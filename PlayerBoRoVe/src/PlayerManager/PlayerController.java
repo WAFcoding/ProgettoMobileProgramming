@@ -14,9 +14,12 @@ public class PlayerController {
 	private Track currentPlayingTrack;
 	private Playlist currentPlayingPlaylist;
 	private MediaPlayer mediaPlayer;
+	private Queue queue, aux_queue;private int q_loop;
 	
 	public PlayerController(){
 		
+		this.queue= new Queue();
+		this.setQ_loop(1);
 		//TODO inizializzazione della libreria da db
 		//TODO inizializzazione del media player
 	}
@@ -75,6 +78,33 @@ public class PlayerController {
 	
 	public void rewind(){
 		
+	}
+	//====================================================================================
+	//==================GESTIONE DELLA CODA DI RIPRODUZIONE===============================
+	public void addTrackToQueue(Track t){
+		queue.addTrack(t);
+	}
+	
+	public void addPlaylistToQueue(Playlist p){
+		queue.addPlaylist(p);
+	}
+
+	public int getQ_loop() {
+		return q_loop;
+	}
+
+	public void setQ_loop(int q_loop) {
+		this.q_loop = q_loop;
+	}
+	
+	public void loop(){
+		if(q_loop > 1){
+			this.aux_queue= new Queue(queue);
+			queue.clear();//ALERT occhio che qua succedono casini;
+			for(int i=0; i<q_loop;i++){
+				queue.addTrackList(aux_queue.getQueue());
+			}
+		}
 	}
 	//====================================================================================
 }

@@ -95,14 +95,4 @@ public class Duration {
 		int sum_h= hour + carry_m + tmp_h;
 		hour= sum_h;
 	}
-	
-	public static void main(String args[]){
-		
-		Duration d= new Duration(13, 59, 55);
-		System.out.println("Duration iniziale= " + d.getDuration());
-		
-		d.sum(new Duration(1,20,10));
-		
-		System.out.println("Duration finale= " + d.getDuration());
-	}
 }
