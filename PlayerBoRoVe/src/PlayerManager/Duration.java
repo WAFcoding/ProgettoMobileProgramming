@@ -65,4 +65,44 @@ public class Duration {
 		setMinute(m);
 		setSeconds(s);
 	}
+	
+	public void sum(Duration d) {
+		int tmp_h= d.getHour();
+		int tmp_m= d.getMinute();
+		int tmp_s= d.getSeconds();
+		
+		int sum_s= seconds + tmp_s;
+		int carry_s= 0;
+		if(sum_s >= 60) {
+			carry_s= 1;
+			seconds= sum_s - 60;
+		}
+		
+		int sum_m= minute + carry_s;
+		int carry_m= 0;
+		if(sum_m >= 60){
+			carry_m= 1;
+			minute= tmp_m;
+		}
+		else{
+			sum_m+= tmp_m;
+			if(sum_m >= 60){
+				carry_m= 1;
+				minute= sum_m - 60;
+			}
+		}
+		
+		int sum_h= hour + carry_m + tmp_h;
+		hour= sum_h;
+	}
+	
+	public static void main(String args[]){
+		
+		Duration d= new Duration(13, 59, 55);
+		System.out.println("Duration iniziale= " + d.getDuration());
+		
+		d.sum(new Duration(1,20,10));
+		
+		System.out.println("Duration finale= " + d.getDuration());
+	}
 }

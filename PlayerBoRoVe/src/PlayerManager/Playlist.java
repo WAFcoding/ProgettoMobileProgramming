@@ -13,11 +13,24 @@ public class Playlist {
 
 	private ArrayList<Track> playlist;
 	private Track current;
+	private String name;
 	
 	public Playlist(){
 		
 		setPlaylist(new ArrayList<Track>());
 		setCurrent(new Track());
+		setName("");
+	}
+	/**
+	 * 
+	 * @param p ArrayList<Track> la lista di brani
+	 * @param n String il nome univoco della playlist
+	 */
+	public Playlist(ArrayList<Track> p, String n){
+		
+		setPlaylist(p);
+		setCurrent(new Track());
+		setName(n);
 	}
 
 	public ArrayList<Track> getPlaylist() {
@@ -25,6 +38,7 @@ public class Playlist {
 	}
 
 	public void setPlaylist(ArrayList<Track> playlist) {
+		if(this.playlist != null) this.playlist.clear();
 		this.playlist = playlist;
 	}
 
@@ -50,7 +64,7 @@ public class Playlist {
 	 */
 	public Track removeTrackByString(String title){
 		if(title != null && !title.equals("")){
-			for(int i=0; i<playlist.size(); i++){
+			for(int i=0; i<size(); i++){
 				if(title.equals(playlist.get(i).getTitle())){
 					return playlist.remove(i);
 				}
@@ -65,7 +79,7 @@ public class Playlist {
 	 */
 	public int setCurrentTrack(Track t){
 		setCurrent(t);
-		for(int i=0; i<playlist.size(); i++){
+		for(int i=0; i<size(); i++){
 			if(this.current.getTitle().equals(playlist.get(i).getTitle())){
 				return i;
 			}
@@ -80,7 +94,7 @@ public class Playlist {
 	 * 
 	 */
 	public Track getNext(int index){
-		if(index == playlist.size()-1){
+		if(index == size()-1){
 			return null;
 		}
 		index+= 1;
@@ -98,5 +112,17 @@ public class Playlist {
 		}
 		index-= 1;
 		return playlist.get(index);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public int size(){
+		return this.playlist.size();
 	}
 }
