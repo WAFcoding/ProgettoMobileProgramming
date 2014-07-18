@@ -15,6 +15,12 @@ public class Track {
 	private Duration duration;
 	
 	private final static String LOG= "TRACK";
+	
+	public Track(){
+		
+		this.title = this.cover_path = this.singer = this.file_path = this.kind = "";
+		this.duration= new Duration(0,0,0);
+	}
 		/**
 		 * 
 		 * Costruttore

@@ -1,4 +1,4 @@
-/*
+/**
  * Rappresenta l'insieme di tutte le playlist, degli album
  * 
  * @author BoRoVe
@@ -7,8 +7,5 @@
 package PlayerManager;
 
 public class Library {
-	/*
-	 * 
-	 */
 
 }
