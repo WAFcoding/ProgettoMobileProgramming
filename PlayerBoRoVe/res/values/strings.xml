@@ -3,5 +3,9 @@
 
     <string name="app_name">PlayerBoRoVe</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_player">PlayerActivity</string>
+    <string name="title_activity_playlist">PlaylistActivity</string>
+    <string name="title_activity_library">LibraryActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 
 </resources>

@@ -35,7 +35,6 @@ public class Track {
 		 */
 	public Track(String title, Duration duration, String cover_path, String singer, String file_path, String kind){
 		
-
 		if(title != null && !title.equals("")){
 			this.setTitle(title);
 		}

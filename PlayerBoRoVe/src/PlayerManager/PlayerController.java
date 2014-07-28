@@ -14,7 +14,8 @@ public class PlayerController {
 	private Track currentPlayingTrack;
 	private Playlist currentPlayingPlaylist;
 	private MediaPlayer mediaPlayer;
-	private Queue queue, aux_queue;private int q_loop;
+	private Queue queue, aux_queue;
+	private int q_loop;
 	
 	public PlayerController(){
 		
