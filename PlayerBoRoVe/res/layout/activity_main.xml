@@ -1,45 +1,64 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="${packageName}.${activityClass}" >
+    tools:context="${packageName}.${activityClass}"
+    android:orientation="vertical" >
 
-    <GridLayout
-        android:id="@+id/gridLayout1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:columnCount="2" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.35"
+        android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/button1"
-            android:layout_column="0"
-            android:layout_row="0"
-            android:layout_gravity="left|top"
-            android:text="Button" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_column="0"
-            android:layout_row="1"
-            android:layout_gravity="left|top"
-            android:text="Button" />
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:text="@string/playlist" />
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_column="1"
-            android:layout_row="0"
-            android:layout_gravity="left|top"
-            android:text="Button" />
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:text="@string/library" />
 
-        <Button
-            android:id="@+id/button4"
-            android:layout_column="1"
-            android:layout_row="1"
-            android:layout_gravity="left|top"
-            android:text="Button" />
-    </GridLayout>
+        </LinearLayout>
 
-</RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.35"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:text="@string/settings" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:text="@string/player" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
