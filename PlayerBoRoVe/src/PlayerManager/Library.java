@@ -16,7 +16,7 @@ public class Library {
 	public Library(){
 		setAllPlayList(new ArrayList<Playlist>());
 		setNumber_of_playlist(-1);
-		setNumber_of_track(-1);
+		setNumber_of_track(-1);   
 	}
 	
 	//TODO un costruttore con parametri necessari alla connessione ad database per scaricare le
