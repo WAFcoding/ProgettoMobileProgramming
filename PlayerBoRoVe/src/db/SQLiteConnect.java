@@ -54,7 +54,6 @@ public class SQLiteConnect{
 	
 	//TODO implementare funzione per il fetching dei risultati della query,
 	//magari passando un array o una lista
-	
 	private class DBhelper extends SQLiteOpenHelper{
 
 

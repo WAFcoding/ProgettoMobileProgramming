@@ -7,9 +7,15 @@
  */
 package PlayerManager;
 
+import it.borove.playerborove.R;
+
 import java.util.ArrayList;
 
-public class Playlist {
+import android.view.KeyEvent;
+
+import android.app.Activity;
+
+public class Playlist{
 
 	private ArrayList<Track> playlist;
 	private Track current;

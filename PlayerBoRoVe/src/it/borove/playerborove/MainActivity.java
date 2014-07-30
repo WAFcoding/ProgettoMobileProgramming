@@ -25,8 +25,6 @@ public class MainActivity extends Activity {
 		player= (Button)findViewById(R.id.button4);
 		this.addButtonListener();
 	}
-	//prova commento
-	//prova commento marco!!!!
 	/**
 	 * Aggiunge i listener ai pulsanti
 	 */

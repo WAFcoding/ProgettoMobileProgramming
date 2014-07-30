@@ -2,10 +2,8 @@ package it.borove.playerborove;
 
 import PlayerManager.PlayerController;
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.KeyEvent;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -67,19 +65,19 @@ public class LibraryActivity extends Activity {
 			tableLayout.addView(tableRow);	
 		*/
 		controller.connectToDB();
-		
+		/*
 		String title = controller.getCurrentPlayingTrack().getTitle();
 		String album = controller.getCurrentPlayingTrack().getAlbum();
 		String author = controller.getCurrentPlayingTrack().getSinger();
 		String length = controller.getCurrentPlayingTrack().getDuration().toString();
 		String kind = controller.getCurrentPlayingTrack().getKind();
-		
+		*/
 		tableLayout	= (TableLayout)findViewById(R.id.tableLayout2);
 		tableRow = new TableRow(this);
 		tableRow.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
 		
 		TextView text = new TextView(this);
-		setTrackRow(title, album, author,length, kind);
+		//setTrackRow(title, album, author,length, kind);
 	
 		
 	}
@@ -101,5 +99,17 @@ public class LibraryActivity extends Activity {
 	public void readDB(){
 		controller.connectToDB();
 		
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event){
+		
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+
+			finish();
+			overridePendingTransition(R.anim.right_in, R.anim.left_out);
+			return true;
+		}
+		
+		return super.onKeyDown(keyCode, event); 
 	}
 }

@@ -1,12 +1,323 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="${packageName}.${activityClass}"
+android:layout_margin="3dp" 
+android:id="@+id/table_playlist">
+
+
+   <LinearLayout
+       android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="${packageName}.${activityClass}" >
+       android:orientation="vertical"
+       android:layout_margin="3dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
-</RelativeLayout>
+	    <TableRow
+	        android:id="@+id/tableRow1"
+	        android:layout_width="match_parent"
+	        android:layout_height="120dp"
+	        android:weightSum="1.0">
+	
+		   <LinearLayout
+		       android:layout_width="match_parent"
+		       android:layout_height="match_parent"
+		       android:orientation="vertical" 
+		     	 android:layout_weight="0.7"
+		     	 android:weightSum="1.0"
+		     	 android:layout_marginTop="0dp">
+		          
+			   	<TextView 
+			         android:layout_width="wrap_content"
+			         android:layout_height="match_parent"
+			         android:text="prova"
+			         android:layout_weight="0.8"/>
+			
+			     <ImageView
+			         android:id="@+id/imageView1"
+			         android:layout_width="match_parent"
+			         android:layout_height="wrap_content"
+			         android:layout_weight="0.2"
+			         android:src="@drawable/nota" />
+				     
+		   </LinearLayout>
+		   <HorizontalScrollView
+		       android:id="@+id/horizontalScrollView1"
+		       android:layout_width="match_parent"
+		       android:layout_height="match_parent"
+		       android:layout_weight="0.3">
+		
+		       <LinearLayout
+		           android:layout_width="wrap_content"
+		           android:layout_height="match_parent"
+		           android:orientation="horizontal">
+		
+			       <LinearLayout
+			           android:layout_width="wrap_content"
+			           android:layout_height="match_parent"
+			           android:orientation="vertical"
+			           android:weightSum="1.0"
+		           	   android:layout_marginLeft="2dp">
+			           
+			           <TextView 
+			               android:layout_width="wrap_content"
+			               android:layout_height="match_parent"
+			               android:text="prova"
+			               android:layout_weight="0.7"/>
+		
+				     <ImageView
+				         android:id="@+id/imageView1"
+				         android:layout_width="match_parent"
+				         android:layout_height="match_parent"
+				         android:src="@drawable/nota"
+			             android:layout_weight="0.3" />
+			           
+			       </LinearLayout>
+		
+			       <LinearLayout
+			           android:layout_width="wrap_content"
+			           android:layout_height="match_parent"
+			           android:orientation="vertical"
+			           android:weightSum="1.0"
+		           	   android:layout_marginLeft="2dp">
+			           
+			           <TextView 
+			               android:layout_width="wrap_content"
+			               android:layout_height="match_parent"
+			               android:text="prova"
+			               android:layout_weight="0.7"/>
+		
+				     <ImageView
+				         android:id="@+id/imageView1"
+				         android:layout_width="match_parent"
+				         android:layout_height="match_parent"
+				         android:src="@drawable/nota"
+			             android:layout_weight="0.3" />
+			           
+			       </LinearLayout>
+		
+			       <LinearLayout
+			           android:layout_width="wrap_content"
+			           android:layout_height="match_parent"
+			           android:orientation="vertical"
+			           android:weightSum="1.0"
+		           	   android:layout_marginLeft="2dp">
+			           
+			           <TextView 
+			               android:layout_width="wrap_content"
+			               android:layout_height="match_parent"
+			               android:text="prova"
+			               android:layout_weight="0.7"/>
+		
+				     <ImageView
+				         android:id="@+id/imageView1"
+				         android:layout_width="match_parent"
+				         android:layout_height="match_parent"
+				         android:src="@drawable/nota"
+			             android:layout_weight="0.3" />
+			           
+			       </LinearLayout>
+		
+			       <LinearLayout
+			           android:layout_width="wrap_content"
+			           android:layout_height="match_parent"
+			           android:orientation="vertical"
+			           android:weightSum="1.0"
+		           	   android:layout_marginLeft="2dp">
+			           
+			           <TextView 
+			               android:layout_width="wrap_content"
+			               android:layout_height="match_parent"
+			               android:text="prova"
+			               android:layout_weight="0.7"/>
+		
+				     <ImageView
+				         android:id="@+id/imageView1"
+				         android:layout_width="match_parent"
+				         android:layout_height="match_parent"
+				         android:src="@drawable/nota"
+			             android:layout_weight="0.3" />
+			           
+			       </LinearLayout>
+		
+			       <LinearLayout
+			           android:layout_width="wrap_content"
+			           android:layout_height="match_parent"
+			           android:orientation="vertical"
+			           android:weightSum="1.0"
+		           	   android:layout_marginLeft="2dp">
+			           
+			           <TextView 
+			               android:layout_width="wrap_content"
+			               android:layout_height="match_parent"
+			               android:text="prova"
+			               android:layout_weight="0.7"/>
+		
+				     <ImageView
+				         android:id="@+id/imageView1"
+				         android:layout_width="match_parent"
+				         android:layout_height="match_parent"
+				         android:src="@drawable/nota"
+			             android:layout_weight="0.3" />
+			           
+			       </LinearLayout>
+		
+			       <LinearLayout
+			           android:layout_width="wrap_content"
+			           android:layout_height="match_parent"
+			           android:orientation="vertical"
+			           android:weightSum="1.0"
+		           	   android:layout_marginLeft="2dp">
+			           
+			           <TextView 
+			               android:layout_width="wrap_content"
+			               android:layout_height="match_parent"
+			               android:text="prova"
+			               android:layout_weight="0.7"/>
+		
+				     <ImageView
+				         android:id="@+id/imageView1"
+				         android:layout_width="match_parent"
+				         android:layout_height="match_parent"
+				         android:src="@drawable/nota"
+			             android:layout_weight="0.3" />
+			           
+			       </LinearLayout>
+		
+			       <LinearLayout
+			           android:layout_width="wrap_content"
+			           android:layout_height="match_parent"
+			           android:orientation="vertical"
+			           android:weightSum="1.0"
+		           	   android:layout_marginLeft="2dp">
+			           
+			           <TextView 
+			               android:layout_width="wrap_content"
+			               android:layout_height="match_parent"
+			               android:text="prova"
+			               android:layout_weight="0.7"/>
+		
+				     <ImageView
+				         android:id="@+id/imageView1"
+				         android:layout_width="match_parent"
+				         android:layout_height="match_parent"
+				         android:src="@drawable/nota"
+			             android:layout_weight="0.3" />
+			           
+			       </LinearLayout>
+		
+			       <LinearLayout
+			           android:layout_width="wrap_content"
+			           android:layout_height="match_parent"
+			           android:orientation="vertical"
+			           android:weightSum="1.0"
+		           	   android:layout_marginLeft="2dp">
+			           
+			           <TextView 
+			               android:layout_width="wrap_content"
+			               android:layout_height="match_parent"
+			               android:text="prova"
+			               android:layout_weight="0.7"/>
+		
+				     <ImageView
+				         android:id="@+id/imageView1"
+				         android:layout_width="match_parent"
+				         android:layout_height="match_parent"
+				         android:src="@drawable/nota"
+			             android:layout_weight="0.3" />
+			           
+			       </LinearLayout>
+		
+			       <LinearLayout
+			           android:layout_width="wrap_content"
+			           android:layout_height="match_parent"
+			           android:orientation="vertical"
+			           android:weightSum="1.0"
+		           	   android:layout_marginLeft="2dp">
+			           
+			           <TextView 
+			               android:layout_width="wrap_content"
+			               android:layout_height="match_parent"
+			               android:text="prova"
+			               android:layout_weight="0.7"/>
+		
+				     <ImageView
+				         android:id="@+id/imageView1"
+				         android:layout_width="match_parent"
+				         android:layout_height="match_parent"
+				         android:src="@drawable/nota"
+			             android:layout_weight="0.3" />
+			           
+			       </LinearLayout>
+		
+			       <LinearLayout
+			           android:layout_width="wrap_content"
+			           android:layout_height="match_parent"
+			           android:orientation="vertical"
+			           android:weightSum="1.0"
+		           	   android:layout_marginLeft="2dp">
+			           
+			           <TextView 
+			               android:layout_width="wrap_content"
+			               android:layout_height="match_parent"
+			               android:text="prova"
+			               android:layout_weight="0.7"/>
+		
+				     <ImageView
+				         android:id="@+id/imageView1"
+				         android:layout_width="match_parent"
+				         android:layout_height="match_parent"
+				         android:src="@drawable/nota"
+			             android:layout_weight="0.3" />
+			           
+			       </LinearLayout>
+		
+			       <LinearLayout
+			           android:layout_width="wrap_content"
+			           android:layout_height="match_parent"
+			           android:orientation="vertical"
+			           android:weightSum="1.0"
+		           	   android:layout_marginLeft="2dp">
+			           
+			           <TextView 
+			               android:layout_width="wrap_content"
+			               android:layout_height="match_parent"
+			               android:text="prova"
+			               android:layout_weight="0.7"/>
+		
+				     <ImageView
+				         android:id="@+id/imageView1"
+				         android:layout_width="match_parent"
+				         android:layout_height="match_parent"
+				         android:src="@drawable/nota"
+			             android:layout_weight="0.3" />
+			           
+			       </LinearLayout>
+		
+			       <LinearLayout
+			           android:layout_width="wrap_content"
+			           android:layout_height="match_parent"
+			           android:orientation="vertical"
+			           android:weightSum="1.0"
+		           	   android:layout_marginLeft="2dp">
+			           
+			           <TextView 
+			               android:layout_width="wrap_content"
+			               android:layout_height="match_parent"
+			               android:text="prova"
+			               android:layout_weight="0.7"/>
+		
+				     <ImageView
+				         android:id="@+id/imageView1"
+				         android:layout_width="match_parent"
+				         android:layout_height="match_parent"
+				         android:src="@drawable/nota"
+			             android:layout_weight="0.3" />
+			           
+			       </LinearLayout>
+		           
+		       </LinearLayout>
+		   </HorizontalScrollView>
+	    </TableRow>
+    </LinearLayout>
+</TableLayout>
