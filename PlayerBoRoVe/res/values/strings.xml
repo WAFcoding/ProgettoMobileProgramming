@@ -12,5 +12,12 @@
     <string name="settings">Impostazioni</string>
     <string name="player">Lettore</string>
     <string name="duration">500</string>
+    
+    <string name="artista">Artista</string>
+    <string name="titolo">Titolo</string>
+    <string name="voto">Voto</string>
+    <string name="album">Album</string>
+    <string name="genere">Genere</string>
+    <string name="durata">Durata</string>
 
 </resources>

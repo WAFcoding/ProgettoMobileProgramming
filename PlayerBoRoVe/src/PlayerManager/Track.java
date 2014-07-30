@@ -11,7 +11,7 @@ import android.util.Log;
 public class Track {
 
 	private String title, cover_path, //eredita il percorso dall'album di cui fa parte, se c'e'
-				   singer, file_path, kind; //eredita il genere dall'album di cui fa parte, se c'e'
+				   singer, file_path, kind, album; //eredita il genere dall'album di cui fa parte, se c'e'
 	private Duration duration;
 	
 	private final static String LOG= "TRACK";
@@ -33,7 +33,7 @@ public class Track {
 		 * @param file_path String il percorso del file audio
 		 * @param kind String il genere musicale del brano
 		 */
-	public Track(String title, Duration duration, String cover_path, String singer, String file_path, String kind){
+	public Track(String title, Duration duration, String cover_path, String singer, String file_path, String kind, String album){
 		
 		if(title != null && !title.equals("")){
 			this.setTitle(title);
@@ -59,6 +59,8 @@ public class Track {
 		this.setCover_path(cover_path);
 		this.setSinger(singer);
 		this.setKind(kind);
+		
+		this.album = album;
 	}
 
 	public String getTitle() {
@@ -67,6 +69,14 @@ public class Track {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	public String getAlbum(){
+		return this.album;
+	}
+	
+	public void setAlbum(String album){
+		this.album = album;
 	}
 
 	public String getCover_path() {

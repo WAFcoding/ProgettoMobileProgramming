@@ -1,12 +1,89 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="${packageName}.${activityClass}" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        <Button
+               android:id="@+id/button1"
+               style="?android:attr/buttonStyleSmall"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_weight="0.5"
+               android:textStyle="italic"
+               android:text="@string/titolo"
+               android:layout_margin="2dp"
+               android:background="@drawable/background_normal" />
+         <Button
+               android:id="@+id/button2"
+               style="?android:attr/buttonStyleSmall"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_weight="0.5"
+               android:textStyle="italic"
+               android:text="@string/artista" />
+          <Button
+               android:id="@+id/button3"
+               style="?android:attr/buttonStyleSmall"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_weight="0.5"
+               android:textStyle="italic"
+               android:text="@string/genere" />
+           <Button
+               android:id="@+id/button4"
+               style="?android:attr/buttonStyleSmall"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_weight="0.5"
+               android:textStyle="italic"
+               android:text="@string/voto" />
+            <Button
+               android:id="@+id/button5"
+               style="?android:attr/buttonStyleSmall"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_weight="0.5"
+               android:textStyle="italic"
+               android:text="@string/durata" />
+       
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:orientation="vertical" >
 
-</RelativeLayout>
+        <ScrollView
+            android:id="@+id/scrollView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TableLayout
+                    android:id="@+id/tableLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TableRow
+                        android:id="@+id/tableRow1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
+                        
+
+                    </TableRow>
+
+                </TableLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>

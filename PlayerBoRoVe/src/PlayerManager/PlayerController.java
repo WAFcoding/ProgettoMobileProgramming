@@ -6,9 +6,12 @@
  */
 package PlayerManager;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.media.MediaPlayer;
 
-public class PlayerController {
+public class PlayerController extends SQLiteOpenHelper{
 	
 	private Library library;
 	private Track currentPlayingTrack;
@@ -17,16 +20,35 @@ public class PlayerController {
 	private Queue queue, aux_queue;
 	private int q_loop;
 	
-	public PlayerController(){
+	
+	private final String TAG = "PLAYERCONTROLLER";
+	private SQLiteDatabase myDatabase;
+	private static String dbPath;
+	private static
+	String DB_NAME ="musicDb.db";
+	private static final
+	int DATABASE_VERSION = 1;
+	
+	public PlayerController(Context context){
+		super(context, DB_NAME, null, DATABASE_VERSION);
+		dbPath = context.getFilesDir().getPath();
 		
 		this.queue= new Queue();
 		this.setQ_loop(1);
 		//TODO inizializzazione della libreria da db
 		//TODO inizializzazione del media player
+		
+		
+	}
+	
+	//Crea il database per la prima volta
+	public boolean createDb(){
+		boolean result = false;
+		return result;
 	}
 	
 	public void connectToDB(){
-		//TODO implementare la connessione ad database
+		//TODO implementare la connessione al database
 	}
 	
 	public void addTrackToPlaylist(Track t, Playlist p){
@@ -80,6 +102,11 @@ public class PlayerController {
 	public void rewind(){
 		
 	}
+	
+	public Track getCurrentPlayingTrack(){
+		return this.currentPlayingTrack;
+	}
+	
 	//====================================================================================
 	//==================GESTIONE DELLA CODA DI RIPRODUZIONE===============================
 	public void addTrackToQueue(Track t){
@@ -108,4 +135,16 @@ public class PlayerController {
 		}
 	}
 	//====================================================================================
+	//==================GESTIONE DATABASE=================================================
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		// TODO Auto-generated method stub
+		
+	}
 }
