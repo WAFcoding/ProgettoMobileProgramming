@@ -5,35 +5,132 @@
  */
 package db;
 
+import java.io.File;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class SQLiteConnect{
+public class SQLiteConnect extends SQLiteOpenHelper{
 	
 	private final static String DB_NAME= "BoRoVe_db.db";
-	private final static int DB_VERSION= 1;
+	private final static int DATABASE_VERSION= 1;
+	private static String db_path;
 	
 	private final static String LOG= "SQLiteConnect";
 	
+	public static final
+	String TABLE_NAME_PLAYLIST 		= "playlist";
+	public static final
+	String COLUMN_ID 				= "pid";
+	public static final
+	String COLUMN_NAME 				= "nameP";
+	
+	public static final
+	String TABLE_NAME_TRACK 		= "track";
+	public static final
+	String COLUMN_KIND				= "kind";
+	public static final
+	String COLUMN_TITLE				= "title";
+	public static final
+	String COLUMN_SINGER_NAME		= "singerName";
+	public static final
+	String COLUMN_VOTE				= "vote";
+	
+	public static final
+	String TABLE_NAME_CONTAINS		= "contains";
+	public static final
+	String COLUMN_ID_BID			= "bid";
+	public static final
+	String COLUMN_ID_PID			= "pid";
+		
 	private SQLiteDatabase m_db;
 	private Context m_context;
-	private DBhelper m_db_helper;
 	
 	public SQLiteConnect(Context context){
-		
+		super(context, DB_NAME, null, DATABASE_VERSION);
 		m_context= context;
-		m_db_helper= new DBhelper(m_context);
+		db_path = context.getFilesDir().getPath();
+		
 	}
 	
-	public void open(){
-		m_db= m_db_helper.getWritableDatabase();
+	/**
+	 * cancella il vecchio database e ne crea uno nuovo
+	 */
+	public void createDatabase(){
+		if(SQLiteDatabase.deleteDatabase(new File(db_path + DB_NAME)))
+			Log.d(LOG, "vecchio database cancellato");
+	
+		try{
+			m_db = SQLiteDatabase.openDatabase(db_path + DB_NAME, null, SQLiteDatabase.CREATE_IF_NECESSARY);
+		}catch(SQLiteException e){
+			Log.d(LOG, "errore nella creazione database: " + e.getMessage());
+		}
+		/*
+		 ** Creazione delle tabelle
+		 */
+		String newTableTrackQueryString =	"create table " + 
+				TABLE_NAME_TRACK + 	" (" + 
+				COLUMN_ID +  " integer primary " + "key autoincrement not null," + 
+				COLUMN_TITLE + " text not null," +
+				COLUMN_SINGER_NAME + " text not null," +
+				COLUMN_KIND + " text not null," + 
+				COLUMN_VOTE + " text not null" + ");";
+		
+		String newTablePlaylistQueryString =	"create table " + 
+				TABLE_NAME_PLAYLIST + 	" (" + 
+				COLUMN_ID +  " integer primary " + "key autoincrement not null," + 
+				COLUMN_NAME + " text not null" + ");";
+		
+		String newTableContainsQueryString =	"create table " + 
+				TABLE_NAME_CONTAINS + 	" (" + 
+				COLUMN_ID_BID +  " integer primary " + "key," + 
+				COLUMN_ID_PID + " text not null," + 
+				" foreign key (" + COLUMN_ID_BID + ") references " + TABLE_NAME_TRACK + "(" + COLUMN_ID +") " 
+				+ "on delete cascade," +
+				" foreign key (" + COLUMN_ID_PID + ") references " + TABLE_NAME_PLAYLIST + "(" + COLUMN_ID + ") "
+				+ "on delete cascade" + ");";
+		try{
+			m_db.execSQL(newTableTrackQueryString);
+		}catch(SQLException e){
+			e.printStackTrace();
+			Log.d(LOG, "Eccezione nella creazione della tabella Track!");
+		}
+		try{
+			m_db.execSQL(newTablePlaylistQueryString);
+		}catch(SQLException e){
+			e.printStackTrace();
+			Log.d(LOG, "Eccezione nella creazione della tabella Playlist!");
+		}
+		try{
+			m_db.execSQL(newTableContainsQueryString);
+		}catch(SQLException e){
+			e.printStackTrace();
+			Log.d(LOG, "Eccezione nella creazione della tabella Contains!");
+		}
+		
+		
 	}
 	
-	public void close(){
+	public void openDatabaseRW(){
+		try{
+			m_db = SQLiteDatabase.openDatabase(db_path + DB_NAME, null, SQLiteDatabase.OPEN_READWRITE);
+		}catch(SQLiteException e){e.printStackTrace();}
+	}
+	
+	public void openDatabaseReadOnly(){
+		try{
+			m_db = SQLiteDatabase.openDatabase(db_path + DB_NAME, null, SQLiteDatabase.OPEN_READONLY);
+		}catch(SQLiteException e){e.printStackTrace();}
+	}
+	
+	public void closeDatabase(){
 		if(m_db != null){
 			m_db.close();
 		}
@@ -42,42 +139,348 @@ public class SQLiteConnect{
 		}
 	}
 	
-	public Cursor execQuery(String query){
-		
-		//TODO aggiungere controllo sul db nullo
-		if(m_db.isOpen()){
-			return m_db.rawQuery(query, null);
+	/**
+	 * Aggiunge una nuova playlist
+	 * @param namePlaylist		nome della playlist da aggiungere
+	 * @return
+	 */
+	public Cursor addRowPlaylist(String namePlaylist){
+		ContentValues content = new ContentValues();
+		content.put(COLUMN_NAME, namePlaylist);
+		try{
+			 openDatabaseRW();
+			 m_db.insert(TABLE_NAME_PLAYLIST, null, content);
+			 closeDatabase();
+		}catch(Exception e){
+			Log.d(LOG, "Errore nella addRowPlaylist!! " + e.getMessage());
+		}
+		return getExactlyNamePlaylist(namePlaylist);	
+	}
+	/**
+	 * Aggiunge un nuovo brano
+	 * @param title				titolo del brano
+	 * @param kind				genere del brano
+	 * @param nameSinger		nome dell'artista
+	 * @param vote				voto di preferenza assegnato
+	 * @return
+	 */
+	public Cursor addRowTrack(String title, String kind, String nameSinger, String vote){
+		ContentValues content = new ContentValues();
+		content.put(COLUMN_TITLE, title);
+		content.put(COLUMN_KIND, kind);
+		content.put(COLUMN_SINGER_NAME, nameSinger);
+		content.put(COLUMN_VOTE, vote);		
+		try{
+			 openDatabaseRW();
+			 m_db.insert(TABLE_NAME_TRACK, null, content);	 
+			 closeDatabase();
+		}catch(Exception e){
+			Log.d(LOG, "Errore nella addRowTrack!! " + e.getMessage());
 		}
 		
-		return null;
+		return getExactlyTrack(title,"title");
+	}
+	/**
+	 * Aggiunge una nuova entry nella tabella contains indicando l'associazione tra brano e playlist
+	 * @param idPlaylist
+	 * @param idTrack
+	 */
+	public void addRowContains(String idPlaylist, String idTrack){
+		if(idPlaylist.equals(null) || idTrack.equals(null)){
+			return;
+		}	
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_ID_BID, idTrack);
+		values.put(COLUMN_ID_PID, idPlaylist);
+		try{
+			openDatabaseRW();
+			m_db.insert(TABLE_NAME_CONTAINS, null, values);
+			closeDatabase();
+		}
+		catch (Exception e){
+				Log.d(LOG, "Errore in containsTrack!! " + e.getMessage());
+		}
 	}
 	
-	//TODO implementare funzione per il fetching dei risultati della query,
-	//magari passando un array o una lista
-	private class DBhelper extends SQLiteOpenHelper{
 
-
-		public DBhelper(Context context){
-			super(context, DB_NAME, null, DB_VERSION);
+	/**
+	 * Cancella un brano
+	 * @param titleTrack	titolo del brano
+	 */
+	public void deleteRowTrack(String titleTrack){	
+		try{
+			openDatabaseRW();
+			m_db.execSQL("PRAGMA foreign_keys = ON");
+			m_db.delete(TABLE_NAME_TRACK, COLUMN_TITLE + "=" + "'" + titleTrack + "'", null);
+			closeDatabase();
 		}
-		
-		/**
-		 * @param db SQLiteDatabase
-		 */
-		@Override
-		public void onCreate(SQLiteDatabase db) {
-			
+		catch (SQLiteException e){
+			Log.d(LOG, "Errore nella deleteRowTrack!! " + e.getMessage());
 		}
+	}
 	
-		/**
-		 * @param db SQLiteDatabase
-		 * @param oldVersion int
-		 * @param newVersion int
-		 */
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			
+	/**
+	 * Cancella una playlist
+	 * @param name		nome della playlist da eliminare
+	 */
+	public void deleteRowPlaylist(String name){
+		try{
+			openDatabaseRW();
+			m_db.execSQL("PRAGMA foreign_keys = ON");
+			m_db.delete(TABLE_NAME_PLAYLIST, COLUMN_NAME + "=" + "'"+name+"'", null);
+			closeDatabase();
 		}
+		catch (Exception e){
+			Log.d(LOG, "Errore nella deleteRowPlaylist!! " + e.getMessage());
+		}	
+	}
+	
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+		// TODO Auto-generated method stub
+		createDatabase();
+		Cursor cursor 	= addRowPlaylist("MyPlaylist");
+		Cursor cursor2 	= addRowTrack("extreme_ways", "electro", "Moby", "5");
+		addRowContains(cursor.getString(0), cursor2.getString(0));
+		cursor.close();
+		cursor2.close();
+		
+		cursor = addRowPlaylist("playlist2");
+		cursor2 	= addRowTrack("evening_rain", "electro", "Moby", "2");
+		addRowContains(cursor.getString(0), cursor2.getString(0));
+		
+		cursor2.close();
+		
+		cursor2 	= addRowTrack("innuendo", "rock", "Queen", "3");
+		addRowContains(cursor.getString(0), cursor2.getString(0));
+		cursor2.close();
+		cursor2 	= addRowTrack("innuendoSpecial", "jazz", "Queen", "3");
+		addRowContains(cursor.getString(0), cursor2.getString(0));
+		
+
+		addRowTrack("stairway_to_heaven", "rock", "Led Zeppelin", "5");	
+		
+		cursor.close();
+		cursor2.close();
 		
 	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		// TODO Auto-generated method stub
+	}
+	
+	/**
+	 * Aggiorna il brano singolo
+	 * @param oldValue		il vecchio valore da aggiornare
+	 * @param newValue		il nuovo valore che aggiorna oldValue
+	 * @param columnType 	la colonna cui oldValue/newValue fanno parte
+	 */
+	public void updateRowTrack(String oldValue, String newValue, String columnType){
+		
+		ContentValues contentValues = new ContentValues();
+		if(columnType.equals(COLUMN_SINGER_NAME) || columnType.equals(COLUMN_KIND) || columnType.equals(COLUMN_TITLE) || columnType.equals(COLUMN_VOTE))
+			contentValues.put(columnType, newValue);
+		
+		String where = columnType + "='" + oldValue + "'";
+		openDatabaseRW();
+		m_db.execSQL("PRAGMA foreign_keys = ON");
+		m_db.update(TABLE_NAME_TRACK, contentValues, where, null);
+		onUpgrade(this.m_db, SQLiteConnect.DATABASE_VERSION, SQLiteConnect.DATABASE_VERSION +1);
+		closeDatabase();
+		return;
+	}
+	
+	/**
+	 * Aggiorna il singolo playlist
+	 * @param oldValue		il vecchio valore da aggiornare
+	 * @param newValue		il nuovo valore che aggiorna oldValue
+	 * @param columnType 	la colonna cui oldValue/newValue fanno parte
+	 */
+	public void updateRowPlaylist(String oldValue, String newValue, String columnType){
+		ContentValues contentValues = new ContentValues();
+		if(columnType.equals(COLUMN_NAME))
+			contentValues.put(columnType, newValue);
+		
+		String where = columnType + "='" + oldValue + "'";
+		openDatabaseRW();
+		m_db.execSQL("PRAGMA foreign_keys = ON");
+		m_db.update(TABLE_NAME_PLAYLIST, contentValues, where, null);
+		onUpgrade(this.m_db, SQLiteConnect.DATABASE_VERSION, SQLiteConnect.DATABASE_VERSION +1);
+		closeDatabase();
+		return;
+		
+	}
+	
+	/**
+	 * Si ricerca una singola playlist
+	 * @param name			il nome della playlist da ricercare
+	 * @return
+	 */
+	public Cursor getExactlyNamePlaylist(String name){
+		openDatabaseReadOnly();
+		String field = "nameP = ?";
+		String [] filter = {name};
+		Cursor cursor = m_db.query(SQLiteConnect.TABLE_NAME_PLAYLIST, null, field, filter, null, null, null);
+		cursor.moveToLast();
+		if(cursor.getCount() != 1){
+			cursor.close();
+			closeDatabase();
+			return null;
+		}
+		cursor.moveToFirst();		
+		closeDatabase();
+		return cursor;
+	}
+	
+	/**
+	 * Si ricerca una singola traccia
+	 * @param value			il valore(titolo, voto...) richiesto per la query
+	 * @param columnType	la colonna contenente l'oggetto 'value'
+	 * @return
+	 */
+	public Cursor getExactlyTrack(String value, String columnType){
+		openDatabaseReadOnly();
+		Cursor cursor = null;
+		if(!value.equals(null)){
+			String field = columnType + "= '" + value + "'";
+			cursor = m_db.query(SQLiteConnect.TABLE_NAME_TRACK, null, field, null, null, null, null);
+		}
+		cursor.moveToLast();
+		if(cursor.getCount() == 0){
+			cursor.close();
+			closeDatabase();
+			return null;
+		}
+		cursor.moveToFirst();		
+		//Log.d(LOG, "Track trovata: "+ cursor.getString(0) +" " +cursor.getString(1) +" "+cursor.getString(2) +" "+cursor.getString(3));
+		closeDatabase();
+		return cursor;
+	}
+	
+	public Cursor getFilteredTrack(String value, String columnType, String[] columnsSelect){
+		openDatabaseReadOnly();
+		Cursor cursor = null;
+		if(!columnsSelect.equals("*")){
+			String field = columnType + " like ?";
+			String [] filter = {value + "%"};
+			cursor = m_db.query(SQLiteConnect.TABLE_NAME_TRACK, columnsSelect, field, filter, null, null, null);
+		}
+		else{
+			String field = columnType + " like ?";
+			String [] filter = {value + "%"};
+			cursor = m_db.query(SQLiteConnect.TABLE_NAME_TRACK, null, field, filter, null, null, null);
+		}
+		cursor.moveToLast();
+		if(cursor.getCount() >= 100){
+			cursor.close();
+			closeDatabase();
+			return null;
+		}
+		cursor.moveToFirst();		
+		closeDatabase();
+		return cursor;
+	}
+	
+	/**
+	 * Restituisce un insieme di playlist dalla ricerca
+	 * @param value				il valore inserito dall'utente. Se è vuota (""), restituisce tutte le entry presenti nella tabella
+	 * @param columnType		la colonna cui value fa parte
+	 * @param columnsSelect		le colonne restituite dalla query(SELECT). Se è uguale a "*" restituisce tutte le colonne
+	 * @return
+	 */
+	public Cursor getFilteredPlaylist(String value, String columnType, String[] columnsSelect){
+		openDatabaseReadOnly();
+		Cursor cursor = null;
+		if(!columnsSelect.equals("*")){
+			String field = columnType + " like ?";
+			String [] filter = {value + "%"};
+			cursor = m_db.query(SQLiteConnect.TABLE_NAME_PLAYLIST, columnsSelect, field, filter, null, null, null);
+		}
+		else{
+			String field = columnType + " like ?";
+			String [] filter = {value + "%"};
+			cursor = m_db.query(SQLiteConnect.TABLE_NAME_PLAYLIST, null, field, filter, null, null, null);
+		}
+		cursor.moveToLast();
+		if(cursor.getCount() >= 100){
+			cursor.close();
+			closeDatabase();
+			return null;
+		}
+		cursor.moveToFirst();		
+		closeDatabase();
+		return cursor;
+	}
+	
+	/** quando si effettuato query complesse
+	 * @param where			la stringa inserita dall' utente
+	 * @param attr			il nome della colonna cui appartiene il parametro 'where'
+	 * @param table_src		la tabella di origine della ricerca
+	 * @param table dst		la tabella di destinazione della query (dove viene presa l'informazione richiesta dall'utente)
+	 * @param select		la/e colonna/e richieste dalla query
+	 * @return cursor		la tabella contenente le entry che soddisfano la query 
+	 * 
+	 */
+	public Cursor getQueryResult(String where, String attr, String table_src, String table_dst, String select){
+		openDatabaseReadOnly();
+		String query 		= "";
+		Cursor cursor	 	= null;
+		if(table_src.equals(TABLE_NAME_TRACK)){
+			if(table_dst.equals(TABLE_NAME_PLAYLIST)){
+				try{
+					String field 		= attr + " like ?";
+					String [] filter 	= {where + "%" };
+					query		= "SELECT "+ "b." + select + " FROM " + table_src + " AS a, " + table_dst + " AS b, " + TABLE_NAME_CONTAINS + " AS c"
+									+ " WHERE " + "a." + COLUMN_ID + "=c." + COLUMN_ID_BID + " AND " + "b." + COLUMN_ID + "=c." + COLUMN_ID_PID 
+									+ " AND " + "a." + field;
+					cursor = m_db.rawQuery(query, filter);
+				}catch(SQLiteException e ){e.printStackTrace();}
+			}
+			else if(table_dst.equals(TABLE_NAME_CONTAINS)){
+				try{
+					String field 		= attr + " = '" + where + "'";
+					String [] filter 	= null;
+					query		= "SELECT "+ "c." + select + " FROM " + table_src + " AS a, " + table_dst + " AS c"
+							+ " WHERE " + "a." + COLUMN_ID + "=c." + COLUMN_ID_BID + " AND " + "a." + field; 
+					cursor = m_db.rawQuery(query, filter);
+				}catch(SQLiteException e ){e.printStackTrace();}
+			}
+		}
+		else if(table_src.equals(TABLE_NAME_PLAYLIST)){
+			if(table_dst.equals(TABLE_NAME_CONTAINS)){
+				try{
+					String field 		= attr + " = '" + where + "'";
+					String [] filter 	= null;
+					query		= "SELECT "+ "c."+select + " FROM " + table_src + " AS a, " + TABLE_NAME_CONTAINS + " AS c"
+							+ " WHERE " + "a." + COLUMN_ID + "=c." + COLUMN_ID_PID + " AND " + "a." + field;
+					cursor = m_db.rawQuery(query, filter);
+				}catch(SQLiteException e ){e.printStackTrace();}
+			}
+			else{
+				try{
+					String field 		= attr + " like ?";
+					String [] filter 	= {where + "%" };
+					query		= "SELECT "+ "b."+select + " FROM " + table_src + " AS a, " + table_dst + " AS b, " + TABLE_NAME_CONTAINS + " AS c"
+							+ " WHERE " + "a." + COLUMN_ID + "=c." + COLUMN_ID_PID + " AND " + "b." + COLUMN_ID + "=c." + COLUMN_ID_BID 
+							+ " AND " + "a." + field;
+					cursor = m_db.rawQuery(query, filter);
+				}catch(SQLiteException e ){e.printStackTrace();}
+			}
+		}
+		
+		else return null;
+		cursor.moveToLast();
+		if(cursor.getCount() == 0){
+			cursor.close();
+			closeDatabase();
+			return null;
+		}
+		cursor.moveToFirst();
+		closeDatabase();
+		return cursor;
+	}
+	
+
+	
 }
