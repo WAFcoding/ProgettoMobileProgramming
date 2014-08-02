@@ -4,9 +4,9 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context="${packageName}.${activityClass}"
 android:layout_margin="3dp" 
-android:id="@+id/table_playlist">
+android:id="@+id/tablePlaylist">
 
-
+ 
    <LinearLayout
        android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -66,7 +66,6 @@ android:id="@+id/table_playlist">
 			               android:layout_weight="0.7"/>
 		
 				     <ImageView
-				         android:id="@+id/imageView1"
 				         android:layout_width="match_parent"
 				         android:layout_height="match_parent"
 				         android:src="@drawable/nota"
@@ -88,7 +87,6 @@ android:id="@+id/table_playlist">
 			               android:layout_weight="0.7"/>
 		
 				     <ImageView
-				         android:id="@+id/imageView1"
 				         android:layout_width="match_parent"
 				         android:layout_height="match_parent"
 				         android:src="@drawable/nota"
@@ -110,7 +108,6 @@ android:id="@+id/table_playlist">
 			               android:layout_weight="0.7"/>
 		
 				     <ImageView
-				         android:id="@+id/imageView1"
 				         android:layout_width="match_parent"
 				         android:layout_height="match_parent"
 				         android:src="@drawable/nota"
@@ -132,7 +129,6 @@ android:id="@+id/table_playlist">
 			               android:layout_weight="0.7"/>
 		
 				     <ImageView
-				         android:id="@+id/imageView1"
 				         android:layout_width="match_parent"
 				         android:layout_height="match_parent"
 				         android:src="@drawable/nota"
@@ -154,7 +150,6 @@ android:id="@+id/table_playlist">
 			               android:layout_weight="0.7"/>
 		
 				     <ImageView
-				         android:id="@+id/imageView1"
 				         android:layout_width="match_parent"
 				         android:layout_height="match_parent"
 				         android:src="@drawable/nota"
@@ -176,7 +171,6 @@ android:id="@+id/table_playlist">
 			               android:layout_weight="0.7"/>
 		
 				     <ImageView
-				         android:id="@+id/imageView1"
 				         android:layout_width="match_parent"
 				         android:layout_height="match_parent"
 				         android:src="@drawable/nota"
@@ -198,7 +192,6 @@ android:id="@+id/table_playlist">
 			               android:layout_weight="0.7"/>
 		
 				     <ImageView
-				         android:id="@+id/imageView1"
 				         android:layout_width="match_parent"
 				         android:layout_height="match_parent"
 				         android:src="@drawable/nota"
@@ -220,7 +213,6 @@ android:id="@+id/table_playlist">
 			               android:layout_weight="0.7"/>
 		
 				     <ImageView
-				         android:id="@+id/imageView1"
 				         android:layout_width="match_parent"
 				         android:layout_height="match_parent"
 				         android:src="@drawable/nota"
@@ -242,7 +234,6 @@ android:id="@+id/table_playlist">
 			               android:layout_weight="0.7"/>
 		
 				     <ImageView
-				         android:id="@+id/imageView1"
 				         android:layout_width="match_parent"
 				         android:layout_height="match_parent"
 				         android:src="@drawable/nota"
@@ -264,7 +255,6 @@ android:id="@+id/table_playlist">
 			               android:layout_weight="0.7"/>
 		
 				     <ImageView
-				         android:id="@+id/imageView1"
 				         android:layout_width="match_parent"
 				         android:layout_height="match_parent"
 				         android:src="@drawable/nota"
@@ -286,29 +276,6 @@ android:id="@+id/table_playlist">
 			               android:layout_weight="0.7"/>
 		
 				     <ImageView
-				         android:id="@+id/imageView1"
-				         android:layout_width="match_parent"
-				         android:layout_height="match_parent"
-				         android:src="@drawable/nota"
-			             android:layout_weight="0.3" />
-			           
-			       </LinearLayout>
-		
-			       <LinearLayout
-			           android:layout_width="wrap_content"
-			           android:layout_height="match_parent"
-			           android:orientation="vertical"
-			           android:weightSum="1.0"
-		           	   android:layout_marginLeft="2dp">
-			           
-			           <TextView 
-			               android:layout_width="wrap_content"
-			               android:layout_height="match_parent"
-			               android:text="prova"
-			               android:layout_weight="0.7"/>
-		
-				     <ImageView
-				         android:id="@+id/imageView1"
 				         android:layout_width="match_parent"
 				         android:layout_height="match_parent"
 				         android:src="@drawable/nota"
