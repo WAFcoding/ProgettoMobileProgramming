@@ -6,20 +6,9 @@ import playlistModules.PlaylistAdapter;
 import playlistModules.PlaylistItem;
 import playlistModules.SinglePlaylistItem;
 import android.app.Activity;
-import android.app.ListActivity;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 public class PlaylistActivity extends Activity {
 	
@@ -34,14 +23,15 @@ public class PlaylistActivity extends Activity {
 		
 		items= new ArrayList<PlaylistItem>();
 		//la cover
-		SinglePlaylistItem tmp_cover= new SinglePlaylistItem("cover", "asd");
+		SinglePlaylistItem tmp_cover= new SinglePlaylistItem("cover", " ");
 		//la scrollview
 		ArrayList<SinglePlaylistItem> tmp_songs= new ArrayList<SinglePlaylistItem>();
 		for(int i=0;i<15;i++){
-			tmp_songs.add(new SinglePlaylistItem("canzone", "asd"));
+			SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem("canzone", " ");
+			tmp_songs.add(tmp_pl_item);
 		}
 		//la listview
-		for(int i=0;i<3;i++){
+		for(int i=0;i<10;i++){
 			PlaylistItem tmp_play= new PlaylistItem(tmp_cover, tmp_songs);
 			items.add(tmp_play);
 		}
@@ -56,7 +46,7 @@ public class PlaylistActivity extends Activity {
 		m_listview.setAdapter(m_adapter);
 		
 	}
-	
+	/*
 	public TableRow addTableRow(String img_name, ArrayList<String> tracks){
 		//l'oggetto TableRow che rappresenta una singola riga da inserire
 		TableRow table_row= new TableRow(this);
@@ -136,7 +126,7 @@ public class PlaylistActivity extends Activity {
 		
 		return table_row;
 	}
-	
+	*/
 	public boolean onKeyDown(int keyCode, KeyEvent event){
 		
 		if(keyCode == KeyEvent.KEYCODE_BACK){
