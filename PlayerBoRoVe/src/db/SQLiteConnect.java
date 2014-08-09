@@ -58,10 +58,14 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	private SQLiteDatabase m_db;
 	private Context m_context;
 	
+	//private MyFileObserver fileOb;
+	
 	public SQLiteConnect(Context context){
 		super(context, DB_NAME, null, DATABASE_VERSION);
 		m_context= context;
 		db_path = context.getFilesDir().getPath();
+		//fileOb = new MyFileObserver("/storage/emulated/0/Music");
+		//fileOb.startWatching();
 	}
 	
 	/**
