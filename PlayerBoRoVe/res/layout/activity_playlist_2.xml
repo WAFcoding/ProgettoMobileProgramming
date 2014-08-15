@@ -5,7 +5,9 @@
    android:layout_height="fill_parent" >
 	<ListView  
 	    android:id="@+id/listview_playlist"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"/>
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:fastScrollEnabled="true"
+	    android:divider="@android:color/darker_gray"	    />
 	
 </LinearLayout>
