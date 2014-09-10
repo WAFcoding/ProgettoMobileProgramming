@@ -22,6 +22,15 @@
     <string name="genere">Genere</string>
     <string name="durata">Durata</string>
     
-    <string name="content"> </string>
+    <string name="content"></string>
+  
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+    <string-array name="drawer_choice_playlist">
+        <item >Aggiungi playlist</item>
+        <item >Rimuovi playlist</item>
+       <item >Aggiorna</item>
+       <item >Impostazioni</item>
+    </string-array>
 
 </resources>

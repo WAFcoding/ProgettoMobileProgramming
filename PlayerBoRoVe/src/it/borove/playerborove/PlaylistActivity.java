@@ -6,11 +6,25 @@ import playlistModules.PlaylistAdapter;
 import playlistModules.PlaylistItem;
 import playlistModules.SinglePlaylistItem;
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class PlaylistActivity extends Activity {
+	
+	private String[] choices;
+	private DrawerLayout drawer;
+	private ListView drawer_list_view;
+	private ActionBarDrawerToggle drawer_toggle;
+	private CharSequence title, drawer_title;
 	
 	private ArrayList<PlaylistItem> items;
 	private PlaylistAdapter m_adapter;
@@ -31,102 +45,96 @@ public class PlaylistActivity extends Activity {
 			tmp_songs.add(tmp_pl_item);
 		}
 		//la listview
-		for(int i=0;i<10;i++){
+		for(int i=0;i<6;i++){
 			PlaylistItem tmp_play= new PlaylistItem(tmp_cover, tmp_songs);
 			items.add(tmp_play);
 		}
-		
-		///FIXME fare debug, possibile che il fatto di aggiungere roba al layout e poi aggiungere il layout alla scrollview sia il problema
-		//inserire un po' di stampe per localizzarlo meglio comunque
-		
+
 		
 		m_adapter= new PlaylistAdapter(this, R.layout.row_playlist, items);
 		
 		m_listview= (ListView)findViewById(R.id.listview_playlist);
 		m_listview.setAdapter(m_adapter);
 		
-	}
-	/*
-	public TableRow addTableRow(String img_name, ArrayList<String> tracks){
-		//l'oggetto TableRow che rappresenta una singola riga da inserire
-		TableRow table_row= new TableRow(this);
-		table_row.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 120));
-		table_row.setWeightSum(1.0f);
 		
-			//il layout che contiene la copertina della playlist e il nome
-			LinearLayout.LayoutParams layout_row= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 0.7f);
-			LinearLayout row= new LinearLayout(this);
-			row.setLayoutParams(layout_row);
-			row.setOrientation(LinearLayout.VERTICAL);
-			row.setWeightSum(1.0f);
-			
-				//La TextView che contiene il nome della playlist
-				LinearLayout.LayoutParams layout_txt= new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, 0.8f);
-				TextView txt_pl_name= new TextView(this);
-				txt_pl_name.setLayoutParams(layout_txt);
-				txt_pl_name.setText("nome playlist");
-				
-				//L'ImageView che contiene la copertina della playlist
-				LinearLayout.LayoutParams img_view= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 0.2f);
-				ImageView img_pl= new ImageView(this);
-				img_pl.setLayoutParams(img_view);
-				int resId= getResources().getIdentifier("nota", "drawable", getPackageName());
-				img_pl.setImageResource(resId);
-				img_pl.setVisibility(ImageView.VISIBLE);
+		//il navigation drawer
+		title= drawer_title = getTitle();
 		
-			//La scroll view orizzontale per i brani nella playlist
-			LinearLayout.LayoutParams layout_scroll= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 0.3f);
-			HorizontalScrollView h_scroll= new HorizontalScrollView(this);
-			h_scroll.setLayoutParams(layout_scroll);
+		choices= getResources().getStringArray(R.array.drawer_choice_playlist);
+		drawer= (DrawerLayout)findViewById(R.id.drawer_playlist);
+		
+		drawer_toggle= new ActionBarDrawerToggle(this, drawer, R.drawable.ic_launcher, 
+												R.string.drawer_open, R.string.drawer_close){
+			//richiamata quando il drawer è completamente chiuso
+			public void onDrawerClosed(View view){
+				super.onDrawerClosed(view);
+				getActionBar().setTitle(title);
+				invalidateOptionsMenu();
+			}
 			
-				//il layout contenitore
-				LinearLayout container_scroll= new LinearLayout(this);
-				container_scroll.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-				container_scroll.setOrientation(LinearLayout.VERTICAL);
-				
-					//for(int i=0;i<10;i++){
-						
-						//Il layout della singola entry nella scroll view
-						LinearLayout.LayoutParams layout_container_entry= new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
-						layout_container_entry.setMargins(2, 0, 0, 0);
-						LinearLayout container_entry= new LinearLayout(this);
-						container_entry.setLayoutParams(layout_container_entry);
-						container_entry.setWeightSum(1.0f);
-						container_entry.setOrientation(LinearLayout.VERTICAL);
-						//La TextView del titolo del singolo brano
-						LinearLayout.LayoutParams layout_txt_entry= new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, 0.7f);
-						TextView txt_entry= new TextView(this);
-						txt_entry.setLayoutParams(layout_txt_entry);
-						txt_entry.setText("titolo brano");
-						//La ImageView del singolo brano
-						LinearLayout.LayoutParams layout_img_entry= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 0.3f);
-						ImageView img_entry= new ImageView(this);
-						img_entry.setLayoutParams(layout_img_entry);
-						int resId_entry= getResources().getIdentifier("nota", "drawable", getPackageName());
-						img_entry.setImageResource(resId_entry);
-						img_entry.setVisibility(ImageView.VISIBLE);
-						
-						//aggiungo i brani alla scrollview
-						container_entry.addView(txt_entry);
-						container_entry.addView(img_entry);
-						container_scroll.addView(container_entry);
-					//}
-			
-			h_scroll.addView(container_scroll);
+			//richiamata quando il drawer è completamente aperto
+			public void onDrawerOpended(View view){
+				super.onDrawerOpened(view);
+				getActionBar().setTitle(drawer_title);
+				invalidateOptionsMenu();
+			}
+		};	
+		
+		drawer.setDrawerListener(drawer_toggle);
 
-		//aggiungo titolo e copertina della playlist al layout
-		row.addView(txt_pl_name);
-		row.addView(img_pl);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
 		
-		//aggiungo i la scroll view
-		row.addView(h_scroll);
 		
-		//aggiungo la riga completa
-		table_row.addView(row);
+        drawer_list_view= (ListView)findViewById(R.id.left_drawer);
+        drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
+        drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
 		
-		return table_row;
 	}
-	*/
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawer_toggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawer_toggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (drawer_toggle.onOptionsItemSelected(item)) {
+          return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    /* Called whenever we call invalidateOptionsMenu() */
+    /*@Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = drawer.isDrawerOpen(drawer_list_view);
+        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }*/
+	private class DrawerItemClickListener implements ListView.OnItemClickListener{
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			drawer.closeDrawer(drawer_list_view);
+			Toast.makeText(parent.getContext(), "selezionato elemento " + position, Toast.LENGTH_SHORT).show();
+		}
+		
+	}
+	
 	public boolean onKeyDown(int keyCode, KeyEvent event){
 		
 		if(keyCode == KeyEvent.KEYCODE_BACK){
