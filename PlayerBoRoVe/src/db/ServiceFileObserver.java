@@ -74,8 +74,9 @@ public class ServiceFileObserver extends Service{
 			
 			//a new file or subdirectory was created under the monitored directory
 			if((FileObserver.CREATE & event) != 0){
-				//Log.d(OBSERVER, "un nuovo file è stato aggiunto!! ---> " + this.absolutePath + "/" + path + " created!!");
+				Log.d(OBSERVER, "un nuovo file è stato aggiunto!! ---> " + this.absolutePath + "/" + path + " created!!");
 				Intent fr = new Intent("it.borove.playerborove.SERVICE");
+				//Intent fr = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 	        	String createdFilePath = this.absolutePath + "/" + path;
 	        	Bundle bundle = new Bundle();
 	        	try{

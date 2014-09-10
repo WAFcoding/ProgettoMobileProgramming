@@ -13,6 +13,8 @@
     <string name="player">Lettore</string>
     <string name="duration">500</string>
     
+    <string name="txtButton">Exit</string>
+    
     <string name="artista">Artista</string>
     <string name="titolo">Titolo</string>
     <string name="voto">Voto</string>
@@ -20,13 +22,6 @@
     <string name="genere">Genere</string>
     <string name="durata">Durata</string>
     
-    <string name="drawer_open">open</string>
-    <string name="drawer_close">close</string>
-    <string-array name="drawer_choice_playlist">
-        <item >Aggiungi playlist</item>
-        <item >Rimuovi playlist</item>
-        <item >Aggiorna</item>
-        <item >Impostazioni</item>
-    </string-array>
+    <string name="content"> </string>
 
 </resources>
