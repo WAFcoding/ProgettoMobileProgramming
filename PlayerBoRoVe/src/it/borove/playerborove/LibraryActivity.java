@@ -274,19 +274,22 @@ public class LibraryActivity extends Activity {
 	}
 	
 	public void setAdapter(Cursor cursor){
-		cursor.moveToFirst();
-		/*while(!cursor.isAfterLast()){
-			for(int i=0; i< cursor.getColumnCount(); i++){
-				Log.d(TAG, cursor.getColumnName(i) + ": " + cursor.getString(cursor.getColumnIndex(cursor.getColumnName(i))));
+		if(cursor != null){
+			cursor.moveToFirst();
+			/*while(!cursor.isAfterLast()){
+				for(int i=0; i< cursor.getColumnCount(); i++){
+					Log.d(TAG, cursor.getColumnName(i) + ": " + cursor.getString(cursor.getColumnIndex(cursor.getColumnName(i))));
+				}
+				cursor.moveToNext();
 			}
-			cursor.moveToNext();
+			*/
+			String[] from = PlayerController.getColumns();
+			int[] to = new int[]{R.id.txtImmagine, R.id.txtTitolo, R.id.txtAutore};
+			
+			LibraryActivity.adapter = new MySimpleCursorAdapter(this, R.layout.item_listview, cursor, from, to, 0);
+			listView.setAdapter(LibraryActivity.adapter);
 		}
-		*/
-		String[] from = PlayerController.getColumns();
-		int[] to = new int[]{R.id.txtImmagine, R.id.txtTitolo, R.id.txtAutore};
 		
-		LibraryActivity.adapter = new MySimpleCursorAdapter(this, R.layout.item_listview, cursor, from, to, 0);
-		listView.setAdapter(LibraryActivity.adapter);
 	}
 	
 	public void onDataSetChanged(){
