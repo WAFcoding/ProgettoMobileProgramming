@@ -39,6 +39,8 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	public static final
 	String TABLE_NAME_TRACK 		= "track";
 	public static final
+	String COLUMN_PATH_TRACK		= "pathTrack";
+	public static final
 	String COLUMN_KIND				= "kind";
 	public static final
 	String COLUMN_TITLE				= "title";
@@ -99,7 +101,8 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 					COLUMN_KIND + " text not null," + 
 					COLUMN_VOTE + " text not null," +
 					COLUMN_CONTENT_TITLE 	+ " text not null," + 
-					COLUMN_ALBUM_ID + " text not null" + ");";
+					COLUMN_ALBUM_ID + " text not null," +
+					COLUMN_PATH_TRACK + ");";
 			
 			String newTablePlaylistQueryString =	"create table " + 
 					TABLE_NAME_PLAYLIST + 	" (" + 
@@ -204,7 +207,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	 * @param albumId			id dell'album(copertina dell'album rappresentato come long int)
 	 * @return il brano appena aggiunto
 	 */
-	public Cursor addRowTrack(String title, String kind, String nameSinger, String vote, String contentTitle, String albumId){
+	public Cursor addRowTrack(String title, String kind, String nameSinger, String vote, String contentTitle, String albumId, String path){
 		ContentValues content = new ContentValues();
 		content.put(COLUMN_TITLE, title);
 		content.put(COLUMN_KIND, kind);
@@ -212,6 +215,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 		content.put(COLUMN_VOTE, vote);
 		content.put(COLUMN_CONTENT_TITLE, contentTitle);
 		content.put(COLUMN_ALBUM_ID, albumId);
+		content.put(COLUMN_PATH_TRACK, path);
 		
 		try{
 			 openDatabaseRW();
@@ -356,6 +360,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 				while(!c.isAfterLast()){
 					String vote			= "0";
 					String kind			= "unknown";
+					String pathTrack	= c.getString(1);
 					String contentTitle	= c.getString(5);
 					String title 		= c.getString(4);
 					String singerName	= c.getString(2);
@@ -363,11 +368,12 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 					
 					Cursor trackOnDb = getExactlyTrack(contentTitle, COLUMN_CONTENT_TITLE);
 					if(trackOnDb == null){				
-							Cursor e = addRowTrack(title, kind, singerName, vote, contentTitle, albumId);
+							Cursor e = addRowTrack(title, kind, singerName, vote, contentTitle, albumId, pathTrack);
 							Log.d(LOG, "nuovo brano rilevato e aggiunto al db");
 							Log.d(LOG, e.getColumnName(1) + ": " + e.getString(1) + " " + e.getColumnName(2) + ": " + e.getString(2) + 
 									" " + e.getColumnName(3) + ": " + e.getString(3) + " " + e.getColumnName(4) + ": " + e.getString(4) +
-									" " + e.getColumnName(5) + ": " + e.getString(5) + " " + e.getColumnName(6) + ": " + e.getString(6));			
+									" " + e.getColumnName(5) + ": " + e.getString(5) + " " + e.getColumnName(6) + ": " + e.getString(6) + 
+									" " + e.getColumnName(7) + ": " + e.getString(7));			
 					}
 					else{
 						if(!trackOnDb.getString(1).equals(title)){

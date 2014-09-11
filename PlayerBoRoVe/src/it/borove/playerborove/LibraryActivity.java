@@ -1,10 +1,17 @@
 package it.borove.playerborove;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.List;
 
-import PlayerManager.PlayerController;
+import db.SQLiteConnect;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -14,17 +21,35 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.os.Parcelable;
+import android.provider.MediaStore;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 @SuppressLint("UseSparseArrays")
 public class LibraryActivity extends Activity {
@@ -34,6 +59,7 @@ public class LibraryActivity extends Activity {
 	private final int REQUEST_VOTE_TRACK 	= 101;
 	private int idTrack;						
 	private static  ListView listView;
+	private Button btnUpdate;
 	private static MySimpleCursorAdapter adapter;
 	private static Context m_c;
 	private static Cursor newCursor;
@@ -46,6 +72,7 @@ public class LibraryActivity extends Activity {
 		
 		//controller 	= new PlayerController(this.getApplicationContext());
 		listView		= (ListView)findViewById(R.id.listView1);
+		btnUpdate		= (Button)findViewById(R.id.btnUpdateListView);
 		//idAlbumsArt = new HashMap<Integer,Boolean>();
 		idTrack = 0;
 		Cursor cursor 	= PlayerController.getCursorTracks();
@@ -53,6 +80,9 @@ public class LibraryActivity extends Activity {
 		//InitHashAlbumsArt(cursor);
 		setAdapter(cursor);
 		listener();
+		
+		
+		
 	}
 	@Override
 	protected void onActivityResult(int requestCode,int resultCode, Intent data){
@@ -64,6 +94,30 @@ public class LibraryActivity extends Activity {
 	}
 	
 	protected void listener(){
+		listView.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				Cursor tracks = adapter.getCursor();
+				boolean reachable = tracks.moveToPosition(position);
+				if(reachable){
+					idTrack				= tracks.getInt(0);
+					
+					Bitmap albumId		= adapter.getArtworkQuick(getApplicationContext(), tracks.getInt(6), RESWIDTH, RESHEIGTH);
+				 	
+					Bundle b=new Bundle();
+					b.putString("uri",tracks.getString(7));
+					b.putString("title",tracks.getString(5));
+					b.putString("singer",tracks.getString(2));
+					b.putString("kind",tracks.getString(3));
+					PlayerController.open_player(b, albumId);
+				}
+				
+			}
+			
+		});
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
@@ -82,6 +136,8 @@ public class LibraryActivity extends Activity {
 					String kind			= tracks.getString(3);
 					String vote 		= tracks.getString(4);
 					String titleTrack 	= tracks.getString(5);
+					String uriTrack		= tracks.getString(7);
+					Log.d(TAG, uriTrack + ": " + uriTrack);
 					Bitmap albumId		= adapter.getArtworkQuick(getApplicationContext(), tracks.getInt(6), RESWIDTH, RESHEIGTH);
 					
 					//for(int i=0; i< tracks.getColumnCount(); i++)
@@ -102,7 +158,20 @@ public class LibraryActivity extends Activity {
 			
 		});
 		
-		
+		btnUpdate.setOnClickListener(new OnClickListener() {	
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Log.d(TAG, "Update bottone");
+				Cursor newCursor = PlayerController.getCursorTracks();
+				LibraryActivity.adapter.swapCursor(newCursor);
+				
+				
+				
+				
+				
+			}
+		});
 	}
 
 	
@@ -189,7 +258,7 @@ public class LibraryActivity extends Activity {
 		                    }
 		                }
 		                else{
-		                	//Log.d(TAG, "dentro getArtworkQuick: b ï¿½ NULL");
+		                	//Log.d(TAG, "dentro getArtworkQuick: b è NULL");
 		                }
 		                
 		                return b;
@@ -204,7 +273,7 @@ public class LibraryActivity extends Activity {
 		            }
 		        }
 		        else 
-		        	Log.e(TAG, "dentro getArtworkQuick: Uri ï¿½ NULL");
+		        	Log.e(TAG, "dentro getArtworkQuick: Uri è NULL");
 		        return null;
 		    }
 		
@@ -260,10 +329,6 @@ public class LibraryActivity extends Activity {
 			
 			LibraryActivity.adapter = new MySimpleCursorAdapter(this, R.layout.item_listview, cursor, from, to, 0);
 			listView.setAdapter(LibraryActivity.adapter);
-		}
-		else{
-			///TODO 
-			Log.d(TAG, "cursor is null in setAdapter");
 		}
 		
 	}

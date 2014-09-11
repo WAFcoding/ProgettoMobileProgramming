@@ -10,6 +10,7 @@
     
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -26,12 +27,17 @@
             </intent-filter>
         </activity>
         <service android:name="MyService2"/>
+        <service android:name="MusicService"/>
         <intent-filter>
             <action android:name="it.borove.playerborove.SERVICE"/>
         </intent-filter>
         <intent-filter>
             <action android:name="android.intent.action.MEDIA_SCANNER_SCAN_FILE"/>
         </intent-filter>
+        <activity
+            android:name="it.borove.playerborove.TrackActivity"
+            android:label="@string/title_activity_player" >
+        </activity>
         <activity
             android:name="it.borove.playerborove.PlayerActivity"
             android:label="@string/title_activity_player" >

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import db.SQLiteConnect;
 import db.ServiceFileObserver;
-import PlayerManager.PlayerController;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -49,7 +48,7 @@ public class MainActivity extends Activity {
 		settings= (Button)findViewById(R.id.button3);
 		player= (Button)findViewById(R.id.button4);
 		
-		controller = new PlayerController(this);
+		controller = new PlayerController(this, this);
 		controller.onCreate(db);
 		
 		serviceObserver = new ServiceFileObserver(this.getApplicationContext());
@@ -139,7 +138,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+				controller.open_settings();
 				//animazione a comparsa da sinistra
 				overridePendingTransition(R.anim.right_in, R.anim.left_out); 
 			}
@@ -149,7 +148,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(MainActivity.this, PlayerActivity.class));
+				//controller.open_player(uri);
 				//animazione a comparsa dal basso
 				overridePendingTransition(R.anim.bottom_in, R.anim.top_out); 
 				

@@ -60,10 +60,10 @@ public class PlaylistActivity extends Activity {
 		//il navigation drawer
 		title= drawer_title = getTitle();
 		
-		choices= getResources().getStringArray(R.array.drawer_choice_playlist);
+	//	choices= getResources().getStringArray(R.array.drawer_choice_playlist);
 		drawer= (DrawerLayout)findViewById(R.id.drawer_playlist);
 		
-		drawer_toggle= new ActionBarDrawerToggle(this, drawer, R.drawable.ic_launcher, 
+	/*	drawer_toggle= new ActionBarDrawerToggle(this, drawer, R.drawable.ic_launcher, 
 												R.string.drawer_open, R.string.drawer_close){
 			//richiamata quando il drawer è completamente chiuso
 			public void onDrawerClosed(View view){
@@ -79,7 +79,7 @@ public class PlaylistActivity extends Activity {
 				invalidateOptionsMenu();
 			}
 		};	
-		
+		*/
 		drawer.setDrawerListener(drawer_toggle);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -87,7 +87,7 @@ public class PlaylistActivity extends Activity {
 		
 		
         drawer_list_view= (ListView)findViewById(R.id.left_drawer);
-        drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
+      //  drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
         drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
 		
 	}
