@@ -1,18 +1,9 @@
 package it.borove.playerborove;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.List;
 
-
-import db.SQLiteConnect;
 import PlayerManager.PlayerController;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -23,33 +14,17 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.ParcelFileDescriptor;
-import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 @SuppressLint("UseSparseArrays")
 public class LibraryActivity extends Activity {
@@ -78,9 +53,6 @@ public class LibraryActivity extends Activity {
 		//InitHashAlbumsArt(cursor);
 		setAdapter(cursor);
 		listener();
-		
-		
-		
 	}
 	@Override
 	protected void onActivityResult(int requestCode,int resultCode, Intent data){
@@ -217,7 +189,7 @@ public class LibraryActivity extends Activity {
 		                    }
 		                }
 		                else{
-		                	//Log.d(TAG, "dentro getArtworkQuick: b è NULL");
+		                	//Log.d(TAG, "dentro getArtworkQuick: b ï¿½ NULL");
 		                }
 		                
 		                return b;
@@ -232,7 +204,7 @@ public class LibraryActivity extends Activity {
 		            }
 		        }
 		        else 
-		        	Log.e(TAG, "dentro getArtworkQuick: Uri è NULL");
+		        	Log.e(TAG, "dentro getArtworkQuick: Uri ï¿½ NULL");
 		        return null;
 		    }
 		
@@ -288,6 +260,10 @@ public class LibraryActivity extends Activity {
 			
 			LibraryActivity.adapter = new MySimpleCursorAdapter(this, R.layout.item_listview, cursor, from, to, 0);
 			listView.setAdapter(LibraryActivity.adapter);
+		}
+		else{
+			///TODO 
+			Log.d(TAG, "cursor is null in setAdapter");
 		}
 		
 	}

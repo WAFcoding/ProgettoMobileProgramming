@@ -69,15 +69,26 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 	public PlayerController(Context context){
 		super(context, DB_NAME, null, DATABASE_VERSION);
-		db_path 	= context.getFilesDir().getPath();
+		//db_path 	= context.getFilesDir().getPath();
+		
+		String externalStorageState= Environment.getExternalStorageState();
+		if(Environment.MEDIA_MOUNTED.equals(externalStorageState)){
+			//possiamo scrivere sulla memoria esterna
+			Log.d(TAG, "external storage ready for read and write");
+			db_path= Environment.getExternalStorageDirectory().getPath() + "/PlayerBoRoVe/";
+			File db_directory= new File(db_path);
+			if(!db_directory.exists()){
+				db_directory.mkdir();
+			}
+		}
+		else
+			db_path 	= context.getFilesDir().getPath();
+		
+		Log.d(TAG, "path of db " + db_path);
 		m_context 	= context;
 		//this.queue= new Queue();
 		//this.setQ_loop(1);
-		PlayerController.sqlDatabaseHelper = new SQLiteConnect(context, db_path, DB_NAME, DATABASE_VERSION);
-		//TODO inizializzazione della libreria da db
-		//TODO inizializzazione del media player
-		
-		
+		PlayerController.sqlDatabaseHelper = new SQLiteConnect(context, db_path, DB_NAME, DATABASE_VERSION);	
 	}
 	
 	//Crea il database per la prima volta
@@ -242,28 +253,25 @@ public class PlayerController extends SQLiteOpenHelper{
 		new SynchronizeDb().execute();
 		//Controller controllerActivity = new Controller(this.m_context);
 		//controllerActivity.onCreate();
-		
-		
-		
-		
-		
-		
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
-	
 	}
 	
 	
 	/**
-	 * Al primo avvio dell'app parsa le info dei file mp3 dallo storage android compreso la copertina dell'album (se esiste)
+	 * Al primo avvio dell'app parsa le info dei file mp3 dallo storage android compreso la copertina dell'album 
+	 * (se esiste)
 	 * @param context
 	 * @return cursore
 	 */
 	public Cursor getInfoMetaMp3(Context context, final String namePathTrack){
 		Cursor c = null;
+		
+		Log.d(TAG, "external: " + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+		
 		if(namePathTrack == null){
 			String field 	= MediaStore.Audio.Media.DISPLAY_NAME + " like ?";
 			String[] filter = {"%_.mp3"};
@@ -290,8 +298,6 @@ public class PlayerController extends SQLiteOpenHelper{
 				c.moveToNext();
 			}
 		}
-		
-		//Log.d(TAG, "external: " + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
 		else{
 			//String field 	= MediaStore.Audio.Media.DISPLAY_NAME + " = " + "'"+namePathTrack+"'";
 			//Log.d(TAG, "field: " + field);
@@ -621,7 +627,7 @@ public class PlayerController extends SQLiteOpenHelper{
 					}
 					else{
 						isCanceled = true;
-						Log.d(TAG, "Il brano è da cancellare!");
+						Log.d(TAG, "Il brano ï¿½ da cancellare!");
 						File file =  Environment.getExternalStorageDirectory();
 						String path2 = file.getPath() + "/Music/";
 						display_name = completeString.substring(path2.length());
@@ -679,41 +685,11 @@ public class PlayerController extends SQLiteOpenHelper{
 				
 			}
 			else
-				Log.d(TAG, "allTracks è NULL!");
+				Log.d(TAG, "allTracks ï¿½ NULL!");
 			 */
 		}
 		 
 	 }
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	
-	/*public static String getAlbumMp3(String title){
-		String uri = "/storage/emulated/0/Music";
-		Log.d(TAG, "uri: " + uri);
-		
-		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-		mmr.setDataSource(uri);
-		String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-		
-		return albumName;
-	}
-	*/
-	
 	
 	private class SynchronizeDb extends AsyncTask<Void, Void, Cursor>{
 		private Cursor getTracksFromDb;
@@ -726,8 +702,9 @@ public class PlayerController extends SQLiteOpenHelper{
 				sqlDatabaseHelper.SynchronizeDb(getMp3FromStorage);
 				String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId"};
 				getTracksFromDb =  sqlDatabaseHelper.getFilteredTrack("", SQLiteConnect.COLUMN_TITLE, columnsSelect);
-				//if(getTracksFromDb != null)
-				//	Log.d(TAG, "getTracksFromDb NON è null!");
+				
+				if(getTracksFromDb != null)
+					Log.d(TAG, "getTracksFromDb is not null!");
 				//getMp3FromStorage.moveToFirst();
 				getTracksFromDb.moveToFirst();
 				//Log.d(TAG, "DENTRO DoInBaCkground in syncronizeDb!!!");
@@ -750,22 +727,26 @@ public class PlayerController extends SQLiteOpenHelper{
 				
 			}catch(Exception e){
 				e.printStackTrace();
-				}
-			Log.d(TAG, "db sincronizzato!");
+			}
+
+			if(getTracksFromDb == null)
+				Log.d(TAG, "getTracksFromDb is null");
+			else
+				Log.d(TAG, "db sincronizzato!");
 			//Toast.makeText(m_context, "db sincronizzato", Toast.LENGTH_SHORT).show();
 			return getTracksFromDb;
 		}
 		
 		protected void onPostExecute(Cursor result){
 			if(result != null){
-				//Log.d(TAG, "result NON è null!!!");
-				setCursorTracks(getTracksFromDb);
-				getTracksFromDb.moveToFirst();
-				while(!getTracksFromDb.isAfterLast()){
-					for(int i=0; i< getTracksFromDb.getColumnCount(); i++){
-						Log.e(TAG, getTracksFromDb.getColumnName(i) + ": " + getTracksFromDb.getString(i));
+				//Log.d(TAG, "result NON ï¿½ null!!!");
+				setCursorTracks(result);
+				result.moveToFirst();
+				while(!result.isAfterLast()){
+					for(int i=0; i< result.getColumnCount(); i++){
+						Log.e(TAG, result.getColumnName(i) + ": " + result.getString(i));
 					}
-					getTracksFromDb.moveToNext();
+					result.moveToNext();
 				}
 				
 			}
