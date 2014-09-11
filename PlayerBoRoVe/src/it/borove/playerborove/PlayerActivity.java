@@ -19,6 +19,12 @@ import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
@@ -45,10 +51,32 @@ public class PlayerActivity extends Activity implements  MediaPlayerControl{
 			@Override 
 			public void hide(){
 			}
+			@Override 
+			 public void setAnchorView(View view){
+				super.setAnchorView(view);
+			    ImageButton stopButton = new ImageButton(getApplicationContext());
+			    ImageButton loopButton = new ImageButton(getApplicationContext());
+			    ImageButton muteButton = new ImageButton(getApplicationContext());
+			    
+			     stopButton.setImageResource(resId);
+			     FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			     params.gravity = Gravity.RIGHT;
+			     addView(searchButton, params);
+				
+			}
+		
+			public boolean dispatchKeyEvent(KeyEvent event)
+	        {
+	            if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
+	            { 	 super.hide();
+	                ((Activity) getContext()).finish();}
+
+	            return super.dispatchKeyEvent(event);
+	        }
 		};	
 		mediaController.setMediaPlayer(this);
 		mediaController.setAnchorView(findViewById(R.id.container));
-		mediaController.setEnabled(true);
+		//mediaController.setEnabled(true);
 		lbm= LocalBroadcastManager.getInstance(this);
 		Log.d("Activity","Created");
 		receiver=new BroadcastReceiver(){
@@ -210,6 +238,7 @@ public class PlayerActivity extends Activity implements  MediaPlayerControl{
 		// TODO Auto-generated method stub
 		return true;
 	}
+
 
 
 }
