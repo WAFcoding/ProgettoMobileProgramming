@@ -775,12 +775,13 @@ public class PlayerController extends SQLiteOpenHelper{
 				//Log.d(TAG, "result NON è null!!!");
 				setCursorTracks(getTracksFromDb);
 				getTracksFromDb.moveToFirst();
-				while(!getTracksFromDb.isAfterLast()){
+				/*while(!getTracksFromDb.isAfterLast()){
 					for(int i=0; i< getTracksFromDb.getColumnCount(); i++){
 						Log.e(TAG, getTracksFromDb.getColumnName(i) + ": " + getTracksFromDb.getString(i));
 					}
 					getTracksFromDb.moveToNext();
 				}
+				*/
 				
 			}
 			

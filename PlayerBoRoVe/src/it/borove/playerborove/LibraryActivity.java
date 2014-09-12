@@ -14,9 +14,11 @@ import java.util.List;
 import db.SQLiteConnect;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -39,7 +41,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -50,74 +51,135 @@ import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @SuppressLint("UseSparseArrays")
 public class LibraryActivity extends Activity {
 	private final static String TAG = "ACTIVITYLIBRARY";
 	private final int RESWIDTH				= 250;
-	private final int RESHEIGTH				= 250; 
+	private final int RESHEIGTH				= 250;
 	private final int REQUEST_VOTE_TRACK 	= 101;
+	private final int MENU_TRACK			= 102;
 	private int idTrack;						
 	private static  ListView listView;
-	private Button btnUpdate; 
+	private Button btnUpdate;
 	private static MySimpleCursorAdapter adapter;
 	private static Context m_c;
 	private static Cursor newCursor;
+	private AlertDialog.Builder builder;
+	private Cursor cursor;
 	//private HashMap<Integer,Boolean> idAlbumsArt;
+	private int itemPosition;
+	private AlertDialog.Builder popup;
+	private boolean isChangedAnything;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_library3);
 		
-		//controller 	= new PlayerController(this.getApplicationContext());
-		listView		= (ListView)findViewById(R.id.listView1);
-		btnUpdate		= (Button)findViewById(R.id.btnUpdateListView);
-		//idAlbumsArt = new HashMap<Integer,Boolean>();
-		idTrack = 0;
-		Cursor cursor 	= PlayerController.getCursorTracks();
-		//InfoActivityTrack activitySon = new InfoActivityTrack();
-		//InitHashAlbumsArt(cursor);
+		listView			= (ListView)findViewById(R.id.listView1);
+		btnUpdate			= (Button)findViewById(R.id.btnUpdateListView);
+		isChangedAnything 	= false;
+		idTrack				= 0;
+		cursor 				= PlayerController.getCursorTracks();
 		setAdapter(cursor);
 		listener();
+		
 		
 		
 		
 	}
 	@Override
 	protected void onActivityResult(int requestCode,int resultCode, Intent data){
+		if(requestCode == MENU_TRACK && resultCode == 300){
+			Intent trackActivity 		= new Intent(LibraryActivity.this, TrackActivity.class);
+			Bundle infoTrack 			= new Bundle();
+			Cursor tracks 				= adapter.getCursor();
+			boolean reachable = tracks.moveToPosition(itemPosition);
+			if(reachable){
+				idTrack				= tracks.getInt(0);
+				String nameTrack	= tracks.getString(1);
+				String singerName	= tracks.getString(2);
+				String kind			= tracks.getString(3);
+				String vote 		= tracks.getString(4);
+				String titleTrack 	= tracks.getString(5);
+				//String uriTrack		= tracks.getString(7);
+				Bitmap albumId		= adapter.getArtworkQuick(getApplicationContext(), tracks.getInt(6), RESWIDTH, RESHEIGTH);
+
+				infoTrack.putString("nameTrack", nameTrack);
+				infoTrack.putString("singerName", singerName);
+				infoTrack.putString("kind", kind);
+				infoTrack.putString("vote", vote);
+				infoTrack.putString("titleTrack", titleTrack);
+				trackActivity.putExtra("imageAlbum", albumId);
+				trackActivity.putExtras(infoTrack);
+				startActivityForResult(trackActivity, REQUEST_VOTE_TRACK);
+			}
+		}
+		
+		if(requestCode == MENU_TRACK && resultCode == 310){
+			popup = new AlertDialog.Builder(LibraryActivity.this);
+			popup.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					Cursor tracks 		= adapter.getCursor();
+					boolean reachable 	= tracks.moveToPosition(itemPosition);
+					if(reachable){
+						idTrack			= tracks.getInt(0);
+						PlayerController.deleteRowTrack(idTrack);		
+					}
+					isChangedAnything = true;
+					
+					
+				}
+			});
+			popup.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+				
+				}
+				
+			});			
+			popup.setTitle("Conferma cancellazione");
+			popup.setMessage("Sei sicuro?");
+			popup.show();
+				
+		}
+			
 		if(requestCode == REQUEST_VOTE_TRACK && resultCode == RESULT_OK){
 			Bundle bundle2 = data.getExtras();
-			int valueOfTrack = bundle2.getInt("valueTrack");
-			PlayerController.setVoteTrackFromActivityLibrary(idTrack, valueOfTrack);
+			
+			String fileNameTrack	= bundle2.getString("fileName");
+			String authorName		= bundle2.getString("author");
+			String albumName		= bundle2.getString("album");
+			String kind				= bundle2.getString("kind");
+			int valueOfTrack 		= bundle2.getInt("valueTrack");
+			
+			Cursor tracks 				= adapter.getCursor();	
+			boolean reachable = tracks.moveToPosition(itemPosition);
+			if(reachable){
+				idTrack				= tracks.getInt(0);
+				String nameTrack	= tracks.getString(1);
+				String singerName	= tracks.getString(2);
+				String oldkind		= tracks.getString(3);
+				String vote 		= tracks.getString(4);
+				String titleTrack 	= tracks.getString(5);
+				
+				if(!nameTrack.equals(fileNameTrack) || !singerName.equals(authorName) || !oldkind.equals(kind) 
+						|| !titleTrack.equals(albumName) || !vote.equals(String.valueOf(valueOfTrack)))
+							isChangedAnything = true;
+			}
+			
+			PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,albumName,kind,valueOfTrack);
 		}
+		
+		
 	}
 	
 	protected void listener(){
-		listView.setOnItemClickListener(new OnItemClickListener(){
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				Cursor tracks = adapter.getCursor();
-				boolean reachable = tracks.moveToPosition(position);
-				if(reachable){
-					idTrack				= tracks.getInt(0);
-					
-					Bitmap albumId		= adapter.getArtworkQuick(getApplicationContext(), tracks.getInt(6), RESWIDTH, RESHEIGTH);
-				 	
-					Bundle b=new Bundle();
-					b.putString("uri",tracks.getString(7));
-					b.putString("title",tracks.getString(5));
-					b.putString("singer",tracks.getString(2));
-					b.putString("kind",tracks.getString(3));
-					PlayerController.open_player(b, albumId);
-				}
-				
-			}
-			
-		});
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
@@ -125,33 +187,13 @@ public class LibraryActivity extends Activity {
 					int position, long id) {
 				// TODO Auto-generated method stub
 				
-				Intent trackActivity = new Intent(LibraryActivity.this, TrackActivity.class);
-				Bundle infoTrack = new Bundle();
+				//Intent trackActivity 		= new Intent(LibraryActivity.this, TrackActivity.class);
+				Intent menuTrackActivity 	= new Intent(LibraryActivity.this, menuTrack.class);
 				Cursor tracks = adapter.getCursor();
 				boolean reachable = tracks.moveToPosition(position);
 				if(reachable){
-					idTrack				= tracks.getInt(0);
-					String nameTrack	= tracks.getString(1);
-					String singerName	= tracks.getString(2);
-					String kind			= tracks.getString(3);
-					String vote 		= tracks.getString(4);
-					String titleTrack 	= tracks.getString(5);
-					String uriTrack		= tracks.getString(7);
-					Log.d(TAG, uriTrack + ": " + uriTrack);
-					Bitmap albumId		= adapter.getArtworkQuick(getApplicationContext(), tracks.getInt(6), RESWIDTH, RESHEIGTH);
-					
-					//for(int i=0; i< tracks.getColumnCount(); i++)
-					//	Log.d(TAG, tracks.getColumnName(i) + ": " + tracks.getString(i));
-					
-					infoTrack.putString("nameTrack", nameTrack);
-					infoTrack.putString("singerName", singerName);
-					infoTrack.putString("kind", kind);
-					infoTrack.putString("vote", vote);
-					infoTrack.putString("titleTrack", titleTrack);
-					trackActivity.putExtra("imageAlbum", albumId);
-
-					trackActivity.putExtras(infoTrack);
-					startActivityForResult(trackActivity, REQUEST_VOTE_TRACK);	
+					itemPosition		= position;
+					startActivityForResult(menuTrackActivity, MENU_TRACK);	
 				}	
 				return false;
 			}
@@ -164,14 +206,26 @@ public class LibraryActivity extends Activity {
 				// TODO Auto-generated method stub
 				Log.d(TAG, "Update bottone");
 				Cursor newCursor = PlayerController.getCursorTracks();
-				LibraryActivity.adapter.swapCursor(newCursor);
-				
-				
-				
-				 
-				
+				if(!isChangedAnything){
+					Toast.makeText(LibraryActivity.this, "Il Db è già aggiornato", Toast.LENGTH_SHORT).show();		
+				}
+				else{
+					LibraryActivity.adapter.swapCursor(newCursor);
+					setAdapter(newCursor);
+					/*newCursor.moveToFirst();
+					while(!newCursor.isAfterLast()){
+						for(int i=0; i< newCursor.getColumnCount(); i++){
+							Log.d(TAG, newCursor.getColumnName(i) + ": " + newCursor.getString(newCursor.getColumnIndex(newCursor.getColumnName(i))));
+						}
+						newCursor.moveToNext();
+					}
+					*/
+					adapter.notifyDataSetChanged();
+					isChangedAnything = false;
+				}
 			}
 		});
+		
 	}
 
 	
@@ -258,7 +312,7 @@ public class LibraryActivity extends Activity {
 		                    }
 		                }
 		                else{
-		                	//Log.d(TAG, "dentro getArtworkQuick: b ï¿½ NULL");
+		                	//Log.d(TAG, "dentro getArtworkQuick: b è NULL");
 		                }
 		                
 		                return b;
@@ -273,7 +327,7 @@ public class LibraryActivity extends Activity {
 		            }
 		        }
 		        else 
-		        	Log.e(TAG, "dentro getArtworkQuick: Uri ï¿½ NULL");
+		        	Log.e(TAG, "dentro getArtworkQuick: Uri è NULL");
 		        return null;
 		    }
 		
@@ -332,76 +386,5 @@ public class LibraryActivity extends Activity {
 		}
 		
 	}
-	
-	public void onDataSetChanged(){
-		
-	}
-	
 
-	public static void notifyToLibrary(Cursor cursor){
-		if(cursor != null){
-			cursor.moveToFirst();
-			//LibraryActivity.adapter.swapCursor(cursor);
-			//Log.d(TAG, "swapCursor");
-			//adapter.notifyDataSetChanged();
-			Log.d(TAG, "notifyDataSetChanged()");
-			//listView.setAdapter(LibraryActivity.adapter);
-			
-			/*while(!cursor.isAfterLast()){
-				for(int i=0; i< cursor.getColumnCount(); i++)
-					Log.d(TAG, cursor.getColumnName(i) + ": " + cursor.getString(i));
-				cursor.moveToNext();
-			}
-			Log.d(TAG, "////notifyDataSetChanged()/////");
-			newCursor = cursor;
-			*/
-			LibraryActivity.adapter.swapCursor(cursor);
-
-			
-		}
-		else
-			Log.d(TAG, "notifiyToLibrary(): curosr NULL!");
-
-	}
-	
-	
-	
-	
-		/*private void InitHashAlbumsArt(Cursor cursor){
-		if(this.idAlbumsArt != null){
-			if(cursor != null){
-				cursor.moveToFirst();
-				while(!cursor.isAfterLast()){
-					this.idAlbumsArt.put(cursor.getInt(6), false);
-					
-					cursor.moveToNext();
-				}
-			}
-		}
-	}
-
-	private void setTrueHashAlbumsArt(int key){
-		if(this.idAlbumsArt.containsKey(key))
-			if(!getValueHashAlbumsArt(key))
-				this.idAlbumsArt.put(key, true);
-	}
-	
-	
-	private boolean getValueHashAlbumsArt(int key){
-		return this.idAlbumsArt.get(key);
-	
-	}
-	private boolean deleteHashAlbumArt(int key){
-		boolean result = false;
-		if(this.idAlbumsArt.containsKey(key))
-			result = this.idAlbumsArt.remove(key);
-		
-		return result;
-	}
-	
-	private void clearHashAlbumArt(){
-		this.idAlbumsArt.clear();
-	}
-	*/
-	
 }
