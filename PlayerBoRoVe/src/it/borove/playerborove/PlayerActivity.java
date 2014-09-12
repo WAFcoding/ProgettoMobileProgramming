@@ -51,17 +51,17 @@ public class PlayerActivity extends Activity implements  MediaPlayerControl{
 			@Override 
 			public void hide(){
 			}
-			@Override 
+			@Override  
 			 public void setAnchorView(View view){
 				super.setAnchorView(view);
 			    ImageButton stopButton = new ImageButton(getApplicationContext());
 			    ImageButton loopButton = new ImageButton(getApplicationContext());
 			    ImageButton muteButton = new ImageButton(getApplicationContext());
 			    
-			     stopButton.setImageResource(resId);
+			     //stopButton.setImageResource(resId);
 			     FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			     params.gravity = Gravity.RIGHT;
-			     addView(searchButton, params);
+			     //addView(searchButton, params);
 				
 			}
 		

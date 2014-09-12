@@ -55,11 +55,11 @@ import android.widget.TextView;
 public class LibraryActivity extends Activity {
 	private final static String TAG = "ACTIVITYLIBRARY";
 	private final int RESWIDTH				= 250;
-	private final int RESHEIGTH				= 250;
+	private final int RESHEIGTH				= 250; 
 	private final int REQUEST_VOTE_TRACK 	= 101;
 	private int idTrack;						
 	private static  ListView listView;
-	private Button btnUpdate;
+	private Button btnUpdate; 
 	private static MySimpleCursorAdapter adapter;
 	private static Context m_c;
 	private static Cursor newCursor;
@@ -168,7 +168,7 @@ public class LibraryActivity extends Activity {
 				
 				
 				
-				
+				 
 				
 			}
 		});
@@ -258,7 +258,7 @@ public class LibraryActivity extends Activity {
 		                    }
 		                }
 		                else{
-		                	//Log.d(TAG, "dentro getArtworkQuick: b è NULL");
+		                	//Log.d(TAG, "dentro getArtworkQuick: b ï¿½ NULL");
 		                }
 		                
 		                return b;
@@ -273,7 +273,7 @@ public class LibraryActivity extends Activity {
 		            }
 		        }
 		        else 
-		        	Log.e(TAG, "dentro getArtworkQuick: Uri è NULL");
+		        	Log.e(TAG, "dentro getArtworkQuick: Uri ï¿½ NULL");
 		        return null;
 		    }
 		
