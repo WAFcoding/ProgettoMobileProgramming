@@ -87,7 +87,7 @@ public class PlaylistActivity extends Activity {
 		
 		
         drawer_list_view= (ListView)findViewById(R.id.left_drawer);
-        drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
+        //drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
         drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
 		
 	}
