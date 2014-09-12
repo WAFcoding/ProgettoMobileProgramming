@@ -31,6 +31,12 @@
         <intent-filter>
             <action android:name="it.borove.playerborove.SERVICE"/>
         </intent-filter>
+         <activity
+            android:name="it.borove.playerborove.menuTrack"
+            android:label="@string/title_activity_player"
+            android:theme="@android:style/Theme.Holo.Dialog" >
+           <!--   android:windowSoftInputMode="stateAlwaysVisible|adjustPan"-->
+        </activity>
         <intent-filter>
             <action android:name="android.intent.action.MEDIA_SCANNER_SCAN_FILE"/>
         </intent-filter>
