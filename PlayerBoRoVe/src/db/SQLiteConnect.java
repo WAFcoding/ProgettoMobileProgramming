@@ -139,6 +139,9 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 		return dbExist;
 		
 	}
+	public static String getPathDb(){
+		return db_path + DB_NAME;
+	}
 	/**
 	 * Controlla se ail dabase esiste già per evitare ricopiature del fileogni volta che riapri l'app
 	 * @return true se il db esiste, falso altrimenti
@@ -269,6 +272,8 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 				m_db.delete(TABLE_NAME_TRACK, COLUMN_VOTE + "=" + "'" + value + "'", null);
 			else if(columnType.equals(COLUMN_CONTENT_TITLE))
 				m_db.delete(TABLE_NAME_TRACK, COLUMN_CONTENT_TITLE + "=" + "'" + value + "'", null);
+			else if(columnType.equals(COLUMN_ID))
+				m_db.delete(TABLE_NAME_TRACK, COLUMN_ID + "=" + "'" + value + "'", null);
 			closeDatabase();
 		}
 		catch (SQLiteException e){
@@ -377,11 +382,11 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 					}
 					else{
 						if(!trackOnDb.getString(1).equals(title)){
-							updateRowTrack(trackOnDb.getString(1), title, COLUMN_TITLE);
+							updateRowTrack(trackOnDb.getString(0), title, COLUMN_TITLE);
 							Log.d(LOG, "aggiornato il titolo del brano: " + trackOnDb.getString(1));
 						}	
 						if(!trackOnDb.getString(2).equals(singerName)){
-							updateRowTrack(trackOnDb.getString(2), singerName, COLUMN_SINGER_NAME);
+							updateRowTrack(trackOnDb.getString(0), singerName, COLUMN_SINGER_NAME);
 							Log.d(LOG, "aggiornato il nome artista: " + trackOnDb.getString(2));			
 						}		
 					}
@@ -403,17 +408,17 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	
 	/**
 	 * Aggiorna il brano singolo
-	 * @param oldValue		il vecchio valore da aggiornare
-	 * @param newValue		il nuovo valore che aggiorna oldValue
-	 * @param columnType 	la colonna cui oldValue/newValue fanno parte
+	 * @param idTrack		id del brano da aggiornare
+	 * @param newValue		il nuovo valore da aggiornare
+	 * @param columnType 	la colonna cui newValue appartiene
 	 */
-	public void updateRowTrack(String oldValue, String newValue, String columnType){
+	public void updateRowTrack(String idTrack, String newValue, String columnType){
 		
 		ContentValues contentValues = new ContentValues();
 		if(columnType.equals(COLUMN_SINGER_NAME) || columnType.equals(COLUMN_KIND) || columnType.equals(COLUMN_TITLE) || columnType.equals(COLUMN_VOTE))
 			contentValues.put(columnType, newValue);
 		
-		String where = columnType + "='" + oldValue + "'";
+		String where = COLUMN_ID + "='" + idTrack + "'";
 		openDatabaseRW();
 		m_db.execSQL("PRAGMA foreign_keys = ON");
 		m_db.update(TABLE_NAME_TRACK, contentValues, where, null);
@@ -621,29 +626,5 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 		DATABASE_VERSION = dATABASE_VERSION;
 	}
 	
-	/**
-	 * Parsa le info dei file  dallo storage di android
-	 * @param context
-	 * @return cursore
-	 */
-	/*private Cursor getInfoMp3(Context context){
-		String field 	= MediaStore.Audio.Media.DISPLAY_NAME + " like ?";
-		String[] filter = {"%_.mp3"};
-		Cursor c = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-				new String[] {	MediaStore.Audio.Media._ID,
-								MediaStore.Audio.Media.DATA,
-								MediaStore.Audio.Media.ARTIST,
-								MediaStore.Audio.Media.ALBUM,
-								MediaStore.Audio.Media.DISPLAY_NAME,
-								MediaStore.Audio.Media.TITLE}, field, filter, null);
-		c.moveToLast();
-		if(c.getCount() == 0){
-			Log.d(LOG, "cursor non ha elementi!");
-			c.close();
-			return null;
-		}
-		c.moveToFirst();
-		return c;
-	}
-	*/
+	
 }
