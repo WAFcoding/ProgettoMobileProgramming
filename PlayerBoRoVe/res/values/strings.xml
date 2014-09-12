@@ -10,6 +10,7 @@
     <string name="library">Libreria</string>
     <string name="playlist">Playlist</string>
     <string name="settings">Impostazioni</string>
+     <string name="classification">Classificazione</string>
     <string name="player">Lettore</string>
     <string name="duration">500</string>
     
@@ -23,6 +24,13 @@
     <string name="durata">Durata</string>
     
     <string name="updateList">Update</string>
+    
+    <!-- *****************menu_track.xml**************** -->
+    <string name="details">Dettagli </string>
+    <string name="rename">Rinomina </string>
+    <string name="erase">Cancella </string>
+    
+   <!-- *****************menu_track.xml**************** -->
     
     <string name="content"> </string>
   
