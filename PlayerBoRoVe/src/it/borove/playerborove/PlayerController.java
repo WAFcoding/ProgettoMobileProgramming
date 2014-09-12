@@ -591,7 +591,11 @@ public class PlayerController extends SQLiteOpenHelper{
 				String new_display_name = newValue.substring(path2.length());
 				
 				Log.d(TAG, "old_display_name: " + old_display_name + " new_display_name: "+ new_display_name);
-				sqlDatabaseHelper.updateRowTrack(old_display_name, new_display_name, SQLiteConnect.COLUMN_TITLE);
+				Cursor c = sqlDatabaseHelper.getExactlyTrack(old_display_name, SQLiteConnect.COLUMN_TITLE);
+				if(c != null){
+					c.moveToFirst();
+					sqlDatabaseHelper.updateRowTrack(c.getString(0), new_display_name, SQLiteConnect.COLUMN_TITLE);
+				}	
 			
 				return null;			
 			}
@@ -793,7 +797,25 @@ public class PlayerController extends SQLiteOpenHelper{
 	}
 	
 	public static Cursor getCursorTracks(){
-		return PlayerController.cursorTracks;
+		String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack"};
+		//String field = SQLiteConnect.COLUMN_TITLE + " like ?";
+		//String[] filter = {"%_"};
+		//Uri dbPath = Uri.parse(SQLiteConnect.getPathDb());
+		sqlDatabaseHelper.openDatabaseReadOnly();
+		Cursor cursorTracks = sqlDatabaseHelper.getDb().query(SQLiteConnect.TABLE_NAME_TRACK, columnsSelect,null,null,null,null,null);
+		//sqlDatabaseHelper.closeDatabase();
+		/*cursorTracks.moveToFirst();
+		Log.e(TAG, "*********+DENTRO GetCursorTracks()**********");
+		while(!cursorTracks.isAfterLast()){
+			for(int i=0; i< cursorTracks.getColumnCount(); i++){
+				Log.e(TAG, cursorTracks.getColumnName(i) + ": " + cursorTracks.getString(i));
+			}
+			cursorTracks.moveToNext();
+		}
+		Log.e(TAG, "***********FUORI GetCursorTracks()************");
+		*/
+		
+		return cursorTracks;
 		
 	}
 	
@@ -807,6 +829,32 @@ public class PlayerController extends SQLiteOpenHelper{
 			sqlDatabaseHelper.updateRowTrack(oldValue, String.valueOf(vote), SQLiteConnect.COLUMN_VOTE);
 		}
 		//Log.d(TAG, "Fatto!");
+	}
+	public static void setTagTrackFromActivityLibrary(int _id, String fileNameTrack, String authorName,String albumName, String kind, int vote){
+		Cursor c = sqlDatabaseHelper.getExactlyTrack(String.valueOf(_id), SQLiteConnect.COLUMN_ID);
+		if(c != null){
+			String oldValueFileName = c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_TITLE));
+			String oldValueAuthor = c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_SINGER_NAME));
+			//String oldValueAlbum = c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_TITLE));
+			String oldValuekind = c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_KIND));
+			String oldValueVote = c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_VOTE));
+			
+			if(!oldValueFileName.equals(fileNameTrack))
+				sqlDatabaseHelper.updateRowTrack(String.valueOf(_id), fileNameTrack, SQLiteConnect.COLUMN_TITLE);
+			if(!oldValueAuthor.equals(authorName))
+				sqlDatabaseHelper.updateRowTrack(String.valueOf(_id), authorName, SQLiteConnect.COLUMN_SINGER_NAME);
+			if(!oldValuekind.equals(kind))
+				sqlDatabaseHelper.updateRowTrack(String.valueOf(_id), kind, SQLiteConnect.COLUMN_KIND);			
+			if(!oldValueVote.equals(String.valueOf(vote)))
+				sqlDatabaseHelper.updateRowTrack(String.valueOf(_id), String.valueOf(vote), SQLiteConnect.COLUMN_VOTE);
+			
+		}
+		//Log.d(TAG, "Fatto!");
+	}
+	
+	public static void deleteRowTrack(int _id){
+		if(_id >= 0)
+			sqlDatabaseHelper.deleteRowTrack(String.valueOf(_id), SQLiteConnect.COLUMN_ID);	
 	}
 	
 }
