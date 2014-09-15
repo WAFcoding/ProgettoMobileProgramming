@@ -215,10 +215,14 @@ public class PlayerController extends SQLiteOpenHelper{
 	 */
 	public Cursor getInfoMetaMp3(Context context, final String namePathTrack){
 		Cursor c = null;
-		Log.d(TAG, "Dentro getInfoMetaMp3");
+		//Log.d(TAG, "Dentro getInfoMetaMp3");
 		if(namePathTrack == null){
-			String field 	= MediaStore.Audio.Media.DISPLAY_NAME + " like ?";
-			String[] filter = {"%_.mp3"};
+			//String field 	= MediaStore.Audio.Media.DISPLAY_NAME + " like ?";
+			//String[] filter = {"%_.mp3"};
+			
+			String selection = MediaStore.Audio.Media.IS_MUSIC + " != ?";
+			String [] filter	= {"0"};
+
 			
 			
 			c = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -229,7 +233,7 @@ public class PlayerController extends SQLiteOpenHelper{
 									MediaStore.Audio.Media.DISPLAY_NAME,
 									MediaStore.Audio.Media.TITLE,
 									MediaStore.Audio.Media.ALBUM_ID,
-									MediaStore.Audio.Media.DURATION}, field, filter, null);
+									MediaStore.Audio.Media.DURATION}, selection, filter, null);
 			c.moveToLast();
 			if(c.getCount() == 0){
 				Log.d(TAG, "cursor c non ha elementi!");

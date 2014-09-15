@@ -200,8 +200,11 @@ public class LibraryActivity extends Activity {
 				String oldAlbumName	= tracks.getString(8);
 				
 				if(!nameTrack.equals(fileNameTrack) || !singerName.equals(authorName) || !oldkind.equals(kind) 
-						|| !vote.equals(String.valueOf(valueOfTrack)) || !oldAlbumName.equals(albumName))
+						|| !vote.equals(String.valueOf(valueOfTrack)) || !oldAlbumName.equals(albumName)){
 							isChangedAnything = true;
+							Toast.makeText(LibraryActivity.this, "Please Update list", Toast.LENGTH_LONG).show();
+				}
+							
 			}
 			
 			PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);

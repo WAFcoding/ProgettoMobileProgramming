@@ -221,6 +221,27 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	 */
 	public void addRowTrack(String title, String kind, String nameSinger, String vote, String contentTitle, String albumId, String path, 
 								String albumName, String duration){
+		/*
+		 * questo parser elimina eventuali apici e slash presenti nel nome del file (String title)
+		 */
+		String[] tags = {title, nameSinger, contentTitle, albumName};
+		int k=0;
+		while(k < tags.length){
+			while(tags[k].contains("'") || tags[k].contains("\\")){
+				String leftTemp="";
+				String rigthTemp="";
+				for(int i=0; i< tags[k].length(); i++){
+					if(tags[k].substring(i, i+1).equals("'") || tags[k].substring(i, i+1).equals("\\")){
+						leftTemp = tags[k].substring(0,i);
+						rigthTemp = tags[k].substring(i+1, tags[k].length());
+						//Log.d(LOG, "leftTemp: " + leftTemp + " rigthTemp: " + rigthTemp);
+						tags[k] = leftTemp +""+ rigthTemp;
+						//Log.d(LOG, "title: " + title);
+					}					
+				}
+			}
+			k++;
+		}
 
 		ContentValues content = new ContentValues();
 		content.put(COLUMN_TITLE, title);
@@ -448,6 +469,34 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 		ContentValues contentValues = new ContentValues();
 		if(columnType.equals(COLUMN_SINGER_NAME) || columnType.equals(COLUMN_KIND) || columnType.equals(COLUMN_TITLE) || columnType.equals(COLUMN_VOTE)
 				|| columnType.equals(COLUMN_ALBUM_NAME))
+			
+			/*
+			 * questo parser elimina eventuali apici e slash presenti in newValue
+			 */
+			while(newValue.contains("'") || newValue.contains("\\")){
+				String leftTemp="";
+				String rigthTemp="";
+				for(int i=0; i< newValue.length(); i++){
+					if(newValue.substring(i, i+1).equals("'") || newValue.substring(i, i+1).equals("\\")){
+						leftTemp = newValue.substring(0,i);
+						rigthTemp = newValue.substring(i+1, newValue.length());
+						//Log.d(LOG, "leftTemp: " + leftTemp + " rigthTemp: " + rigthTemp);
+						newValue = leftTemp +""+ rigthTemp;
+						//Log.d(LOG, "title: " + title);
+					}					
+				}
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			contentValues.put(columnType, newValue);
 		
 		String where = COLUMN_ID + "='" + idTrack + "'";

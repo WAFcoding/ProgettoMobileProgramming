@@ -98,6 +98,25 @@ public class MainActivity extends Activity {
 		
 		
 		this.addButtonListener();
+			/*String title = "O' sole' \\mio";
+			
+			while(title.contains("'") || title.contains("\\")){
+				String leftTemp="";
+				String rigthTemp="";
+				for(int i=0; i< title.length(); i++){
+					if(title.substring(i, i+1).equals("'") || title.substring(i, i+1).equals("\\")){
+						leftTemp = title.substring(0,i);
+						rigthTemp = title.substring(i+1, title.length());
+						Log.d(TAG, "leftTemp: " + leftTemp + " rigthTemp: " + rigthTemp);
+						title = leftTemp +""+ rigthTemp;
+						Log.d(TAG, "title: " + title);
+					}					
+				}
+			}	
+			Log.d(TAG, "fuori da while: ");
+			*/
+			
+			
 	}
 	
 	@Override
