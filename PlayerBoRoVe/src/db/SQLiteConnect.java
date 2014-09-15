@@ -9,6 +9,7 @@ import java.io.File;
 import java.nio.channels.GatheringByteChannel;
 import java.util.concurrent.SynchronousQueue;
 
+import utility.Utils;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -81,13 +82,13 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	
 	/**
 	 * Se non esiste crea il nuovo database(solo tabelle e senza entry)
-	 * @return true se il database già esisteva, false se è stato appena creato
+	 * @return true se il database giï¿½ esisteva, false se ï¿½ stato appena creato
 	 */
 	public boolean createDatabase(){
 		boolean dbExist = checkDatabase();
 		if(dbExist){
-			// non fare nulla, il db esiste già
-			Log.d(LOG, "database già esistente");
+			// non fare nulla, il db esiste giï¿½
+			Log.d(LOG, "database esistente");
 		}
 		else{		
 			try{	
@@ -150,7 +151,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 		return db_path + DB_NAME;
 	}
 	/**
-	 * Controlla se ail dabase esiste già per evitare ricopiature del fileogni volta che riapri l'app
+	 * Controlla se ail dabase esiste giï¿½ per evitare ricopiature del fileogni volta che riapri l'app
 	 * @return true se il db esiste, falso altrimenti
 	 */
 	private boolean checkDatabase(){
@@ -290,7 +291,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	/**
 	 * Cancella un brano singolo
 	 * @param value			il valore di ricerca del brano 
-	 * @param columnType	il tipo di colonna cui value fà parte
+	 * @param columnType	il tipo di colonna cui value fï¿½ parte
 	 */
 	public void deleteRowTrack(String value, String columnType){	
 		try{
@@ -411,6 +412,21 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 					String albumName	= c.getString(3);
 					String duration		= c.getString(7);
 					
+					//controllo che non vi siano caratteri strani
+					/*if(title.contains("/")){
+						int start= title.indexOf("/");
+						title= title.substring(0, start) + title.substring(start + 1);
+					}
+					if(contentTitle.contains("/")){
+						int start= contentTitle.indexOf("/");
+						contentTitle= contentTitle.substring(0, start) + contentTitle.substring(start + 2);
+					}*/
+					title= Utils.replaceBadSymbols(title);
+					contentTitle= Utils.replaceBadSymbols(contentTitle);
+					Log.d("SQLiteConnect", "=======================file: " + pathTrack + " " + singerName + " " 
+							+ title + " " + contentTitle + " "+ albumId + " "
+							+ kind + " " + vote + "============================");
+					
 					Log.d(LOG, "SQLite Connect - duration: " + duration);
 					openDatabaseRW();
 					Cursor trackOnDb = getExactlyTrack(contentTitle, COLUMN_CONTENT_TITLE);
@@ -447,7 +463,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 				}
 			}
 			else
-				Log.d(LOG, "cursor c è null!!");
+				Log.d(LOG, "cursor c ï¿½ null!!");
 	
 		//return result;
 	}
@@ -603,9 +619,9 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	
 	/**
 	 * Restituisce un insieme di playlist dalla ricerca
-	 * @param value				il valore inserito dall'utente. Se è vuota (""), restituisce tutte le entry presenti nella tabella
+	 * @param value				il valore inserito dall'utente. Se ï¿½ vuota (""), restituisce tutte le entry presenti nella tabella
 	 * @param columnType		la colonna cui value fa parte
-	 * @param columnsSelect		le colonne restituite dalla query(SELECT). Se è uguale a "*" restituisce tutte le colonne
+	 * @param columnsSelect		le colonne restituite dalla query(SELECT). Se ï¿½ uguale a "*" restituisce tutte le colonne
 	 * @return
 	 */
 	public Cursor getFilteredPlaylist(String value, String columnType, String[] columnsSelect){

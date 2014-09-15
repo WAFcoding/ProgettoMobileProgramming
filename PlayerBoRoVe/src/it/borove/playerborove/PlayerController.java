@@ -78,7 +78,22 @@ public class PlayerController extends SQLiteOpenHelper{
 	public PlayerController(Context context, Activity v){
 		super(context, DB_NAME, null, DATABASE_VERSION);
 		mainActivity=v;
-		db_path 	= context.getFilesDir().getPath();
+		//db_path 	= context.getFilesDir().getPath();
+		
+		String externalStorageState= Environment.getExternalStorageState();
+		if(Environment.MEDIA_MOUNTED.equals(externalStorageState)){
+			//possiamo scrivere sulla memoria esterna
+			Log.d(TAG, "external storage ready for read and write");
+			db_path= Environment.getExternalStorageDirectory().getPath() + "/PlayerBoRoVe/";
+			File db_directory= new File(db_path);
+			if(!db_directory.exists()){
+				db_directory.mkdir();
+			}
+		}
+		else
+			db_path 	= context.getFilesDir().getPath();
+		
+		Log.d(TAG, "path of db " + db_path);
 		m_context 	= context;
 		//this.queue= new Queue();
 		//this.setQ_loop(1);
@@ -242,11 +257,11 @@ public class PlayerController extends SQLiteOpenHelper{
 			}
 			c.moveToFirst();
 			//Log.d(TAG, "MediaStore.Audio.Media.EXTERNAL_CONTENT_URI: " + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-			while(!c.isAfterLast()){
+			/*while(!c.isAfterLast()){
 				for(int i=0; i < c.getColumnCount(); i++)
 					Log.d(TAG, c.getColumnName(i) + ": --> " + c.getString(i));
 				c.moveToNext();
-			}
+			}*/
 			
 			
 		}
@@ -369,7 +384,7 @@ public class PlayerController extends SQLiteOpenHelper{
 					}
 					else{
 						isCanceled = true;
-						Log.d(TAG, "Il brano è da cancellare!");
+						Log.d(TAG, "Il brano e' da cancellare!");
 						File file =  Environment.getExternalStorageDirectory();
 						String path2 = file.getPath() + "/Music/";
 						display_name = completeString.substring(path2.length());
@@ -403,7 +418,7 @@ public class PlayerController extends SQLiteOpenHelper{
 				String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack, albumName, duration"};
 				getTracksFromDb =  sqlDatabaseHelper.getFilteredTrack("", SQLiteConnect.COLUMN_TITLE, columnsSelect);
 				//if(getTracksFromDb != null)
-				//	Log.d(TAG, "getTracksFromDb NON è null!");
+				//	Log.d(TAG, "getTracksFromDb NON ï¿½ null!");
 				//getMp3FromStorage.moveToFirst();
 				getTracksFromDb.moveToFirst();
 				//Log.d(TAG, "DENTRO DoInBaCkground in syncronizeDb!!!");
@@ -434,7 +449,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		
 		protected void onPostExecute(Cursor result){
 			if(result != null){
-				//Log.d(TAG, "result NON è null!!!");
+				//Log.d(TAG, "result NON ï¿½ null!!!");
 				setCursorTracks(getTracksFromDb);
 				getTracksFromDb.moveToFirst();
 				/*while(!getTracksFromDb.isAfterLast()){
