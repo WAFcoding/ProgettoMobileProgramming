@@ -268,9 +268,10 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	}
 	/**
 	 * Aggiunge una nuova entry nella tabella contains indicando l'associazione tra brano e playlist
-	 * @param idPlaylist
-	 * @param idTrack
+	 * @param idPlaylist	id della plalist
+	 * @param idTrack		id del brano appartenente alla playlist
 	 */
+	
 	public void addRowContains(String idPlaylist, String idTrack){
 		if(idPlaylist.equals(null) || idTrack.equals(null)){
 			return;
@@ -293,7 +294,10 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	 * @param value			il valore di ricerca del brano 
 	 * @param columnType	il tipo di colonna cui value f� parte
 	 */
-	public void deleteRowTrack(String value, String columnType){	
+	public void deleteRowTrack(String value, String columnType){
+		if(value == null || columnType == null)
+			return;
+		
 		try{
 			openDatabaseRW();
 			m_db.execSQL("PRAGMA foreign_keys = ON");
@@ -325,6 +329,9 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	 * @param name		nome della playlist da eliminare
 	 */
 	public void deleteRowPlaylist(String name){
+		if(name == null)
+			return;
+		
 		try{
 			openDatabaseRW();
 			m_db.execSQL("PRAGMA foreign_keys = ON");
@@ -335,6 +342,29 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 			Log.d(LOG, "Errore nella deleteRowPlaylist!! " + e.getMessage());
 		}	
 	}
+	
+	/**
+	 * Elimina un brano di una playlist (entry tabella)
+	 * 
+	 * @param idPlaylist		id della playlist
+	 * @param idTrack			id del brano appartenente alla playlist
+	 */
+	
+	public void deleteRowContains(String idPlaylist, String idTrack){
+		if(idPlaylist == null || idTrack == null)
+			return;
+		
+		String condition = COLUMN_ID_PID + " = " + "'" + idPlaylist +"'" + " AND " + COLUMN_ID_BID + " = " + "'" + idTrack + "'";
+		try{
+			openDatabaseRW();
+			m_db.execSQL("PRAGMA foreign_keys = ON");
+			m_db.delete(TABLE_NAME_CONTAINS, condition, null);
+		}catch(SQLiteException e ){
+			e.printStackTrace();
+			}
+	}
+	
+	
 	
 	public void eraseDatabase(){
 		String path = db_path + DB_NAME;

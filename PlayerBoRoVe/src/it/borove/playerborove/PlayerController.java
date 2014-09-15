@@ -13,6 +13,8 @@ import java.io.File;
 
 
 
+import java.util.ArrayList;
+
 import db.SQLiteConnect;
 import db.ServiceFileObserver;
 import PlayerManager.Library;
@@ -411,14 +413,10 @@ public class PlayerController extends SQLiteOpenHelper{
 		protected Cursor doInBackground(Void... params) {
 			// TODO Auto-generated method stub
 			try{
-				//Cursor getMp3FromStorage = getInfoMp3(m_context);
 				Cursor getMp3FromStorage = getInfoMetaMp3(m_context, null);
 				sqlDatabaseHelper.SynchronizeDb(getMp3FromStorage);
 				String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack, albumName, duration"};
 				getTracksFromDb =  sqlDatabaseHelper.getFilteredTrack("", SQLiteConnect.COLUMN_TITLE, columnsSelect);
-				//if(getTracksFromDb != null)
-				//	Log.d(TAG, "getTracksFromDb NON � null!");
-				//getMp3FromStorage.moveToFirst();
 				getTracksFromDb.moveToFirst();
 				//Log.d(TAG, "DENTRO DoInBaCkground in syncronizeDb!!!");
 				/*while(!getMp3FromStorage.isAfterLast()){
@@ -442,13 +440,11 @@ public class PlayerController extends SQLiteOpenHelper{
 				e.printStackTrace();
 				}
 			Log.d(TAG, "db sincronizzato!");
-			//Toast.makeText(m_context, "db sincronizzato", Toast.LENGTH_SHORT).show();
 			return getTracksFromDb;
 		}
 		
 		protected void onPostExecute(Cursor result){
 			if(result != null){
-				//Log.d(TAG, "result NON � null!!!");
 				setCursorTracks(getTracksFromDb);
 				getTracksFromDb.moveToFirst();
 				/*while(!getTracksFromDb.isAfterLast()){
@@ -475,9 +471,6 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 	public static Cursor getCursorTracks(){
 		String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack, albumName, duration"};
-		//String field = SQLiteConnect.COLUMN_TITLE + " like ?";
-		//String[] filter = {"%_"};
-		//Uri dbPath = Uri.parse(SQLiteConnect.getPathDb());
 		sqlDatabaseHelper.openDatabaseReadOnly();
 		Cursor cursorTracks = sqlDatabaseHelper.getDb().query(SQLiteConnect.TABLE_NAME_TRACK, columnsSelect,null,null,null,null,null);
 		//sqlDatabaseHelper.closeDatabase();
@@ -500,6 +493,18 @@ public class PlayerController extends SQLiteOpenHelper{
 	public void setCursorTracks(Cursor cursor){
 		PlayerController.cursorTracks = cursor;
 	}
+	
+	/**
+	 * Modifica i tag del singolo brano
+	 * 
+	 * @param _id				l'id del brano
+	 * @param fileNameTrack		il nuovo nome del brano
+	 * @param authorName		il nuovo autore del brano
+	 * @param kind				il nuovo genere
+	 * @param vote				il nuovo voto attribuito al brano
+	 * @param albumName			il nuovo nome dell'album del brano
+	 * @param duration			la durata del brano(non modificabile)
+	 */
 	
 	public static void setTagTrackFromActivityLibrary(int _id, String fileNameTrack, String authorName, String kind, int vote,
 														String albumName, String duration){
@@ -536,4 +541,68 @@ public class PlayerController extends SQLiteOpenHelper{
 			sqlDatabaseHelper.deleteRowTrack(String.valueOf(_id), SQLiteConnect.COLUMN_ID);	
 	}
 	
+	/**
+	 * Aggiunge una nuova playlist nel db con il/i brano/i associati
+	 * 
+	 * @param namePlaylist	nome della playlist(String)
+	 * @param arrayIdTrack	insieme di brani associati alla playlist
+	 */
+	
+	public void addPlaylistToDb(String namePlaylist, ArrayList<String> arrayIdTrack){
+		try{
+			sqlDatabaseHelper.addRowPlaylist(namePlaylist);
+			for(int i=0; i< arrayIdTrack.size(); i++){
+				if(arrayIdTrack.get(i) != null)
+					sqlDatabaseHelper.addRowContains(namePlaylist, arrayIdTrack.get(i));
+			}
+		}catch(Exception e){
+			Log.d(TAG, "Errore in addPlaylistToDb()");
+			e.printStackTrace();
+			}	
+		
+	}
+	
+	/**
+	 * Aggiunge o rimuove un singolo brano da una playlist esistente
+	 * 
+	 * @param name		Il nome della playlist
+	 * @param idTrack	L'id del singolo brano
+	 * @param cancel	TRUE se il brano deve essere eliminato, FALSE deve essere aggiunto alla playlist
+	 */
+	
+	public void setPlaylistOnDb(String name, String idTrack, boolean cancel){
+		try{
+			Cursor singlePlaylist = sqlDatabaseHelper.getExactlyNamePlaylist(name);
+			if(singlePlaylist != null){
+				if(!cancel)
+					sqlDatabaseHelper.addRowContains(name, idTrack);
+				else{
+					sqlDatabaseHelper.deleteRowContains(singlePlaylist.getString(0), idTrack);
+				}
+			}		
+		}catch(Exception e){
+			Log.d(TAG, "Errore in setPlaylistOnDb()");
+			e.printStackTrace();
+			}
+		
+	}
+	
+	/**
+	 * Cancella la playlist specificata
+	 * 
+	 * @param name	il nome della playlist
+	 */
+	
+	public void deletePlaylist(String name){
+		if(name == null)
+			return;
+		try{
+			Cursor c = sqlDatabaseHelper.getExactlyNamePlaylist(name);
+			if(c != null){
+				sqlDatabaseHelper.deleteRowPlaylist(name);
+			}
+		}catch(Exception e){
+			Log.d(TAG, "Errore in deleteRowPlaylist()");
+		}
+	}
 }
