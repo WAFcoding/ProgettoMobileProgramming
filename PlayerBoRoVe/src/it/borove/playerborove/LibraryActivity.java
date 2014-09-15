@@ -1,18 +1,9 @@
 package it.borove.playerborove;
 
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import db.SQLiteConnect;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,37 +12,27 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.ParcelFileDescriptor;
-import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.support.v4.widget.CursorAdapter;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("UseSparseArrays")
@@ -72,7 +53,14 @@ public class LibraryActivity extends Activity {
 	private int itemPosition;
 	private AlertDialog.Builder popup;
 	private boolean isChangedAnything;
-
+	
+	//navigation drawer
+	private String[] choices;
+	private DrawerLayout drawer;
+	private ListView drawer_list_view;
+	private ActionBarDrawerToggle drawer_toggle;
+	private CharSequence title, drawer_title;
+	//--------------------
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,14 +86,41 @@ public class LibraryActivity extends Activity {
 			}
 		}
 		
-		
-		
-		
 		setAdapter(cursor);
 		listener();
 		
+		//il navigation drawer
+		title= drawer_title = getTitle();
+		
+		choices= getResources().getStringArray(R.array.drawer_choice_library);
+		drawer= (DrawerLayout)findViewById(R.id.drawer_library);
+		
+		drawer_toggle= new ActionBarDrawerToggle(this, drawer, R.drawable.ic_launcher, 
+												R.string.drawer_open, R.string.drawer_close){
+			//richiamata quando il drawer Ã¨ completamente chiuso
+			public void onDrawerClosed(View view){
+				super.onDrawerClosed(view);
+				getActionBar().setTitle(title);
+				invalidateOptionsMenu();
+			}
+			
+			//richiamata quando il drawer Ã¨ completamente aperto
+			public void onDrawerOpended(View view){
+				super.onDrawerOpened(view);
+				getActionBar().setTitle(drawer_title);
+				invalidateOptionsMenu();
+			}
+		};	
+		
+		drawer.setDrawerListener(drawer_toggle);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
 		
 		
+        drawer_list_view= (ListView)findViewById(R.id.left_drawer);
+        drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
+        drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
 		
 	}
 	@Override
@@ -212,7 +227,50 @@ public class LibraryActivity extends Activity {
 		
 		
 	}
-	
+	//navigation drawer
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawer_toggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawer_toggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (drawer_toggle.onOptionsItemSelected(item)) {
+          return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    /* Called whenever we call invalidateOptionsMenu() */
+    /*@Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = drawer.isDrawerOpen(drawer_list_view);
+        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }*/
+	private class DrawerItemClickListener implements ListView.OnItemClickListener{
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			drawer.closeDrawer(drawer_list_view);
+			Toast.makeText(parent.getContext(), "selezionato elemento " + position, Toast.LENGTH_SHORT).show();
+		}
+		
+	}
+	//---------------------------------
 	protected void listener(){
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -284,7 +342,7 @@ public class LibraryActivity extends Activity {
 
 				if(!isChangedAnything){
 					Log.d(TAG, "!isChangedAnything");
-					Toast.makeText(LibraryActivity.this, "Il Db è già aggiornato", Toast.LENGTH_SHORT).show();		
+					Toast.makeText(LibraryActivity.this, "Il Db ï¿½ giï¿½ aggiornato", Toast.LENGTH_SHORT).show();		
 				}
 				else{
 					LibraryActivity.adapter.swapCursor(newCursor);
@@ -406,7 +464,7 @@ public class LibraryActivity extends Activity {
 		                    }
 		                }
 		                else{
-		                	//Log.d(TAG, "dentro getArtworkQuick: b è NULL");
+		                	//Log.d(TAG, "dentro getArtworkQuick: b ï¿½ NULL");
 		                }
 		                
 		                return b;
@@ -421,7 +479,7 @@ public class LibraryActivity extends Activity {
 		            }
 		        }
 		        else 
-		        	Log.e(TAG, "dentro getArtworkQuick: Uri è NULL");
+		        	Log.e(TAG, "dentro getArtworkQuick: Uri ï¿½ NULL");
 		        return null;
 		    }
 		

@@ -33,12 +33,19 @@
    <!-- *****************menu_track.xml**************** -->
     
     <string name="content"> </string>
-  
+    
+   <!-- *****************navigation drawer**************** -->
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
     <string-array name="drawer_choice_playlist">
         <item >Aggiungi playlist</item>
         <item >Rimuovi playlist</item>
+       <item >Aggiorna</item>
+       <item >Impostazioni</item>
+    </string-array>
+    <string-array name="drawer_choice_library">
+        <item >Aggiungi brano</item>
+        <item >Rimuovi brano</item>
        <item >Aggiorna</item>
        <item >Impostazioni</item>
     </string-array>

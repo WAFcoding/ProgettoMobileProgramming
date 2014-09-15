@@ -212,8 +212,8 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
-		//sqlDatabaseHelper.eraseDatabase();
+	
+		sqlDatabaseHelper.eraseDatabase();
 		createDb();
 		new SynchronizeDb().execute();
 	}
@@ -235,10 +235,9 @@ public class PlayerController extends SQLiteOpenHelper{
 			//String field 	= MediaStore.Audio.Media.DISPLAY_NAME + " like ?";
 			//String[] filter = {"%_.mp3"};
 			
-			String selection = MediaStore.Audio.Media.IS_MUSIC + " != ?";
-			String [] filter	= {"0"};
+			String selection= MediaStore.Audio.Media.IS_MUSIC + " != ?";
+			String [] filter= {"0"};
 
-			
 			
 			c = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
 					new String[] {	MediaStore.Audio.Media._ID,

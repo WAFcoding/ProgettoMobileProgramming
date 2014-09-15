@@ -9,7 +9,7 @@ package utility;
  */
 public class Utils {
 	
-	private static String[] badSymbols=  {"\"", "'", "//", " "};
+	private static String[] badSymbols=  {"\"", "'", "//", ",", "_"};
 	
 	public static String replaceBadSymbols(String param){
 		String toReturn= "";
@@ -29,7 +29,7 @@ public class Utils {
 				}
 				//rimpiazzo i simboli
 				for(int j : position){
-					paramChar[j]= '_';
+					paramChar[j]= ' ';
 				}
 			}
 		}
