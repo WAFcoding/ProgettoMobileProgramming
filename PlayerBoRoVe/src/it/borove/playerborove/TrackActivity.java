@@ -1,18 +1,27 @@
 package it.borove.playerborove;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,8 +30,10 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -43,14 +54,13 @@ public class TrackActivity extends Activity{
 	private String vote;
 	private String kind;
 	private Bitmap albumCover;
+	private String albumName;
+	private String duration;
 	private AlertDialog.Builder builder;
 	
 	private Button exitTrack;
-	//private TextView textViewFileName;
-	//private TextView textViewAuthor;
-	//private TextView textViewTitleTrack;
-	//private TextView textViewKind;
 	private EditText edtFileName,edtAuthor,edtAlbum, edtKind;
+	private TextView txtViewDuration;
 	private ImageButton star1,star2,star3,star4,star5;
 	private boolean stateStar1;
 	private boolean stateStar2;
@@ -59,9 +69,6 @@ public class TrackActivity extends Activity{
 	private boolean stateStar5;
 	private int voteTrack;
 	private ImageView albumArt;
-	private KeyListener originalKeyListener;
-	private ArrayAdapter<String> arrayAdapter;
-	private String[] listItems;
 	
 	private final static String TAG = "TRACKACTIVITY"; 
 	
@@ -87,6 +94,7 @@ public class TrackActivity extends Activity{
 		 edtAuthor			= (EditText)findViewById(R.id.songArtist);
 		 edtAlbum			= (EditText)findViewById(R.id.albumName);
 		 edtKind			= (EditText)findViewById(R.id.kind);
+		 txtViewDuration	= (TextView)findViewById(R.id.duration1);
 		 
          getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		 
@@ -103,12 +111,43 @@ public class TrackActivity extends Activity{
 			this.albumCover 	= this.MyCallerIntent.getParcelableExtra("imageAlbum");
 			this.kind			= this.myBundle.getString("kind");
 			this.vote 			= this.myBundle.getString("vote");
+			this.albumName		= this.myBundle.getString("albumName");
+			this.duration		= this.myBundle.getString("duration");
 			this.voteTrack		= Integer.parseInt(this.myBundle.getString("vote"));
+			
+			Log.e(TAG, "duration: -> " + duration);
+			
+			long sec 	= Long.parseLong(duration) / 1000;
+			long min 	= sec / 60;
+			sec = sec % 60;
+			long hour	= min / 60;
+			min = min % 60; 
+			String length 	= "";
+			String minutes 	= "";
+			String seconds 	= "";
+			if(sec < 10)
+				seconds = "0" + sec;
+			else
+				seconds = "" + sec;
+			if(min < 10)
+				minutes = "0" + min;
+			else
+				minutes	= "" + min;
+							
+			if(hour <= 0){
+				
+					length = "" + minutes + ":"+ seconds;
+			}
+				
+			else
+				length = hour + ":" + minutes + ":"+ seconds;
+
+				
 			 edtFileName.setText(title);
 			 edtAuthor.setText(author);
-			 edtAlbum.setText(titleTrack);
+			 edtAlbum.setText(albumName);
 			 edtKind.setText(kind);
-			 
+			 txtViewDuration.setText(length);
 			
 			if(albumCover != null)
 				albumArt.setImageBitmap(albumCover);
@@ -144,12 +183,46 @@ public class TrackActivity extends Activity{
 		}
 		else
 			Log.d(TAG, "myBundle è NULL");
-
+		
+		
+		edtFileName.setInputType(EditorInfo.TYPE_CLASS_TEXT);
+		edtFileName.setImeOptions(EditorInfo.IME_ACTION_DONE);
+		edtFileName.setImeActionLabel("boh", KeyEvent.KEYCODE_ENTER);
+		
 		starsListeners();
 		
 	}
 	
 	public void starsListeners(){
+		Log.e(TAG, "starsListeners!");
+		
+		 edtFileName.setOnClickListener(new OnClickListener() {	
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				exitTrack.setText("Save");
+			}
+		});
+		
+		edtAuthor.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				exitTrack.setText("Save");
+			}
+		});
+		
+		edtAlbum.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				exitTrack.setText("Save");
+				
+			}
+		});
+		
 		exitTrack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -157,9 +230,10 @@ public class TrackActivity extends Activity{
 
 				myBundle.putString("fileName", edtFileName.getText().toString());
 				myBundle.putString("author", edtAuthor.getText().toString());
-				myBundle.putString("album", edtAlbum.getText().toString());
+				myBundle.putString("albumName", edtAlbum.getText().toString());
 				myBundle.putString("kind", edtKind.getText().toString());		
 				myBundle.putInt("valueTrack", voteTrack);
+				myBundle.putString("duration", duration);
 		
 				MyCallerIntent.putExtras(myBundle);
 				
@@ -307,15 +381,24 @@ public class TrackActivity extends Activity{
 		});	
 		
 		
+			
+		
+		
 		edtFileName.setOnEditorActionListener(new OnEditorActionListener() {		
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				// TODO Auto-generated method stub
-				if(!edtFileName.getText().toString().equals(title))
-					exitTrack.setText("Save");			
+				
+				if(actionId == EditorInfo.IME_ACTION_DONE){
+					Log.e(TAG, "action done catturato!");
+					if(!edtFileName.getText().toString().equals(title))
+						exitTrack.setText("Save");	
+					return true;
+				}
 				return false;
 			}
 		});
+		
 		edtAuthor.setOnEditorActionListener(new OnEditorActionListener() {		
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -329,7 +412,7 @@ public class TrackActivity extends Activity{
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				// TODO Auto-generated method stub
-				if(!edtAlbum.getText().toString().equals(titleTrack))
+				if(!edtAlbum.getText().toString().equals(albumName))
 					exitTrack.setText("Save");			
 				return false;
 			}
@@ -380,7 +463,78 @@ public class TrackActivity extends Activity{
 			}
 		});
 		
+		albumArt.setOnClickListener(new OnClickListener() {	
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				/*if(albums != null){
+					
+					
+					CustomListBitmapAdapter adapter = new CustomListBitmapAdapter(albumsArt);
+					builder.setAdapter(adapter, null);
+					AlertDialog alert = builder.create();
+					alert.show();
+				
+					
+				}
+				 */
+			}
+		});
+		
 	
 	
+	}
+	
+	public class CustomListBitmapAdapter extends BaseAdapter{
+		LayoutInflater inflater;
+		ArrayList<Bitmap> albums = new ArrayList<Bitmap>();
+		
+		public CustomListBitmapAdapter(ArrayList<Bitmap> images){
+			albums = images;
+		
+			inflater = LayoutInflater.from(TrackActivity.this);
+			
+		}
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			Bitmap album = albums.get(position);
+			ImageView imageAlbum;
+			
+			ViewHolder holder = new ViewHolder();
+
+						
+			convertView = inflater.inflate(R.layout.albums_list, null);
+			holder.iv = (ImageView)convertView.findViewById(R.id.imageView_list_item);
+			convertView.setTag(holder);
+			
+			
+			holder.iv.setImageBitmap(album);
+			
+			return convertView;
+		}
+		class ViewHolder{
+			ImageView iv;
+		}
+		
 	}
 }

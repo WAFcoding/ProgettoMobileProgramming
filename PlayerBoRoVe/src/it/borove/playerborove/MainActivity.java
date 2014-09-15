@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
 		settings= (Button)findViewById(R.id.button3);
 		player= (Button)findViewById(R.id.button4);
 		
-		controller = new PlayerController(this, this);
+		controller = new PlayerController(this,this);
 		controller.onCreate(db);
 		
 		serviceObserver = new ServiceFileObserver(this.getApplicationContext());
@@ -66,8 +66,13 @@ public class MainActivity extends Activity {
 					// TODO Auto-generated method stub
 					
 					if(intent.getExtras().containsKey(MainActivity.CREATE)){
+						
 						value = intent.getExtras().getString(MainActivity.CREATE);
+						//if(!value.equals(alreadyReceivedPath)){
+						Log.d(TAG, "onReceive() ---> "+ value);
+							//alreadyReceivedPath = value;
 						controller.getInfoMetaMp3(getApplicationContext(), value);
+						//}				
 					}
 					else if(intent.getExtras().containsKey(MainActivity.DELETE)){
 						value = intent.getExtras().getString(MainActivity.DELETE);
@@ -85,7 +90,7 @@ public class MainActivity extends Activity {
 						newValue=null;
 					}
 					
-					Log.d(TAG, "onReceive() ---> "+ value);
+					//Log.d(TAG, "onReceive() ---> "+ value);
 
 				}
 			};
@@ -139,7 +144,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				controller.open_settings();
+				//controller.open_settings();
 				//animazione a comparsa da sinistra
 				overridePendingTransition(R.anim.right_in, R.anim.left_out); 
 			}

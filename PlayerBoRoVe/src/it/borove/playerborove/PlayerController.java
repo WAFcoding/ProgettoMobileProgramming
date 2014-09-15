@@ -108,74 +108,12 @@ public class PlayerController extends SQLiteOpenHelper{
 		sqlDatabaseHelper.createDatabase();
 	}
 	
-	
-	
-	/*public class Controller extends Activity{
-		private Intent i;
-		private BroadcastReceiver rec;
-		private ServiceFileObserver serviceObserver;
-		private Context m_context;
-		
-		public Controller(Context context){
-			this.m_context = context;
-		}
-		
-		
-		public void onCreate(){
-			
-			
-			
-			serviceObserver = new ServiceFileObserver(this.m_context);
-			i = new Intent(Controller.this, ServiceFileObserver.class);
-			ComponentName b = startService(i);
-			Log.d(TAG, "SERVIZIO PARTITO!!");
-			
-			serviceObserver.onStart(i, 100);
-					
-			IntentFilter inf =new IntentFilter("it.borove.playerborove.SERVICE");
-			rec = new BroadcastReceiver(){
-					@Override
-					public void onReceive(Context context, Intent intent) {
-						// TODO Auto-generated method stub
-						
-						if(intent.getExtras().containsKey(PlayerController.CREATE))
-							value = intent.getExtras().getString(PlayerController.CREATE);
-						else if(intent.getExtras().containsKey(PlayerController.DELETE))
-							value = intent.getExtras().getString(PlayerController.DELETE);
-						else if(intent.getExtras().containsKey(PlayerController.MODIFYFROM))
-							value = intent.getExtras().getString(PlayerController.MODIFYFROM);
-						else if(intent.getExtras().containsKey(PlayerController.MODIFYTO))
-							value = intent.getExtras().getString(PlayerController.MODIFYTO);	
-						
-						Log.d(TAG, "onReceive() ---> "+ value);
-
-					}
-				};
-			registerReceiver(rec,inf);
-			
-		}
-		@Override
-		protected void onDestroy() {
-			super.onDestroy();
-			try{
-				stopService(i);
-				Log.d(TAG, "service stoppato!");
-				//serviceObserver.onDestroy();
-				unregisterReceiver(rec);
-			}catch(Exception e){Log.e(TAG,"app destroy>>> " + e.getMessage());}
-			
-		}
-			
-	}
-	*/
-
-	
 	public void addTrackToPlaylist(Track t, Playlist p){
 		
 	}
 	
 	public void addPlaylist(Playlist p){
-		this.library.addPlaylist(p);
+		//this.library.addPlaylist(p);
 	}
 	/**
 	 * Ricerca e restituisce la playlist selezionata in base al nome
@@ -184,11 +122,11 @@ public class PlayerController extends SQLiteOpenHelper{
 	 */
 	public Playlist getPlaylistByName(String name){
 		
-		for(Playlist p : library.getAllPlayList()){
+		/*for(Playlist p : library.getAllPlayList()){
 			if(p.getName().equals(name))
 				return p;
 		}
-		
+		*/
 		return null;
 	}
 	
@@ -253,32 +191,22 @@ public class PlayerController extends SQLiteOpenHelper{
 			}
 		}
 	}
+	
 	//====================================================================================
 	//==================GESTIONE DATABASE=================================================
+	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
 		//sqlDatabaseHelper.eraseDatabase();
 		createDb();
-		//Cursor getMp3FromStorage = getInfoMp3(this.m_context);
-		//sqlDatabaseHelper.SynchronizeDb(getMp3FromStorage);
 		new SynchronizeDb().execute();
-		//Controller controllerActivity = new Controller(this.m_context);
-		//controllerActivity.onCreate();
-		
-		
-		
-		
-		
-		
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
-	
 	}
-	
 	
 	/**
 	 * Al primo avvio dell'app parsa le info dei file mp3 dallo storage android compreso la copertina dell'album (se esiste)
@@ -287,6 +215,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	 */
 	public Cursor getInfoMetaMp3(Context context, final String namePathTrack){
 		Cursor c = null;
+		Log.d(TAG, "Dentro getInfoMetaMp3");
 		if(namePathTrack == null){
 			String field 	= MediaStore.Audio.Media.DISPLAY_NAME + " like ?";
 			String[] filter = {"%_.mp3"};
@@ -299,7 +228,8 @@ public class PlayerController extends SQLiteOpenHelper{
 									MediaStore.Audio.Media.ALBUM,
 									MediaStore.Audio.Media.DISPLAY_NAME,
 									MediaStore.Audio.Media.TITLE,
-									MediaStore.Audio.Media.ALBUM_ID}, field, filter, null);
+									MediaStore.Audio.Media.ALBUM_ID,
+									MediaStore.Audio.Media.DURATION}, field, filter, null);
 			c.moveToLast();
 			if(c.getCount() == 0){
 				Log.d(TAG, "cursor c non ha elementi!");
@@ -307,257 +237,24 @@ public class PlayerController extends SQLiteOpenHelper{
 				return null;
 			}
 			c.moveToFirst();
-			Log.d(TAG, "MediaStore.Audio.Media.EXTERNAL_CONTENT_URI: " + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+			//Log.d(TAG, "MediaStore.Audio.Media.EXTERNAL_CONTENT_URI: " + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
 			while(!c.isAfterLast()){
 				for(int i=0; i < c.getColumnCount(); i++)
 					Log.d(TAG, c.getColumnName(i) + ": --> " + c.getString(i));
 				c.moveToNext();
 			}
+			
+			
 		}
-		
-		//Log.d(TAG, "external: " + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
 		else{
-			//String field 	= MediaStore.Audio.Media.DISPLAY_NAME + " = " + "'"+namePathTrack+"'";
-			//Log.d(TAG, "field: " + field);
-			/*String field1 	= MediaStore.Audio.Media.DISPLAY_NAME + " like ?";
-			String[] filter1 = {"%"+namePathTrack+"%"};
-			c = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-					new String[] {	MediaStore.Audio.Media._ID,
-									MediaStore.Audio.Media.DATA,
-									MediaStore.Audio.Media.ARTIST,
-									MediaStore.Audio.Media.ALBUM,
-									MediaStore.Audio.Media.DISPLAY_NAME,
-									MediaStore.Audio.Media.TITLE,
-									MediaStore.Audio.Media.ALBUM_ID}, field1, filter1, null);
-			c.moveToLast();
-			if(c.getCount() == 0){
-				Log.d(TAG, "cursor c non ha elementi!");
-				c.close();
-				return null;
-			}
-			//String[] f = {namePathTrack};
-			//scanWithPath(context,f);
-			c.moveToFirst();
-			while(!c.isAfterLast()){
-				for(int i=0; i < c.getColumnCount(); i++)
-					Log.d(TAG, c.getColumnName(i) + ": --> " + c.getString(i));
-				c.moveToNext();
-			}
-			*/
-			
-			
-			//String[] completePath = {"/storage/emulated/0/Music/" + namePathTrack};
-			String[] p = {namePathTrack};
-			
-			String[] paths = {namePathTrack};
-	
-			
-			//PlayerController.scanWithPath(context, p);
 			new updateDbOnTrack().execute(namePathTrack);
-			
-			//new SynchronizeDb().execute();
-			
-			
-			
-			//MyScannerConn client = new MyScannerConn(context, namePathTrack, null);
-			
-			
-			
-			/*c = null;
-			String field 	= MediaStore.Audio.Media.DISPLAY_NAME + " like ?" ;//+ "'"+paths[0]+"'";
-			String[] pathC	= {"%"+title+"%"};
-			
-			//Log.d(TAG, "field: " + field);
-			//String field1 	= MediaStore.Audio.Media.DISPLAY_NAME + " like ?";
-			//String[] filter1 = {"%_.mp3"};
-			c = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-					new String[] {	MediaStore.Audio.Media._ID,
-									MediaStore.Audio.Media.DATA,
-									MediaStore.Audio.Media.ARTIST,
-									MediaStore.Audio.Media.ALBUM,
-									MediaStore.Audio.Media.DISPLAY_NAME,
-									MediaStore.Audio.Media.TITLE,
-									MediaStore.Audio.Media.ALBUM_ID}, field, pathC, null);
-			c.moveToLast();
-			if(c.getCount() == 0){
-				Log.d(TAG, "onScanCompleted: cursor c non ha elementi!");
-				c.close();
-				c = null;
-			}
-			else{
-				c.moveToFirst();
-				while(!c.isAfterLast()){
-					for(int i=0; i < c.getColumnCount(); i++)
-						Log.d(TAG, c.getColumnName(i) + ": --> " + c.getString(i));
-					c.moveToNext();
-				}
-			}
-			*/
-			
-			
-			
-			
 		}
 
-		
-		
-		
-		
-		
-		/*c.moveToFirst();
-		
-		while(!c.isAfterLast()){
-			Log.d(TAG, "_ID: " + c.getString(0) + " -- ALBUM_ID: " + c.getString(6));
-			c.moveToNext();
-		}
-		*/
-		/*
-		String field1 	= MediaStore.Audio.Albums.ALBUM_ID + " like ?";
-		String[] filter1= {"%"};
-		Cursor c1 = context.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-				new String[] {MediaStore.Audio.Albums.ALBUM_ART}, null, null, null);
-		c1.moveToFirst();
-		while(!c1.isAfterLast()){
-			//String title = c1.getString(4);
-			String albumArt = c1.getString(0);
-			Log.d(TAG, "c1 -> album_art: " + albumArt);	
-			c1.moveToNext();
-		}
-		c1.close();
-		*/
 		if(c != null)
 			c.moveToFirst();
 		return c;	
 	}
 	
-	 public static void scanWithPath( final Context context, final String[] paths){
-		
-		OnScanCompletedListener callback = new OnScanCompletedListener() {
-			
-
-			@Override
-			public void onScanCompleted(String path, Uri uri) {
-				// TODO Auto-generated method stub
-				//Log.e(TAG, "String path: " + path + " Uri uri: " + uri.toString() + "String path1: " + path1);
-				String uri2 = uri.toString();
-				String percorso = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/";
-				String id = uri2.substring(percorso.length());
-				
-				Cursor c = null;
-				String field 	= MediaStore.Audio.Media._ID + " like ?";
-				String[] pathC	= {"" + id };
-				
-				//Log.d(TAG, "field: " + field);
-				//String field1 	= MediaStore.Audio.Media.DISPLAY_NAME + " like ?";
-				//String[] filter1 = {"%_.mp3"};
-				c = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-						new String[] {	MediaStore.Audio.Media._ID,
-										MediaStore.Audio.Media.DATA,
-										MediaStore.Audio.Media.ARTIST,
-										MediaStore.Audio.Media.ALBUM,
-										MediaStore.Audio.Media.DISPLAY_NAME,
-										MediaStore.Audio.Media.TITLE,
-										MediaStore.Audio.Media.ALBUM_ID}, field, pathC, null);
-				c.moveToLast();
-				if(c.getCount() == 0){
-					Log.d(TAG, "onScanCompleted: cursor c non ha elementi!");
-					c.close();
-					c = null;
-				}
-				else{
-					c.moveToFirst();
-					while(!c.isAfterLast()){
-						for(int i=0; i < c.getColumnCount(); i++)
-							Log.d(TAG, c.getColumnName(i) + ": --> " + c.getString(i));
-						c.moveToNext();
-					}
-				}
-			}
-			
-		};
-		
-		MediaScannerConnection.scanFile(context, paths, null, callback);
-		return;
-	}
-	 
-	 
-	 final class MyScannerConn implements MediaScannerConnectionClient{
-		 private String completePath;
-		 private String mimeType;
-		 private MediaScannerConnection mConn;
-		 private Context m_context;
-		 
-		 public MyScannerConn(Context conn, String path, String mimeType){
-			 this.completePath = path;
-			 this.mimeType = mimeType;
-			 this.m_context = conn;
-			 mConn = new MediaScannerConnection(conn, this);
-			 mConn.connect();
-		 }
-
-		@Override
-		public void onMediaScannerConnected() {
-			// TODO Auto-generated method stub
-			mConn.scanFile(completePath, this.mimeType);
-			
-		}
-
-		@Override
-		public void onScanCompleted(String path, Uri uri) {
-			// TODO Auto-generated method stub
-			//Log.e(TAG, "String path: " + path + " Uri uri: " + uri.toString());
-			
-			
-			String uri2 = uri.toString();
-			String percorso = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/";
-			String id = uri2.substring(percorso.length());
-			//Log.d(TAG, "_id TRACK: " + id);
-			mConn.disconnect();
-			
-			
-			Cursor c = null;
-			String field 	= MediaStore.Audio.Media._ID + " = ?" ;//+ "'"+paths[0]+"'";
-			String[] pathC	= {"" + id};
-			
-			//Log.d(TAG, "field: " + field);
-			//String field1 	= MediaStore.Audio.Media.DISPLAY_NAME + " like ?";
-			//String[] filter1 = {"%_.mp3"};
-			c = m_context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-					new String[] {	MediaStore.Audio.Media._ID,
-									MediaStore.Audio.Media.DATA,
-									MediaStore.Audio.Media.ARTIST,
-									MediaStore.Audio.Media.ALBUM,
-									MediaStore.Audio.Media.DISPLAY_NAME,
-									MediaStore.Audio.Media.TITLE,
-									MediaStore.Audio.Media.ALBUM_ID}, field, pathC, null);
-			c.moveToLast();
-			if(c.getCount() == 0){
-				Log.d(TAG, "onScanCompleted: cursor c non ha elementi!");
-				c.close();
-				c = null;
-			}
-			else{
-				c.moveToFirst();
-				while(!c.isAfterLast()){
-					for(int i=0; i < c.getColumnCount(); i++)
-						Log.d(TAG, c.getColumnName(i) + ": --> " + c.getString(i));
-					c.moveToNext();
-				}
-				c.moveToFirst();
-				
-			}
-			
-			
-			
-			
-			
-		}
-
-	 }
-	 
-	 
-	 
-	 
 	 public class updateDbOnTrack extends AsyncTask<String,Void,Void>{
 		 private OnScanCompletedListener callback;
 		 private String artist;
@@ -565,6 +262,8 @@ public class PlayerController extends SQLiteOpenHelper{
 		 private String title;
 		 private String album_id;
 		 private String display_name;
+		 private String albumName;
+		 private String duration;
 		 private String kind;
 		 private String vote;
 		 private boolean isCanceled = false;
@@ -591,7 +290,9 @@ public class PlayerController extends SQLiteOpenHelper{
 				String new_display_name = newValue.substring(path2.length());
 				
 				Log.d(TAG, "old_display_name: " + old_display_name + " new_display_name: "+ new_display_name);
+				sqlDatabaseHelper.openDatabaseReadOnly();
 				Cursor c = sqlDatabaseHelper.getExactlyTrack(old_display_name, SQLiteConnect.COLUMN_TITLE);
+				sqlDatabaseHelper.closeDatabase();
 				if(c != null){
 					c.moveToFirst();
 					sqlDatabaseHelper.updateRowTrack(c.getString(0), new_display_name, SQLiteConnect.COLUMN_TITLE);
@@ -609,7 +310,7 @@ public class PlayerController extends SQLiteOpenHelper{
 						String percorso = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/";
 						String id = uri2.substring(percorso.length());
 						Cursor c = null;
-						String field 	= MediaStore.Audio.Media._ID + " like ?";
+						String field 	= MediaStore.Audio.Media._ID + " = ?";
 						String[] pathC	= {"" + id };
 						
 						c = m_context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -619,7 +320,18 @@ public class PlayerController extends SQLiteOpenHelper{
 												MediaStore.Audio.Media.ALBUM,
 												MediaStore.Audio.Media.DISPLAY_NAME,
 												MediaStore.Audio.Media.TITLE,
-												MediaStore.Audio.Media.ALBUM_ID}, field, pathC, null);
+												MediaStore.Audio.Media.ALBUM_ID,
+												MediaStore.Audio.Media.DURATION}, field, pathC, null);
+						
+						/*c.moveToFirst();
+						while(!c.isAfterLast()){
+							for(int i=0; i < c.getColumnCount(); i++)
+								Log.e(TAG, c.getColumnName(i) + " " + c.getString(i));
+							c.moveToNext();
+						}
+						*/
+						
+						
 						c.moveToLast();
 						if(c.getCount() == 0){
 							Log.d(TAG, "onScanCompleted: cursor c non ha elementi!");
@@ -635,13 +347,15 @@ public class PlayerController extends SQLiteOpenHelper{
 							album_id	= c.getString(6);
 							kind		= "unknown";
 							vote		= "0";
+							albumName	= c.getString(3);
+							duration	= c.getString(7);
 							String temp = c.getString(1);
 							File file =  Environment.getExternalStorageDirectory();
 							String pt = file.getPath() + "/Music/";
 							display_name = temp.substring(pt.length());
 							//Log.d(TAG, "display_name: " + display_name);
 							
-							sqlDatabaseHelper.addRowTrack(display_name, kind, artist, vote, title, album_id, pathTrack);
+							sqlDatabaseHelper.addRowTrack(display_name, kind, artist, vote, title, album_id, pathTrack, albumName, duration);
 							Log.d(TAG, "Aggiunto il brano!  --> " + display_name);
 							
 	
@@ -657,77 +371,21 @@ public class PlayerController extends SQLiteOpenHelper{
 						display_name = completeString.substring(path2.length());
 						sqlDatabaseHelper.deleteRowTrack(display_name, SQLiteConnect.COLUMN_TITLE);
 					}
-					
-					/*toLibrary.moveToFirst();
-					if(toLibrary != null){
-						//LibraryActivity.notifyToLibrary(allTracks);
-						while(!toLibrary.isAfterLast()){
-							for(int i=0; i< toLibrary.getColumnCount(); i++)
-								Log.d(TAG, "doInBackground--->  " + toLibrary.getColumnName(i) + ": " + toLibrary.getString(i));
-							toLibrary.moveToNext();
-						}
-						
-					}
-					*/
-
+				
 				}
 				
 			};
 			MediaScannerConnection.scanFile(m_context, paths, null, callback);
-			
-			/*String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId"};
-			//Cursor allTracks = sqlDatabaseHelper.getFilteredTrack("", SQLiteConnect.COLUMN_TITLE, columnsSelect);
-			toLibrary.moveToFirst();
-			if(toLibrary != null){
-				//LibraryActivity.notifyToLibrary(allTracks);
-				while(!toLibrary.isAfterLast()){
-					for(int i=0; i< toLibrary.getColumnCount(); i++)
-						Log.d(TAG, "doInBackground--->  " + toLibrary.getColumnName(i) + ": " + toLibrary.getString(i));
-					toLibrary.moveToNext();
-				}
-				
-			}
-			*/
-			
-			
+	
 			return null;
 		}
 		
 		protected void onPostExecute(Void result){
-			//Log.d(TAG, "onPostExecute!");
-			//String[] all = {"*"};
-			//String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId"};
-			//new SynchronizeDb().execute();
-			/*Cursor allTracks = sqlDatabaseHelper.getFilteredTrack("", SQLiteConnect.COLUMN_TITLE, columnsSelect);
-			if(allTracks != null){
-				//LibraryActivity.notifyToLibrary(allTracks);
-				while(!allTracks.isAfterLast()){
-					for(int i=0; i< allTracks.getColumnCount(); i++)
-						Log.d(TAG, "onPostExecute--->  " + allTracks.getColumnName(i) + ": " + allTracks.getString(i));
-					allTracks.moveToNext();
-				}
-				
-			}
-			else
-				Log.d(TAG, "allTracks è NULL!");
-			 */
+			
 		}
 		 
 	 }
 
-	
-	/*public static String getAlbumMp3(String title){
-		String uri = "/storage/emulated/0/Music";
-		Log.d(TAG, "uri: " + uri);
-		
-		MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-		mmr.setDataSource(uri);
-		String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-		
-		return albumName;
-	}
-	*/
-	
 	
 	private class SynchronizeDb extends AsyncTask<Void, Void, Cursor>{
 		private Cursor getTracksFromDb;
@@ -738,7 +396,7 @@ public class PlayerController extends SQLiteOpenHelper{
 				//Cursor getMp3FromStorage = getInfoMp3(m_context);
 				Cursor getMp3FromStorage = getInfoMetaMp3(m_context, null);
 				sqlDatabaseHelper.SynchronizeDb(getMp3FromStorage);
-				String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack"};
+				String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack, albumName, duration"};
 				getTracksFromDb =  sqlDatabaseHelper.getFilteredTrack("", SQLiteConnect.COLUMN_TITLE, columnsSelect);
 				//if(getTracksFromDb != null)
 				//	Log.d(TAG, "getTracksFromDb NON è null!");
@@ -792,13 +450,13 @@ public class PlayerController extends SQLiteOpenHelper{
 	}
 	
 	public static final String[] getColumns(){
-		String[] from = new String[]{  SQLiteConnect.COLUMN_ALBUM_ID, SQLiteConnect.COLUMN_TITLE, SQLiteConnect.COLUMN_SINGER_NAME, 
-				SQLiteConnect.COLUMN_KIND, SQLiteConnect.COLUMN_VOTE};
+		String[] from = new String[]{  "_id", SQLiteConnect.COLUMN_TITLE, SQLiteConnect.COLUMN_SINGER_NAME};
+				//SQLiteConnect.COLUMN_KIND, SQLiteConnect.COLUMN_VOTE, SQLiteConnect.COLUMN_ALBUM_NAME, SQLiteConnect.COLUMN_DURATION};
 		return from;
 	}
 	
 	public static Cursor getCursorTracks(){
-		String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack"};
+		String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack, albumName, duration"};
 		//String field = SQLiteConnect.COLUMN_TITLE + " like ?";
 		//String[] filter = {"%_"};
 		//Uri dbPath = Uri.parse(SQLiteConnect.getPathDb());
@@ -813,6 +471,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			}
 			cursorTracks.moveToNext();
 		}
+		
 		Log.e(TAG, "***********FUORI GetCursorTracks()************");
 		*/
 		
@@ -823,22 +482,19 @@ public class PlayerController extends SQLiteOpenHelper{
 	public void setCursorTracks(Cursor cursor){
 		PlayerController.cursorTracks = cursor;
 	}
-	public static void setVoteTrackFromActivityLibrary(int _id, int vote){
-		Cursor c = sqlDatabaseHelper.getExactlyTrack(String.valueOf(vote), SQLiteConnect.COLUMN_VOTE);
-		if(c != null){
-			String oldValue = c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_VOTE));
-			sqlDatabaseHelper.updateRowTrack(oldValue, String.valueOf(vote), SQLiteConnect.COLUMN_VOTE);
-		}
-		//Log.d(TAG, "Fatto!");
-	}
-	public static void setTagTrackFromActivityLibrary(int _id, String fileNameTrack, String authorName,String albumName, String kind, int vote){
+	
+	public static void setTagTrackFromActivityLibrary(int _id, String fileNameTrack, String authorName, String kind, int vote,
+														String albumName, String duration){
+		sqlDatabaseHelper.openDatabaseRW();
 		Cursor c = sqlDatabaseHelper.getExactlyTrack(String.valueOf(_id), SQLiteConnect.COLUMN_ID);
+		sqlDatabaseHelper.closeDatabase();
 		if(c != null){
-			String oldValueFileName = c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_TITLE));
-			String oldValueAuthor = c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_SINGER_NAME));
-			//String oldValueAlbum = c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_TITLE));
-			String oldValuekind = c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_KIND));
-			String oldValueVote = c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_VOTE));
+			String oldValueFileName 	= c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_TITLE));
+			String oldValueAuthor 		= c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_SINGER_NAME));
+			String oldValuekind 		= c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_KIND));
+			String oldValueVote 		= c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_VOTE));
+			String oldValueAlbumName 	= c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_ALBUM_NAME));
+			String oldValueDuration 	= c.getString(c.getColumnIndex(SQLiteConnect.COLUMN_DURATION));
 			
 			if(!oldValueFileName.equals(fileNameTrack))
 				sqlDatabaseHelper.updateRowTrack(String.valueOf(_id), fileNameTrack, SQLiteConnect.COLUMN_TITLE);
@@ -848,6 +504,10 @@ public class PlayerController extends SQLiteOpenHelper{
 				sqlDatabaseHelper.updateRowTrack(String.valueOf(_id), kind, SQLiteConnect.COLUMN_KIND);			
 			if(!oldValueVote.equals(String.valueOf(vote)))
 				sqlDatabaseHelper.updateRowTrack(String.valueOf(_id), String.valueOf(vote), SQLiteConnect.COLUMN_VOTE);
+			if(!oldValueAlbumName.equals(String.valueOf(albumName)))
+				sqlDatabaseHelper.updateRowTrack(String.valueOf(_id), albumName, SQLiteConnect.COLUMN_ALBUM_NAME);
+			if(!oldValueDuration.equals(String.valueOf(duration)))
+				sqlDatabaseHelper.updateRowTrack(String.valueOf(_id), duration, SQLiteConnect.COLUMN_DURATION);
 			
 		}
 		//Log.d(TAG, "Fatto!");

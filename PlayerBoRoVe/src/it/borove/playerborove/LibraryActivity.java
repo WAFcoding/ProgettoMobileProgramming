@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -64,11 +65,10 @@ public class LibraryActivity extends Activity {
 	private static  ListView listView;
 	private Button btnUpdate;
 	private static MySimpleCursorAdapter adapter;
-	private static Context m_c;
-	private static Cursor newCursor;
-	private AlertDialog.Builder builder;
+	private HashMap<String,String> map = new HashMap<String,String>();
+
 	private Cursor cursor;
-	//private HashMap<Integer,Boolean> idAlbumsArt;
+
 	private int itemPosition;
 	private AlertDialog.Builder popup;
 	private boolean isChangedAnything;
@@ -83,6 +83,24 @@ public class LibraryActivity extends Activity {
 		isChangedAnything 	= false;
 		idTrack				= 0;
 		cursor 				= PlayerController.getCursorTracks();
+		if(cursor != null){
+			cursor.moveToFirst();
+			while(!cursor.isAfterLast()){
+				if(!map.containsKey(cursor.getString(0))){
+					if(!map.containsValue(cursor.getString(6))){
+						map.put(cursor.getString(0), cursor.getString(6));
+					}
+					else
+						map.put(cursor.getString(0), "-1");
+				}
+				Log.d(TAG, "HashMap<>  key: " + cursor.getString(0) + " value: " + cursor.getString(6));
+				cursor.moveToNext();
+			}
+		}
+		
+		
+		
+		
 		setAdapter(cursor);
 		listener();
 		
@@ -93,10 +111,10 @@ public class LibraryActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode,int resultCode, Intent data){
 		if(requestCode == MENU_TRACK && resultCode == 300){
-			Intent trackActivity 		= new Intent(LibraryActivity.this, TrackActivity.class);
-			Bundle infoTrack 			= new Bundle();
-			Cursor tracks 				= adapter.getCursor();
-			boolean reachable = tracks.moveToPosition(itemPosition);
+			Intent trackActivity 	= new Intent(LibraryActivity.this, TrackActivity.class);
+			Bundle infoTrack 		= new Bundle();
+			Cursor tracks 			= adapter.getCursor();
+			boolean reachable 		= tracks.moveToPosition(itemPosition);
 			if(reachable){
 				idTrack				= tracks.getInt(0);
 				String nameTrack	= tracks.getString(1);
@@ -104,17 +122,28 @@ public class LibraryActivity extends Activity {
 				String kind			= tracks.getString(3);
 				String vote 		= tracks.getString(4);
 				String titleTrack 	= tracks.getString(5);
-				//String uriTrack		= tracks.getString(7);
-				Bitmap albumId		= adapter.getArtworkQuick(getApplicationContext(), tracks.getInt(6), RESWIDTH, RESHEIGTH);
+				String albumName	= tracks.getString(8);
+				String duration		= tracks.getString(9);
+				//String uriTrack	= tracks.getString(7);
+				Bitmap albumId 		= null;
+				
+				if(map.containsKey(String.valueOf(idTrack))){
+						albumId		= adapter.getArtworkQuick(getApplicationContext(), Integer.parseInt(map.get(String.valueOf(idTrack))),
+												RESWIDTH, RESHEIGTH);				
+				}
 
 				infoTrack.putString("nameTrack", nameTrack);
 				infoTrack.putString("singerName", singerName);
 				infoTrack.putString("kind", kind);
 				infoTrack.putString("vote", vote);
 				infoTrack.putString("titleTrack", titleTrack);
+				infoTrack.putString("albumName", albumName);
+				infoTrack.putString("duration", duration);
+				
 				trackActivity.putExtra("imageAlbum", albumId);
-				trackActivity.putExtras(infoTrack);
+				trackActivity.putExtras(infoTrack);			
 				startActivityForResult(trackActivity, REQUEST_VOTE_TRACK);
+				
 			}
 		}
 		
@@ -128,7 +157,8 @@ public class LibraryActivity extends Activity {
 					boolean reachable 	= tracks.moveToPosition(itemPosition);
 					if(reachable){
 						idTrack			= tracks.getInt(0);
-						PlayerController.deleteRowTrack(idTrack);		
+						PlayerController.deleteRowTrack(idTrack);
+						map.remove(String.valueOf(idTrack));
 					}
 					isChangedAnything = true;
 					
@@ -154,26 +184,27 @@ public class LibraryActivity extends Activity {
 			
 			String fileNameTrack	= bundle2.getString("fileName");
 			String authorName		= bundle2.getString("author");
-			String albumName		= bundle2.getString("album");
+			String albumName		= bundle2.getString("albumName");
 			String kind				= bundle2.getString("kind");
 			int valueOfTrack 		= bundle2.getInt("valueTrack");
+			String duration			= bundle2.getString("duration");
 			
-			Cursor tracks 				= adapter.getCursor();	
-			boolean reachable = tracks.moveToPosition(itemPosition);
+			Cursor tracks 			= adapter.getCursor();	
+			boolean reachable 		= tracks.moveToPosition(itemPosition);
 			if(reachable){
 				idTrack				= tracks.getInt(0);
 				String nameTrack	= tracks.getString(1);
 				String singerName	= tracks.getString(2);
 				String oldkind		= tracks.getString(3);
 				String vote 		= tracks.getString(4);
-				String titleTrack 	= tracks.getString(5);
+				String oldAlbumName	= tracks.getString(8);
 				
 				if(!nameTrack.equals(fileNameTrack) || !singerName.equals(authorName) || !oldkind.equals(kind) 
-						|| !titleTrack.equals(albumName) || !vote.equals(String.valueOf(valueOfTrack)))
+						|| !vote.equals(String.valueOf(valueOfTrack)) || !oldAlbumName.equals(albumName))
 							isChangedAnything = true;
 			}
 			
-			PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,albumName,kind,valueOfTrack);
+			PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);
 		}
 		
 		
@@ -186,8 +217,6 @@ public class LibraryActivity extends Activity {
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				
-				//Intent trackActivity 		= new Intent(LibraryActivity.this, TrackActivity.class);
 				Intent menuTrackActivity 	= new Intent(LibraryActivity.this, menuTrack.class);
 				Cursor tracks = adapter.getCursor();
 				boolean reachable = tracks.moveToPosition(position);
@@ -200,26 +229,63 @@ public class LibraryActivity extends Activity {
 			
 		});
 		
+		
+		
 		btnUpdate.setOnClickListener(new OnClickListener() {	
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Log.d(TAG, "Update bottone");
 				Cursor newCursor = PlayerController.getCursorTracks();
+				isChangedAnything = false;
+				newCursor.moveToFirst();
+				while(!newCursor.isAfterLast()){
+					boolean found = false;
+					//Log.d(TAG, "newCursor.getString(0): " + newCursor.getString(0));
+					cursor.moveToFirst();
+					while(!cursor.isAfterLast()){
+						if(cursor.getString(0).equals(newCursor.getString(0))){
+							found = true;		
+							break;
+						}
+
+						cursor.moveToNext();
+					}
+					if(!found){
+						isChangedAnything = true;
+						break;
+					}
+				
+					newCursor.moveToNext();
+				}			
+				cursor.moveToFirst();
+				while(!cursor.isAfterLast()){
+					boolean found = false;
+					newCursor.moveToFirst();
+					while(!newCursor.isAfterLast()){
+						if(cursor.getString(0).equals(newCursor.getString(0))){						
+							found = true;
+							break;
+						}
+						
+						newCursor.moveToNext();
+					}
+					if(!found){
+						map.remove(cursor.getString(0));
+						isChangedAnything = true;
+						break;
+					}
+
+					cursor.moveToNext();
+				}
+
 				if(!isChangedAnything){
+					Log.d(TAG, "!isChangedAnything");
 					Toast.makeText(LibraryActivity.this, "Il Db è già aggiornato", Toast.LENGTH_SHORT).show();		
 				}
 				else{
 					LibraryActivity.adapter.swapCursor(newCursor);
 					setAdapter(newCursor);
-					/*newCursor.moveToFirst();
-					while(!newCursor.isAfterLast()){
-						for(int i=0; i< newCursor.getColumnCount(); i++){
-							Log.d(TAG, newCursor.getColumnName(i) + ": " + newCursor.getString(newCursor.getColumnIndex(newCursor.getColumnName(i))));
-						}
-						newCursor.moveToNext();
-					}
-					*/
 					adapter.notifyDataSetChanged();
 					isChangedAnything = false;
 				}
@@ -243,26 +309,48 @@ public class LibraryActivity extends Activity {
 	
 
 	
+	
 	public class MySimpleCursorAdapter extends SimpleCursorAdapter{
 		private Context m_context;
 		private final int DIM_HEIGHT 	= 70;
 		private final int DIM_WIDTH 	= 70;
 		private final Uri ART_CONTENT_URI = Uri.parse("content://media/external/audio/albumart");
 		private final BitmapFactory.Options sBitmapOptionsCache = new BitmapFactory.Options();
+
 		private Cursor mCursor;
 
 		public MySimpleCursorAdapter(Context context, int layout, Cursor c,
 				String[] from, int[] to, int flags) {
 			super(context, layout, c, from, to, flags);
 			mCursor = c;
+			
+			mCursor.moveToFirst();
+			while(!mCursor.isAfterLast()){
+				if(!map.containsKey(mCursor.getString(0))){
+					if(!map.containsValue(mCursor.getString(6)))
+						map.put(mCursor.getString(0), mCursor.getString(6));
+					else
+						map.put(mCursor.getString(0), "-1");
+				}
+				else{
+					if(!map.get(mCursor.getString(0)).equals("-1"))
+							map.put(mCursor.getString(0), mCursor.getString(6));
+				}
+				
+				mCursor.moveToNext();
+			}
+	
 			// TODO Auto-generated constructor stub
 			 m_context = context;
 		}
 
 		@Override
 		public void setViewImage(ImageView v, String id){
-				Bitmap bitmap = getArtworkQuick(m_context, Integer.parseInt(id), DIM_WIDTH, DIM_HEIGHT);
-				
+			String album_id = "-1";
+			if(!id.equals(null))
+				album_id = map.get(id);
+			
+				Bitmap bitmap = getArtworkQuick(m_context, Integer.parseInt(album_id), DIM_WIDTH, DIM_HEIGHT);
 				if(bitmap != null){
 					v.setImageBitmap(bitmap);
 					v.setAdjustViewBounds(true);	
@@ -274,6 +362,9 @@ public class LibraryActivity extends Activity {
 		}
 
 		 private Bitmap getArtworkQuick(Context context, int album_id, int w, int h) {
+			 
+			 if(album_id == -1)
+				 return null;
 		        w -= 2;
 		        h -= 2;
 		        
@@ -331,40 +422,6 @@ public class LibraryActivity extends Activity {
 		        return null;
 		    }
 		
-		/* @Override
-		 public Cursor swapCursor(Cursor newCursor){
-			 if (newCursor == mCursor) {
-		            return null;
-		        }
-		        Cursor oldCursor = mCursor;
-		        if (oldCursor != null) {
-		        	Log.d(TAG, "oldCursor != null");
-		            if (mChangeObserver != null) oldCursor.unregisterContentObserver(mChangeObserver);
-		            if (mDataSetObserver != null) oldCursor.unregisterDataSetObserver(mDataSetObserver);
-		        }
-		        mCursor = newCursor;
-		        if (newCursor != null) {
-		        	Log.d(TAG, "newCursor != null");
-		            if (mChangeObserver != null) newCursor.registerContentObserver(mChangeObserver);
-		            if (mDataSetObserver != null) newCursor.registerDataSetObserver(mDataSetObserver);
-		            mRowIDColumn = newCursor.getColumnIndexOrThrow("_id");
-		            mDataValid = true;
-		            // notify the observers about the new cursor
-		            notifyDataSetChanged();
-		           
-		            
-		        } else {
-		        	Log.d(TAG, "(newCursor == null");
-		            mRowIDColumn = -1;
-		            mDataValid = false;
-		            // notify the observers about the lack of a data set
-		            notifyDataSetInvalidated();
-		        }
-	 
-			return oldCursor;
-			 
-		 }
-		 */
 		 
 	}
 	
