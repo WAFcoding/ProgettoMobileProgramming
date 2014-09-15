@@ -163,7 +163,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				//controller.open_settings();
+				controller.open_settings();
 				//animazione a comparsa da sinistra
 				overridePendingTransition(R.anim.right_in, R.anim.left_out); 
 			}

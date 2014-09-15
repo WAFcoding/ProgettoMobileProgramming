@@ -37,6 +37,9 @@
    <!-- *****************navigation drawer**************** -->
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
+    <string name="description">Media Controls</string>
+
+    
     <string-array name="drawer_choice_playlist">
         <item >Aggiungi playlist</item>
         <item >Rimuovi playlist</item>

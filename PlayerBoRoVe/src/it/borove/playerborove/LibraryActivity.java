@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -290,7 +291,30 @@ public class LibraryActivity extends Activity {
 			
 		});
 		
-		
+		listView.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				// TODO Auto-generated method stub
+				Cursor tracks = adapter.getCursor();
+				boolean reachable = tracks.moveToPosition(position);
+				if(reachable){
+					idTrack				= tracks.getInt(0);
+					
+					Bitmap albumId		= adapter.getArtworkQuick(getApplicationContext(), tracks.getInt(6), RESWIDTH, RESHEIGTH);
+				 	
+					Bundle b=new Bundle();
+					b.putString("uri",tracks.getString(7));
+					b.putString("title",tracks.getString(5));
+					b.putString("singer",tracks.getString(2));
+					b.putString("kind",tracks.getString(3));
+					PlayerController.open_player(b, albumId);
+				}
+				
+			}
+			
+		});
+
 		
 		btnUpdate.setOnClickListener(new OnClickListener() {	
 			@Override

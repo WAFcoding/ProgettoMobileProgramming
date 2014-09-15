@@ -27,9 +27,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--  <service android:name="MyService2"/>
+        <!--  <service android:name="MyService2"/>-->
         <service android:name="MusicService"/>
-        -->
+        
         <intent-filter>
             <action android:name="it.borove.playerborove.SERVICE"/>
         </intent-filter>

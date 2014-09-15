@@ -18,7 +18,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.MediaController;
+
 
 
 public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener{
@@ -27,7 +27,8 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	private MediaPlayer player;
 	private Uri uri;
 	private final IBinder mBinder = new MusicBinder();
-	private float volume;
+	private float volume=1f;
+	private boolean stopped=false;
 	
 	
 	public void onCreate(){
@@ -63,6 +64,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	     LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
 	     Intent mIntent= new Intent();
 	     mIntent.setAction("Prepared");
+	     setVolume(volume);
 	     lbm.sendBroadcast(mIntent);
 	     //playPlayer();
 		//mediacontroller.show();
@@ -85,16 +87,26 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		Log.d("service","pause");
 	}
 	
+	public void stop(){
+		stopped=true;
+		player.stop();
+	}
+	
 	public boolean isPng(){
 		return player.isPlaying();
 	}
 	public void playPlayer(){
-		player.setVolume(1f, 1f);
 		SharedPreferences prefs=getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 		int fadeIn=prefs.getInt("FadeIn",0);
 		//Log.d("FADe",Integer.toString(fadeIn));
+		if(!stopped){
 		fadeIn(fadeIn);
 		player.start();
+		}
+		else{
+			stopped=false;
+			player.prepareAsync();
+		}
 
 	}
 	public int getDur() {
@@ -131,12 +143,25 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		return false;
 	}
 	
+	public void Loop(boolean b){
+			player.setLooping(b);
+	}
+	public boolean isMute(){
+		return (volume==0);
+	}
+	public boolean isLooping(){
+		return player.isLooping();	
+	}
+
+	public void setVolume(float v){
+		volume=v;
+		player.setVolume(v, v);
+	}
 	public void fadeOut(int fadeDuration){
 		Log.d("fade out", "fade out");
 		//usare il logaritmo per fare fade
 		if(fadeDuration>0){
-			volume=1;
-			player.setVolume(volume, volume);
+			setVolume(1f);
 			final double decrement=1/(double)(fadeDuration*10);
 			Log.d("fade","fade");
 			final Timer timer=new Timer(true);
@@ -148,12 +173,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 					// TODO Auto-generated method stub
 					volume=(float) (volume-decrement);
 					if (volume<=0){
-						volume=0;
+						volume=0f;
 						timer.cancel();
 						timer.purge();
 					}
 					Log.d("volume", Double.toString(volume));
-					player.setVolume(volume, volume);
+					setVolume(volume);
 				}
 			};
 			timer.schedule(task, 100, 100);
@@ -163,8 +188,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	
 	public void fadeIn(int fadeDuration){
 		if(fadeDuration>0){
-			volume=0;
-			player.setVolume(volume,volume);
+			setVolume(0f);
 			final double increment=1/(double)(fadeDuration*10);
 			Log.d("fade","fade");
 			final Timer timer=new Timer(true);
@@ -181,7 +205,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 						timer.purge();
 					}
 					Log.d("volume", Double.toString(volume));
-					player.setVolume(volume, volume);
+					setVolume(volume);
 				}
 			};
 			timer.schedule(task, 100, 100);
