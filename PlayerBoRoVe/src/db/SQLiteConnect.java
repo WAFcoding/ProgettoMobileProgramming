@@ -52,6 +52,11 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	String COLUMN_CONTENT_TITLE		= "contentTitle";
 	public static final
 	String COLUMN_ALBUM_ID			= "albumId";
+	public static final
+	String COLUMN_ALBUM_NAME		= "albumName";
+	public static final
+	String COLUMN_DURATION			= "duration";
+	
 	
 	public static final
 	String TABLE_NAME_CONTAINS		= "contains";
@@ -102,7 +107,9 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 					COLUMN_VOTE + " text not null," +
 					COLUMN_CONTENT_TITLE 	+ " text not null," + 
 					COLUMN_ALBUM_ID + " text not null," +
-					COLUMN_PATH_TRACK + ");";
+					COLUMN_PATH_TRACK + " text not null," + 
+					COLUMN_ALBUM_NAME + " text not null," +
+					COLUMN_DURATION + " text not null" +");";
 			
 			String newTablePlaylistQueryString =	"create table " + 
 					TABLE_NAME_PLAYLIST + 	" (" + 
@@ -208,9 +215,13 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	 * @param vote				voto di preferenza assegnato
 	 * @param contentTitle		il titolo del brano(senza estensione)
 	 * @param albumId			id dell'album(copertina dell'album rappresentato come long int)
+	 * @param albumName			Il nome dell'album
+	 * @param duration			Durata del brano(espresso in msec)
 	 * @return il brano appena aggiunto
 	 */
-	public Cursor addRowTrack(String title, String kind, String nameSinger, String vote, String contentTitle, String albumId, String path){
+	public void addRowTrack(String title, String kind, String nameSinger, String vote, String contentTitle, String albumId, String path, 
+								String albumName, String duration){
+
 		ContentValues content = new ContentValues();
 		content.put(COLUMN_TITLE, title);
 		content.put(COLUMN_KIND, kind);
@@ -219,6 +230,8 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 		content.put(COLUMN_CONTENT_TITLE, contentTitle);
 		content.put(COLUMN_ALBUM_ID, albumId);
 		content.put(COLUMN_PATH_TRACK, path);
+		content.put(COLUMN_ALBUM_NAME, albumName);
+		content.put(COLUMN_DURATION, duration);
 		
 		try{
 			 openDatabaseRW();
@@ -229,7 +242,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 			Log.d(LOG, "Errore nella addRowTrack!! " + e.getMessage());
 		}
 		
-		return getExactlyTrack(title,"title");
+		//return getExactlyTrack(title,"title");
 	}
 	/**
 	 * Aggiunge una nuova entry nella tabella contains indicando l'associazione tra brano e playlist
@@ -272,6 +285,10 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 				m_db.delete(TABLE_NAME_TRACK, COLUMN_VOTE + "=" + "'" + value + "'", null);
 			else if(columnType.equals(COLUMN_CONTENT_TITLE))
 				m_db.delete(TABLE_NAME_TRACK, COLUMN_CONTENT_TITLE + "=" + "'" + value + "'", null);
+			else if(columnType.equals(COLUMN_ALBUM_NAME))
+				m_db.delete(TABLE_NAME_TRACK, COLUMN_ALBUM_NAME + "=" + "'" + value + "'", null);
+			else if(columnType.equals(COLUMN_DURATION))
+				m_db.delete(TABLE_NAME_TRACK, COLUMN_DURATION + "=" + "'" + value + "'", null);
 			else if(columnType.equals(COLUMN_ID))
 				m_db.delete(TABLE_NAME_TRACK, COLUMN_ID + "=" + "'" + value + "'", null);
 			closeDatabase();
@@ -370,15 +387,24 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 					String title 		= c.getString(4);
 					String singerName	= c.getString(2);
 					String albumId		= c.getString(6);
+					String albumName	= c.getString(3);
+					String duration		= c.getString(7);
 					
+					Log.d(LOG, "SQLite Connect - duration: " + duration);
+					openDatabaseRW();
 					Cursor trackOnDb = getExactlyTrack(contentTitle, COLUMN_CONTENT_TITLE);
+					closeDatabase();
 					if(trackOnDb == null){				
-							Cursor e = addRowTrack(title, kind, singerName, vote, contentTitle, albumId, pathTrack);
-							Log.d(LOG, "nuovo brano rilevato e aggiunto al db");
-							Log.d(LOG, e.getColumnName(1) + ": " + e.getString(1) + " " + e.getColumnName(2) + ": " + e.getString(2) + 
-									" " + e.getColumnName(3) + ": " + e.getString(3) + " " + e.getColumnName(4) + ": " + e.getString(4) +
-									" " + e.getColumnName(5) + ": " + e.getString(5) + " " + e.getColumnName(6) + ": " + e.getString(6) + 
-									" " + e.getColumnName(7) + ": " + e.getString(7));			
+							//Cursor e = 
+							addRowTrack(title, kind, singerName, vote, contentTitle, albumId, pathTrack, albumName, duration);
+							/*Log.d(LOG, "nuovo brano rilevato e aggiunto al db");
+							e.moveToFirst();
+							while(!e.isAfterLast()){
+								for(int i=0; i < e.getColumnCount(); i++)
+									Log.d(LOG, e.getColumnName(i) + ": " + e.getString(i));
+								e.moveToNext();
+							}
+							*/
 					}
 					else{
 						if(!trackOnDb.getString(1).equals(title)){
@@ -388,8 +414,13 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 						if(!trackOnDb.getString(2).equals(singerName)){
 							updateRowTrack(trackOnDb.getString(0), singerName, COLUMN_SINGER_NAME);
 							Log.d(LOG, "aggiornato il nome artista: " + trackOnDb.getString(2));			
-						}		
+						}
+						if(!trackOnDb.getString(8).equals(albumName)){
+							updateRowTrack(trackOnDb.getString(0), albumName, COLUMN_ALBUM_NAME);
+							Log.d(LOG, "aggiornato il nome dell'album: " + trackOnDb.getString(8));			
+						}	
 					}
+					
 				
 					c.moveToNext();
 				}
@@ -415,7 +446,8 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	public void updateRowTrack(String idTrack, String newValue, String columnType){
 		
 		ContentValues contentValues = new ContentValues();
-		if(columnType.equals(COLUMN_SINGER_NAME) || columnType.equals(COLUMN_KIND) || columnType.equals(COLUMN_TITLE) || columnType.equals(COLUMN_VOTE))
+		if(columnType.equals(COLUMN_SINGER_NAME) || columnType.equals(COLUMN_KIND) || columnType.equals(COLUMN_TITLE) || columnType.equals(COLUMN_VOTE)
+				|| columnType.equals(COLUMN_ALBUM_NAME))
 			contentValues.put(columnType, newValue);
 		
 		String where = COLUMN_ID + "='" + idTrack + "'";
@@ -476,7 +508,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	 * @return
 	 */
 	public Cursor getExactlyTrack(String value, String columnType){
-		openDatabaseReadOnly();
+		//openDatabaseReadOnly();
 		Cursor cursor = null;
 		if(!value.equals(null)){
 			String field = columnType + "='" + value + "'";
@@ -489,9 +521,10 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 			return null;
 		}
 		cursor.moveToFirst();		
+		
+		//closeDatabase();
 		Log.d(LOG, "Track trovata: "+ cursor.getString(0) +" " +cursor.getString(1) +" "+cursor.getString(2) +" "+cursor.getString(3) +
 				 " " + cursor.getString(4) +" " +cursor.getString(5) + " " + cursor.getLong(6));
-		closeDatabase();
 		return cursor;
 	}
 	
@@ -500,12 +533,12 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 		Cursor cursor = null;
 		if(!columnsSelect.equals("*")){
 			String field = columnType + " like ?";
-			String [] filter = {value + "%"};
+			String [] filter = {value + "%_"};
 			cursor = m_db.query(SQLiteConnect.TABLE_NAME_TRACK, columnsSelect, field, filter, null, null, null);
 		}
 		else{
 			String field = columnType + " like ?";
-			String [] filter = {value + "%"};
+			String [] filter = {value + "%_"};
 			cursor = m_db.query(SQLiteConnect.TABLE_NAME_TRACK, null, field, filter, null, null, null);
 		}
 		cursor.moveToLast();
