@@ -97,25 +97,7 @@ public class MainActivity extends Activity {
 		registerReceiver(rec,inf);
 		
 		
-		this.addButtonListener();
-			/*String title = "O' sole' \\mio";
-			
-			while(title.contains("'") || title.contains("\\")){
-				String leftTemp="";
-				String rigthTemp="";
-				for(int i=0; i< title.length(); i++){
-					if(title.substring(i, i+1).equals("'") || title.substring(i, i+1).equals("\\")){
-						leftTemp = title.substring(0,i);
-						rigthTemp = title.substring(i+1, title.length());
-						Log.d(TAG, "leftTemp: " + leftTemp + " rigthTemp: " + rigthTemp);
-						title = leftTemp +""+ rigthTemp;
-						Log.d(TAG, "title: " + title);
-					}					
-				}
-			}	
-			Log.d(TAG, "fuori da while: ");
-			*/
-			
+		this.addButtonListener();			
 			
 	}
 	
@@ -130,10 +112,7 @@ public class MainActivity extends Activity {
 		}catch(Exception e){Log.e(TAG,"app destroy>>> " + e.getMessage());}
 		
 	}
-	
-	
-	
-	
+
 	/**
 	 * Aggiunge i listener ai pulsanti
 	 */

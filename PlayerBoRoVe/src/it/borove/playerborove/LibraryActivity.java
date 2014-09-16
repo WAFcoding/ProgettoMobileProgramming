@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -428,7 +429,7 @@ public class LibraryActivity extends Activity {
 			// TODO Auto-generated constructor stub
 			 m_context = context;
 		}
-
+				
 		@Override
 		public void setViewImage(ImageView v, String id){
 			String album_id = "-1";

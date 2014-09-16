@@ -119,8 +119,8 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 			
 			String newTableContainsQueryString =	"create table " + 
 					TABLE_NAME_CONTAINS + 	" (" + 
-					COLUMN_ID_BID +  " integer primary " + "key," + 
-					COLUMN_ID_PID + " text not null," + 
+					COLUMN_ID_BID +  " text not null," + 
+					COLUMN_ID_PID + " text not null," +
 					" foreign key (" + COLUMN_ID_BID + ") references " + TABLE_NAME_TRACK + "(" + COLUMN_ID +") " 
 					+ "on delete cascade," +
 					" foreign key (" + COLUMN_ID_PID + ") references " + TABLE_NAME_PLAYLIST + "(" + COLUMN_ID + ") "
@@ -201,6 +201,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 		content.put(COLUMN_NAME, namePlaylist);
 		try{
 			 openDatabaseRW();
+			 m_db.execSQL("PRAGMA foreign_keys = ON");
 			 m_db.insert(TABLE_NAME_PLAYLIST, null, content);
 			 closeDatabase();
 		}catch(Exception e){
@@ -363,8 +364,6 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 			e.printStackTrace();
 			}
 	}
-	
-	
 	
 	public void eraseDatabase(){
 		String path = db_path + DB_NAME;
@@ -582,17 +581,22 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	 */
 	public Cursor getExactlyNamePlaylist(String name){
 		openDatabaseReadOnly();
-		String field = "nameP = ?";
-		String [] filter = {name};
-		Cursor cursor = m_db.query(SQLiteConnect.TABLE_NAME_PLAYLIST, null, field, filter, null, null, null);
+		//String[] columnSelect = {COLUMN_NAME};
+		//String [] filter = {name};
+		Cursor cursor = null;
+		if(!name.equals(null)){
+			String field = COLUMN_NAME + "='" + name + "'";
+			cursor = m_db.query(SQLiteConnect.TABLE_NAME_PLAYLIST, null, field, null,null,null,null);
+		}
+		//Cursor cursor = m_db.query(SQLiteConnect.TABLE_NAME_PLAYLIST, columnSelect, field, filter, null, null, null);
 		cursor.moveToLast();
-		if(cursor.getCount() != 1){
+		if(cursor.getCount() == 0){
 			cursor.close();
 			closeDatabase();
 			return null;
 		}
 		cursor.moveToFirst();		
-		closeDatabase();
+		//closeDatabase();
 		return cursor;
 	}
 	
@@ -714,22 +718,38 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 		}
 		else if(table_src.equals(TABLE_NAME_PLAYLIST)){
 			if(table_dst.equals(TABLE_NAME_CONTAINS)){
+				Log.d(LOG, "dentro queryResult");
 				try{
 					String field 		= attr + " = '" + where + "'";
 					String [] filter 	= null;
-					query		= "SELECT "+ "c."+select + " FROM " + table_src + " AS a, " + TABLE_NAME_CONTAINS + " AS c"
+					query		= "SELECT "+ "c."+select + " FROM " + table_src + " AS a, " + table_dst + " AS c"
 							+ " WHERE " + "a." + COLUMN_ID + "=c." + COLUMN_ID_PID + " AND " + "a." + field;
 					cursor = m_db.rawQuery(query, filter);
+					/*if(cursor == null)
+						Log.e(LOG, "CURSOR NULL");
+					else{
+						cursor.moveToFirst();
+						Log.e(LOG, "********* cursor: " + cursor.getCount());
+						
+					}
+					*/
 				}catch(SQLiteException e ){e.printStackTrace();}
 			}
 			else{
 				try{
 					String field 		= attr + " like ?";
 					String [] filter 	= {where + "%" };
-					query		= "SELECT "+ "b."+select + " FROM " + table_src + " AS a, " + table_dst + " AS b, " + TABLE_NAME_CONTAINS + " AS c"
+					query		= "SELECT "+ "a." + COLUMN_ID +" AS id_P,b."+select + " FROM " + table_src + " AS a, " + table_dst + " AS b, " + TABLE_NAME_CONTAINS + " AS c"
 							+ " WHERE " + "a." + COLUMN_ID + "=c." + COLUMN_ID_PID + " AND " + "b." + COLUMN_ID + "=c." + COLUMN_ID_BID 
 							+ " AND " + "a." + field;
 					cursor = m_db.rawQuery(query, filter);
+					if(cursor == null)
+						Log.e(LOG, "CURSOR NULL");
+					else{
+						cursor.moveToFirst();
+						Log.e(LOG, "********* cursor: " + cursor.getCount());
+						
+					}
 				}catch(SQLiteException e ){e.printStackTrace();}
 			}
 		}
@@ -742,7 +762,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 			return null;
 		}
 		cursor.moveToFirst();
-		closeDatabase();
+		//closeDatabase();
 		return cursor;
 	}
 

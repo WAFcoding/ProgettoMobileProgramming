@@ -17,7 +17,7 @@
 		
 	</LinearLayout>
 	<!-- the navigation drawer -->
-    <ListView android:id="@+id/left_drawer"
+    <ListView android:id="@+id/left_drawer_playlist"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"

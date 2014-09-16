@@ -67,6 +67,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 	private Context m_context;
 	private static Cursor cursorTracks;
+	private static Cursor cursorPlaylist;
 	private final static String TAG = "PLAYERCONTROLLER";
 	//private SQLiteDatabase myDatabase;
 	private static SQLiteConnect sqlDatabaseHelper;
@@ -275,7 +276,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		return c;	
 	}
 	
-	 public class updateDbOnTrack extends AsyncTask<String,Void,Void>{
+	public class updateDbOnTrack extends AsyncTask<String,Void,Void>{
 		 private OnScanCompletedListener callback;
 		 private String artist;
 		 private String pathTrack;
@@ -406,7 +407,6 @@ public class PlayerController extends SQLiteOpenHelper{
 		 
 	 }
 
-	
 	private class SynchronizeDb extends AsyncTask<Void, Void, Cursor>{
 		private Cursor getTracksFromDb;
 		@Override
@@ -418,23 +418,6 @@ public class PlayerController extends SQLiteOpenHelper{
 				String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack, albumName, duration"};
 				getTracksFromDb =  sqlDatabaseHelper.getFilteredTrack("", SQLiteConnect.COLUMN_TITLE, columnsSelect);
 				getTracksFromDb.moveToFirst();
-				//Log.d(TAG, "DENTRO DoInBaCkground in syncronizeDb!!!");
-				/*while(!getMp3FromStorage.isAfterLast()){
-					String id		= getMp3FromStorage.getString(0);
-					String title 	=  getMp3FromStorage.getString(1);
-					//String author 	=  getMp3FromStorage.getString(2);
-					//String kind		=  getMp3FromStorage.getString(3);
-					//String vote		=  getMp3FromStorage.getString(4);
-					//String cont		=  getMp3FromStorage.getString(5);
-					String albumId		=  getMp3FromStorage.getString(6);
-					Log.d(TAG, "_id: " + id + " title: " + title + " albumId: " + albumId);
-					
-					
-					getMp3FromStorage.moveToNext();
-				}
-				getMp3FromStorage.close();
-				*/
-				//getTracksFromDb.close();
 				
 			}catch(Exception e){
 				e.printStackTrace();
@@ -447,14 +430,14 @@ public class PlayerController extends SQLiteOpenHelper{
 			if(result != null){
 				setCursorTracks(getTracksFromDb);
 				getTracksFromDb.moveToFirst();
-				/*while(!getTracksFromDb.isAfterLast()){
+				while(!getTracksFromDb.isAfterLast()){
 					for(int i=0; i< getTracksFromDb.getColumnCount(); i++){
 						Log.e(TAG, getTracksFromDb.getColumnName(i) + ": " + getTracksFromDb.getString(i));
 					}
 					getTracksFromDb.moveToNext();
 				}
-				*/
-				
+							
+				new SynchronizePlaylistDb().execute();
 			}
 			
 			else
@@ -492,6 +475,14 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 	public void setCursorTracks(Cursor cursor){
 		PlayerController.cursorTracks = cursor;
+	}
+	
+	public static Cursor getCursorPlaylist(){
+		return cursorPlaylist;
+	}
+	
+	public void setCursorPlaylist(Cursor c){
+		this.cursorPlaylist = c;
 	}
 	
 	/**
@@ -550,11 +541,16 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 	public void addPlaylistToDb(String namePlaylist, ArrayList<String> arrayIdTrack){
 		try{
-			sqlDatabaseHelper.addRowPlaylist(namePlaylist);
-			for(int i=0; i< arrayIdTrack.size(); i++){
-				if(arrayIdTrack.get(i) != null)
-					sqlDatabaseHelper.addRowContains(namePlaylist, arrayIdTrack.get(i));
-			}
+			Cursor pl = sqlDatabaseHelper.addRowPlaylist(namePlaylist);
+			if(pl != null)
+				for(int i=0; i< arrayIdTrack.size(); i++){
+					if(arrayIdTrack.get(i) != null){
+						Log.d(TAG, "pl.getString(0): " + pl.getString(0));
+						sqlDatabaseHelper.addRowContains(pl.getString(0), arrayIdTrack.get(i));
+					}
+				}
+			else
+				Log.d(TAG, "Errore in addPlaylistToDb(): pl è NULL");
 		}catch(Exception e){
 			Log.d(TAG, "Errore in addPlaylistToDb()");
 			e.printStackTrace();
@@ -604,5 +600,76 @@ public class PlayerController extends SQLiteOpenHelper{
 		}catch(Exception e){
 			Log.d(TAG, "Errore in deleteRowPlaylist()");
 		}
+	}
+	
+	/**
+	 * Permette di ricavare la lista delle playlist con i brani associati salvate sul db (in background)
+	 * setta il cursore di PlayerController (cursorPlaylist)
+	 *
+	 */
+	
+	public class SynchronizePlaylistDb extends AsyncTask<Void, Void, Cursor>{
+		private Cursor cursorPlaylist;
+
+		@Override
+		protected Cursor doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			try{
+				//String[] columnSelect = {"*"};
+				this.cursorPlaylist = sqlDatabaseHelper.getQueryResult("", SQLiteConnect.COLUMN_NAME, SQLiteConnect.TABLE_NAME_PLAYLIST,
+																	 SQLiteConnect.TABLE_NAME_TRACK, "*");
+			}catch(Exception e){
+				e.printStackTrace();}
+			Log.d(TAG, "Recupero playlist! su db");
+			return cursorPlaylist;
+		}
+		
+		protected void onPostExecute(Cursor result){
+			setCursorPlaylist(this.cursorPlaylist);
+			
+			ArrayList<String> tracks = new ArrayList<String>();
+			tracks.add("1");
+			tracks.add("2");
+			tracks.add("3");
+			addPlaylistToDb("primo", tracks);
+			
+			ArrayList<String> tracks2 = new ArrayList<String>();
+			tracks2.add("3");
+			tracks2.add("4");
+			addPlaylistToDb("secondo", tracks2);
+			
+			ArrayList<String> tracks3 = new ArrayList<String>();
+			tracks3.add("1");
+			tracks3.add("6");
+			addPlaylistToDb("terzo", tracks3);
+			
+			Cursor test = sqlDatabaseHelper.getQueryResult("%", SQLiteConnect.COLUMN_NAME, SQLiteConnect.TABLE_NAME_PLAYLIST,
+					 SQLiteConnect.TABLE_NAME_TRACK, "*");
+			setCursorPlaylist(test);
+			//Cursor test2 = sqlDatabaseHelper.getQueryResult("primo", SQLiteConnect.COLUMN_NAME, SQLiteConnect.TABLE_NAME_PLAYLIST,
+			//		 SQLiteConnect.TABLE_NAME_TRACK, "*");
+			if(test != null){
+				test.moveToFirst();
+				while(!test.isAfterLast()){
+					for(int i=0; i< test.getColumnCount(); i++)
+						Log.d(TAG, "TEST ---> " + test.getColumnName(i) + ": " + test.getString(i));
+					test.moveToNext();
+				}
+			}
+			
+			/*if(this.cursorPlaylist != null){
+				this.cursorPlaylist.moveToFirst();
+				while(!this.cursorPlaylist.isAfterLast()){
+					for(int i=0; i< this.cursorPlaylist.getColumnCount(); i++)
+						Log.d(TAG, this.cursorPlaylist.getColumnName(i) + ": " + this.cursorPlaylist.getString(i));
+					this.cursorPlaylist.moveToNext();
+				}
+			}
+			*/
+			//else
+			//	Log.d(TAG, "test è NULL");
+			
+		}
+		
 	}
 }

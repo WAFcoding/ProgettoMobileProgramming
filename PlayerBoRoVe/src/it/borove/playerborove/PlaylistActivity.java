@@ -1,15 +1,27 @@
 package it.borove.playerborove;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import playlistModules.PlaylistAdapter;
 import playlistModules.PlaylistItem;
 import playlistModules.SinglePlaylistItem;
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,33 +41,102 @@ public class PlaylistActivity extends Activity {
 	private ArrayList<PlaylistItem> items;
 	private PlaylistAdapter m_adapter;
 	private ListView m_listview;
+	private Cursor playlistCursor;
+	
+	private static final String TAG = "PLAYLISTACTIVITY";
+	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_playlist_2);
 		
+		playlistCursor = PlayerController.getCursorPlaylist();
 		items= new ArrayList<PlaylistItem>();
+		
+		//_id ---> album_id (brano)
+		/*HashMap<String,String> tracks = new HashMap<String,String>();
+		if(playlistCursor != null){
+			playlistCursor.moveToFirst();
+			while(!playlistCursor.isAfterLast()){
+				
+				tracks.put(playlistCursor.getString(playlistCursor.getColumnIndex("pid")), playlistCursor.getString(playlistCursor.getColumnIndex("albumId")));
+				playlistCursor.moveToNext();
+			}
+		}
+		*/
+		ArrayList<String> id_p = null;
+		if(playlistCursor != null){
+			id_p = new ArrayList<String>();
+			playlistCursor.moveToFirst();
+			while(!playlistCursor.isAfterLast()){
+				if(!id_p.contains(playlistCursor.getString(0)))
+					id_p.add(playlistCursor.getString(0));
+				playlistCursor.moveToNext();
+			}
+		}
+		
+		/*
 		//la cover
 		SinglePlaylistItem tmp_cover= new SinglePlaylistItem("cover", " ");
+		//********************************************************
+		playlistCursor.moveToFirst();
+		SinglePlaylistItem tmp_cover2 = new SinglePlaylistItem("cover", " ", playlistCursor.getString(7), this);
+		
+		//*********************************************************
+	
 		//la scrollview
 		ArrayList<SinglePlaylistItem> tmp_songs= new ArrayList<SinglePlaylistItem>();
-		for(int i=0;i<15;i++){
-			SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem("canzone", " ");
+		if(playlistCursor != null)
+			playlistCursor.moveToFirst();
+		//for(int i=0; i<playlistCursor.getCount() && !playlistCursor.isAfterLast(); i++){
+		while(!playlistCursor.isAfterLast()){
+			SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem("canzone", " ", playlistCursor.getString(7), this);
+			
+			playlistCursor.moveToNext();
 			tmp_songs.add(tmp_pl_item);
 		}
 		//la listview
-		for(int i=0;i<6;i++){
-			PlaylistItem tmp_play= new PlaylistItem(tmp_cover, tmp_songs);
-			items.add(tmp_play);
+		playlistCursor.moveToFirst();
+		//for(int i=0;i<6;i++){
+		for(int i=0; i <id_p.size(); i++){
+			//while(!playlistCursor.isAfterLast()){
+				PlaylistItem tmp_play= new PlaylistItem(tmp_cover2, tmp_songs);
+				items.add(tmp_play);
+				playlistCursor.moveToNext();
+			//}
 		}
-
-		
-		m_adapter= new PlaylistAdapter(this, R.layout.row_playlist, items);
-		
-		m_listview= (ListView)findViewById(R.id.listview_playlist);
-		m_listview.setAdapter(m_adapter);
-		
+		*/
+		SinglePlaylistItem tmp_cover2 = null;
+			if(id_p != null){
+				ArrayList<SinglePlaylistItem> tmp_songs;
+				for(int i = 1; i <= id_p.size(); i++){
+					//Log.d(TAG, "id_p.size()" + id_p.size());
+					playlistCursor.moveToFirst();
+					boolean coverUsed = false;
+					tmp_songs = new ArrayList<SinglePlaylistItem>();
+					while(!playlistCursor.isAfterLast()){
+						if(playlistCursor.getString(0).equals(String.valueOf(i))){
+							if(!coverUsed){
+								//la cover
+								tmp_cover2 = new SinglePlaylistItem("cover", " ", playlistCursor.getString(7), this);
+								coverUsed = true;
+							}
+							//la scrollview
+							SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem("canzone", " ", playlistCursor.getString(7), this);
+							tmp_songs.add(tmp_pl_item);		
+						}			
+						playlistCursor.moveToNext();
+					}
+					
+					PlaylistItem tmp_play= new PlaylistItem(tmp_cover2, tmp_songs);
+					items.add(tmp_play);	
+				}
+				m_adapter= new PlaylistAdapter(this, R.layout.row_playlist, items);
+				m_listview= (ListView)findViewById(R.id.listview_playlist);
+				m_listview.setAdapter(m_adapter);
+		}
 		
 		//il navigation drawer
 		title= drawer_title = getTitle();
@@ -84,12 +165,13 @@ public class PlaylistActivity extends Activity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-		
-		
-        drawer_list_view= (ListView)findViewById(R.id.left_drawer);
-        //drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
+			
+        drawer_list_view= (ListView)findViewById(R.id.left_drawer_playlist);
+        drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
         drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
-		
+        	
+       
+	
 	}
 
     @Override
@@ -146,4 +228,5 @@ public class PlaylistActivity extends Activity {
 		
 		return super.onKeyDown(keyCode, event); 
 	}
+
 }

@@ -8,6 +8,7 @@ import it.borove.playerborove.R;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,9 +49,11 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 		this.items= items;
 	}
 	
+	
+	
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent){
-		
 		m_v= convertView;
 		ViewHolder holder;
 		if (m_v == null) {
@@ -91,12 +94,13 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 			//FIXME forse tocca usare la bitmap image per settare l'imageview
 			ImageView tmp_cover_image= (ImageView)m_v.findViewById(R.id.imageView_row_playlist);
 			//tmp_cover_image.setImageURI(Uri.parse(tmp_cover.getImagePath()));
-			tmp_cover_image.setImageResource(R.drawable.nota_original);
+			Bitmap bit = tmp_cover.getBitmapCover();
+			tmp_cover_image.setImageBitmap(bit);
+			//tmp_cover_image.setImageResource(R.drawable.nota_original);
 			tmp_cover_image.setOnLongClickListener(new OnLongClickListener() {
 				
 				@Override
 				public boolean onLongClick(View v) {
-
 					//TODO inserire qui la chiamata al controllore per attivare la riproduzione del brano
 					Toast.makeText(getContext(), "anteprima playlist : " + playlist_name, Toast.LENGTH_SHORT).show();
 					
@@ -143,7 +147,12 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				//song_cover_params.rightMargin= 3;
 				song_cover.setLayoutParams(song_cover_params);
 				song_cover.setScaleType(ScaleType.FIT_XY);
-				song_cover.setImageResource(R.drawable.nota_small);
+				Bitmap bit2 = it.getBitmapCover();
+				if(bit2 != null)
+					song_cover.setImageBitmap(bit2);
+				else
+					song_cover.setImageResource(R.drawable.nota_small);
+				//song_cover.setImageResource(R.drawable.nota_small);
 				
 				song_cover.setOnLongClickListener(new OnLongClickListener() {
 					
