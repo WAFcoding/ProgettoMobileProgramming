@@ -42,8 +42,7 @@
         android:id="@+id/seekBar1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="3"
-        android:progress="1" />
+        android:max="3"/>
     
     <TextView
         android:id="@+id/textView4"
@@ -72,8 +71,7 @@
         android:id="@+id/seekBar2"
         android:layout_width="272dp"
         android:layout_height="wrap_content"
-        android:max="3"
-        android:progress="3" />
+        android:max="3"/>
     
 
         <TextView
@@ -83,7 +81,103 @@
         />
 
     </LinearLayout>
+	<LinearLayout 
+	android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    
+	<TextView
+        android:id="@+id/textViewPreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Preview" />
+	 
+	 <TextView
+        android:id="@+id/textViewValuePreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
+    <SeekBar
+        android:id="@+id/seekBarPreview"
+        android:layout_width="272dp"
+        android:layout_height="wrap_content"
+        android:max="46" />
 
+	</LinearLayout>
+	
+	<LinearLayout 
+	android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    
+	<TextView
+        android:id="@+id/textNLoopPlaylist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="N° Loop Playlist" />
 
+	<EditText
+	    android:id="@+id/editTextNLoopPlaylist"
+	    android:layout_width="60dp"
+	    android:layout_height="wrap_content"
+	    android:inputType="number"
+	    android:maxLength="3"/>
+
+	<CheckBox
+	    android:id="@+id/infiniteLoopCheckBox"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="Infinite Loop" />
+	
+	</LinearLayout>
+	
+	<LinearLayout 
+	android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:gravity="bottom"
+		    android:text="Playback mode" />
+
+	<RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+		<RadioButton
+		    android:id="@+id/radioButtonRandom"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="Random" />
+
+		<RadioButton
+		    android:id="@+id/radioButtonSequential"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="Sequential" />
+  </RadioGroup>
+	</LinearLayout>
+	
+<LinearLayout 	
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+	
+    <Button
+	    android:id="@+id/buttonCancelDatabase"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="Cancel database" />
+
+	<Button
+	    android:id="@+id/buttonSyncronizesDatabase"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="Syncronizes Database" />
+</LinearLayout>
+	
+	 
 </LinearLayout>
