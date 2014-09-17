@@ -1,11 +1,13 @@
 package it.borove.playerborove;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -17,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TimePicker;
 
 public class SettingsActivity extends Activity{
 	private static final String SETTINGS = "SETTINGS";
@@ -29,11 +32,14 @@ public class SettingsActivity extends Activity{
 	private TextView textViewFadeIn;
 	private TextView textViewFadeOut;
 	private TextView textViewPreview;
-	private EditText editText;
+	private EditText editTextDisplayTime;
 	private EditText editTextNLoopPlaylist;
 	private CheckBox infiniteLoopCheckBox;
 	private RadioGroup radioGroup;
+	static final int TIME_DIALOG_ID = 0;
 	
+	
+            
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settings_activity);
@@ -44,11 +50,11 @@ public class SettingsActivity extends Activity{
 		textViewFadeIn=(TextView) findViewById(R.id.textViewValue1);
 		textViewFadeOut=(TextView) findViewById(R.id.textViewValue2);
 		textViewPreview=(TextView) findViewById(R.id.textViewValuePreview);
-		editText=(EditText)findViewById(R.id.editText1);
+		editTextDisplayTime=(EditText)findViewById(R.id.editText1);
 		editTextNLoopPlaylist=(EditText)findViewById(R.id.editTextNLoopPlaylist);
 		infiniteLoopCheckBox=(CheckBox) findViewById(R.id.infiniteLoopCheckBox);
 		radioGroup=(RadioGroup) findViewById(R.id.radioGroup);
-		
+		 getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		
 		SharedPreferences prefs=getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 
@@ -63,7 +69,8 @@ public class SettingsActivity extends Activity{
 		textViewFadeIn.setText(" "+valueFadeIn+"/"+seekBarFadeIn.getMax());
 		textViewFadeOut.setText(" "+valueFadeOut+"/"+seekBarFadeOut.getMax());
 		textViewPreview.setText(" "+(durationPreview+15)+"/"+(seekBarPreview.getMax()+14));
-		editText.setText(Integer.toString(pos));
+		editTextDisplayTime.setText(Integer.toString(pos));
+		
 		if(nLoopPlaylist==1000)
 			{
 				editTextNLoopPlaylist.setText("");
@@ -82,6 +89,7 @@ public class SettingsActivity extends Activity{
 		seekBarFadeIn.setProgress(valueFadeIn);
 		seekBarFadeOut.setProgress(valueFadeOut);
 		seekBarPreview.setProgress(durationPreview);
+		
 		
 		seekBarFadeIn.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
 
@@ -194,7 +202,11 @@ public class SettingsActivity extends Activity{
 		SharedPreferences.Editor editor=prefs.edit();
 		editor.putInt("FadeIn", valueFadeIn);
 		editor.putInt("FadeOut", valueFadeOut);
-		pos=Integer.parseInt(editText.getText().toString());
+		if(!editTextDisplayTime.getText().toString().equals(""))
+			pos=Integer.parseInt(editTextDisplayTime.getText().toString());
+		else
+			pos=0;
+		
 		editor.putInt("Pos", pos);
 		editor.putInt("Duration Preview", durationPreview);
 		if(infiniteLoopCheckBox.isChecked())
