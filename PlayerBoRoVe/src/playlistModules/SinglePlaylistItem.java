@@ -51,6 +51,7 @@ public class SinglePlaylistItem {
 		this.singer_name 		= singerName;
 		this.kind 				= kind;
 		this.album_id 			= album_id;
+		this.path_track			= path_track;
 		setTitle(p_title);
 		//setImagePath(p_image_path);
 		cover = getArtworkQuick(context, Integer.parseInt(album_id), DIM_WIDTH, DIM_HEIGHT);
