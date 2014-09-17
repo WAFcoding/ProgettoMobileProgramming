@@ -3,9 +3,6 @@
  */
 package it.borove.playerborove;
 
-import java.util.ArrayList;
-
-import db.SQLiteConnect;
 import db.ServiceFileObserver;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -24,7 +21,6 @@ import android.widget.Button;
 public class MainActivity extends Activity {
 	
 	private Button playlist, library, settings, player;
-	private SQLiteConnect connDb;
 	private SQLiteDatabase db;
 	private final static String TAG = "MainActivity";
 	private Intent i;

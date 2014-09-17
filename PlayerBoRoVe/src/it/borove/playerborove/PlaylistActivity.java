@@ -42,6 +42,9 @@ public class PlaylistActivity extends Activity {
 	private PlaylistAdapter m_adapter;
 	private ListView m_listview;
 	private Cursor playlistCursor;
+	//private HashMap<String,String> map = new HashMap<String,String>();
+	private AlbumMapper mapper;
+	
 	
 	private static final String TAG = "PLAYLISTACTIVITY";
 	
@@ -52,8 +55,12 @@ public class PlaylistActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_playlist_2);
 		
-		playlistCursor = PlayerController.getCursorPlaylist();
-		items= new ArrayList<PlaylistItem>();
+		playlistCursor 	= PlayerController.getCursorPlaylist();
+		items			= new ArrayList<PlaylistItem>();
+		mapper 			= new AlbumMapper();
+		
+		
+		
 		
 		//_id ---> album_id (brano)
 		/*HashMap<String,String> tracks = new HashMap<String,String>();
@@ -71,8 +78,28 @@ public class PlaylistActivity extends Activity {
 			id_p = new ArrayList<String>();
 			playlistCursor.moveToFirst();
 			while(!playlistCursor.isAfterLast()){
-				if(!id_p.contains(playlistCursor.getString(0)))
+				/*if(!id_p.contains(playlistCursor.getString(0)))
 					id_p.add(playlistCursor.getString(0));
+				if(!map.containsKey(playlistCursor.getString(1))){
+					if(!map.containsValue(playlistCursor.getString(7))){
+						map.put(playlistCursor.getString(1), playlistCursor.getString(7));
+						Log.d(TAG, "HashMap<>  key: " + playlistCursor.getString(1) + " value: " + playlistCursor.getString(7));
+					}
+					else{
+						map.put(playlistCursor.getString(1), "-1");
+						Log.d(TAG, "HashMap<>  key: " + playlistCursor.getString(1) +" value: -1");
+					}
+				}
+				*/
+				if(!id_p.contains(playlistCursor.getString(0))){
+					id_p.add(playlistCursor.getString(0));
+				}
+				
+				mapper.setIdTrackToContentTitle(playlistCursor.getString(1), playlistCursor.getString(6));
+				mapper.setIdTrackToIdAlbum(playlistCursor.getString(1), playlistCursor.getString(7));
+				
+				
+				
 				playlistCursor.moveToNext();
 			}
 		}
@@ -112,19 +139,30 @@ public class PlaylistActivity extends Activity {
 			if(id_p != null){
 				ArrayList<SinglePlaylistItem> tmp_songs;
 				for(int i = 1; i <= id_p.size(); i++){
-					//Log.d(TAG, "id_p.size()" + id_p.size());
+					Log.d(TAG, "id_p.size()" + id_p.size());
 					playlistCursor.moveToFirst();
 					boolean coverUsed = false;
 					tmp_songs = new ArrayList<SinglePlaylistItem>();
 					while(!playlistCursor.isAfterLast()){
 						if(playlistCursor.getString(0).equals(String.valueOf(i))){
+							String title		= playlistCursor.getString(6);
+							String name_singer 	= playlistCursor.getString(3);
+							String kind			= playlistCursor.getString(4);
+							String albumId		= playlistCursor.getString(7);
+							String path_track	= playlistCursor.getString(8);
 							if(!coverUsed){
 								//la cover
-								tmp_cover2 = new SinglePlaylistItem("cover", " ", playlistCursor.getString(7), this);
+								tmp_cover2 = new SinglePlaylistItem(title, name_singer, kind, albumId, path_track, this);
 								coverUsed = true;
 							}
 							//la scrollview
-							SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem("canzone", " ", playlistCursor.getString(7), this);
+							//String album_id = "-1";
+							//if(!playlistCursor.getString(7).equals(null))
+							//album_id = map.get(playlistCursor.getString(1));
+							String album_id = mapper.getIdAlbumFromIdTrack(playlistCursor.getString(1));
+							//String path_track = playlistCursor.getString(8);
+							//album_id = playlistCursor.getString(7);
+							SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem(title, name_singer, kind, album_id, path_track, this);
 							tmp_songs.add(tmp_pl_item);		
 						}			
 						playlistCursor.moveToNext();
@@ -228,5 +266,33 @@ public class PlaylistActivity extends Activity {
 		
 		return super.onKeyDown(keyCode, event); 
 	}
+	
+	/*public void getAlbumId(Cursor cursor){
+		//String album_id = "-1";
+		Cursor localCursor = cursor;
+		localCursor.moveToFirst();
+		while(!localCursor.isAfterLast()){
+			if(!map.containsKey(localCursor.getString(1))){
+				if(!map.containsValue(localCursor.getString(7)))
+					map.put(localCursor.getString(1), localCursor.getString(7));
+				else
+					map.put(localCursor.getString(1), "-1");
+			}
+			else{
+				if(!map.get(localCursor.getString(1)).equals("-1"))
+						map.put(localCursor.getString(1), localCursor.getString(7));
+			}
+			
+			playlistCursor.moveToNext();
+		}
+		
+		//if(!idFromDb.equals(null))
+		//	album_id = map.get(idFromDb);
+		
+		
+		
+		//return album_id;
+	}
+	*/
 
 }

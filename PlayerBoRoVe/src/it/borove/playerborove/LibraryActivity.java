@@ -48,7 +48,7 @@ public class LibraryActivity extends Activity {
 	private static  ListView listView;
 	private Button btnUpdate;
 	private static MySimpleCursorAdapter adapter;
-	private HashMap<String,String> map = new HashMap<String,String>();
+	private AlbumMapper mapper;
 
 	private Cursor cursor;
 
@@ -72,18 +72,28 @@ public class LibraryActivity extends Activity {
 		btnUpdate			= (Button)findViewById(R.id.btnUpdateListView);
 		isChangedAnything 	= false;
 		idTrack				= 0;
+		mapper = new AlbumMapper();
+		
 		cursor 				= PlayerController.getCursorTracks();
 		if(cursor != null){
 			cursor.moveToFirst();
 			while(!cursor.isAfterLast()){
+				/*
 				if(!map.containsKey(cursor.getString(0))){
 					if(!map.containsValue(cursor.getString(6))){
 						map.put(cursor.getString(0), cursor.getString(6));
 					}
-					else
+					else {
 						map.put(cursor.getString(0), "-1");
+					}
 				}
-				Log.d(TAG, "HashMap<>  key: " + cursor.getString(0) + " value: " + cursor.getString(6));
+				//Log.d(TAG, "HashMap<>  key: " + cursor.getString(0) + " value: " + cursor.getString(6));
+				 */
+				//if(!map.containsKey(cursor.getString(0));
+				mapper.setIdTrackToContentTitle(cursor.getString(0), cursor.getString(5));
+				mapper.setIdTrackToIdAlbum(cursor.getString(0), cursor.getString(6));
+				Log.d(TAG, "idTrack: " +cursor.getString(0)+ " idAlbum: " + cursor.getString(6) + " contentTitle: " + cursor.getString(5));
+				
 				cursor.moveToNext();
 			}
 		}
@@ -144,9 +154,15 @@ public class LibraryActivity extends Activity {
 				//String uriTrack	= tracks.getString(7);
 				Bitmap albumId 		= null;
 				
-				if(map.containsKey(String.valueOf(idTrack))){
+				/*if(map.containsKey(String.valueOf(idTrack))){
 						albumId		= adapter.getArtworkQuick(getApplicationContext(), Integer.parseInt(map.get(String.valueOf(idTrack))),
 												RESWIDTH, RESHEIGTH);				
+				}
+				*/
+				if(mapper.getIdTrackToIdAlbum().containsKey(String.valueOf(idTrack))){
+					String id_album	= mapper.getIdAlbumFromIdTrack(String.valueOf(idTrack));
+					albumId			= adapter.getArtworkQuick(getApplicationContext(), Integer.parseInt(id_album),
+							RESWIDTH, RESHEIGTH);		
 				}
 
 				infoTrack.putString("nameTrack", nameTrack);
@@ -175,7 +191,9 @@ public class LibraryActivity extends Activity {
 					if(reachable){
 						idTrack			= tracks.getInt(0);
 						PlayerController.deleteRowTrack(idTrack);
-						map.remove(String.valueOf(idTrack));
+						//map.remove(String.valueOf(idTrack));
+						mapper.getIdTrackToIdAlbum().remove(idTrack);
+						mapper.getIdTrackToContentTitle().remove(idTrack);
 					}
 					isChangedAnything = true;
 					
@@ -287,7 +305,7 @@ public class LibraryActivity extends Activity {
 					itemPosition		= position;
 					startActivityForResult(menuTrackActivity, MENU_TRACK);	
 				}	
-				return false;
+				return true;
 			}
 			
 		});
@@ -357,7 +375,9 @@ public class LibraryActivity extends Activity {
 						newCursor.moveToNext();
 					}
 					if(!found){
-						map.remove(cursor.getString(0));
+						//map.remove(cursor.getString(0));
+						mapper.getIdTrackToIdAlbum().remove(cursor.getString(0));
+						mapper.getIdTrackToContentTitle().remove(cursor.getString(0));
 						isChangedAnything = true;
 						break;
 					}
@@ -409,10 +429,10 @@ public class LibraryActivity extends Activity {
 				String[] from, int[] to, int flags) {
 			super(context, layout, c, from, to, flags);
 			mCursor = c;
-			
 			mCursor.moveToFirst();
+			
 			while(!mCursor.isAfterLast()){
-				if(!map.containsKey(mCursor.getString(0))){
+				/*if(!map.containsKey(mCursor.getString(0))){
 					if(!map.containsValue(mCursor.getString(6)))
 						map.put(mCursor.getString(0), mCursor.getString(6));
 					else
@@ -422,9 +442,38 @@ public class LibraryActivity extends Activity {
 					if(!map.get(mCursor.getString(0)).equals("-1"))
 							map.put(mCursor.getString(0), mCursor.getString(6));
 				}
+				*/
+				String contentTitle	= mapper.getContentTitleFromIdTrack(mCursor.getString(0));
+				String idAlbum		= mapper.getIdAlbumFromIdTrack(mCursor.getString(0));
+				
+				if(!mapper.getIdTrackToContentTitle().containsKey(mCursor.getString(0))){
+					if(mapper.getIdTrackToIdAlbum().containsValue(idAlbum)){
+						if(mapper.getIdTrackToContentTitle().containsValue(contentTitle)){
+							mapper.setIdTrackToIdAlbum(mCursor.getString(0), idAlbum);
+							mapper.setIdTrackToContentTitle(mCursor.getString(0), contentTitle);
+						}
+						else{
+							Log.d(TAG,"contentTitle diverso!!!");
+							mapper.setIdTrackToIdAlbum(mCursor.getString(0), "-1");
+							mapper.setIdTrackToContentTitle(mCursor.getString(0), contentTitle);
+						}
+					}
+					else{
+						Log.d(TAG, "idTrack: " +mCursor.getString(0)+ " idAlbum: " + idAlbum + " contentTitle: " + contentTitle);
+						mapper.setIdTrackToIdAlbum(mCursor.getString(0), idAlbum);
+						mapper.setIdTrackToContentTitle(mCursor.getString(0), contentTitle);
+					}
+				}
+				
+				
+				
 				
 				mCursor.moveToNext();
 			}
+			
+			
+			
+			
 	
 			// TODO Auto-generated constructor stub
 			 m_context = context;
@@ -434,7 +483,8 @@ public class LibraryActivity extends Activity {
 		public void setViewImage(ImageView v, String id){
 			String album_id = "-1";
 			if(!id.equals(null))
-				album_id = map.get(id);
+				//album_id = map.get(id);
+				album_id = mapper.getIdAlbumFromIdTrack(id);
 			
 				Bitmap bitmap = getArtworkQuick(m_context, Integer.parseInt(album_id), DIM_WIDTH, DIM_HEIGHT);
 				if(bitmap != null){

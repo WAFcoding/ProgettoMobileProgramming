@@ -88,9 +88,9 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 
 			//visualizzare la copertina
 			SinglePlaylistItem tmp_cover= item.getCover();
-			TextView tmp_title= (TextView)m_v.findViewById(R.id.textView_row_playlist);
+			//TextView tmp_title= (TextView)m_v.findViewById(R.id.textView_row_playlist);
 			playlist_name= tmp_cover.getTitle();
-			tmp_title.setText(playlist_name);
+			//tmp_title.setText(playlist_name);
 			//FIXME forse tocca usare la bitmap image per settare l'imageview
 			ImageView tmp_cover_image= (ImageView)m_v.findViewById(R.id.imageView_row_playlist);
 			//tmp_cover_image.setImageURI(Uri.parse(tmp_cover.getImagePath()));
@@ -130,15 +130,15 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				layout_item.setOrientation(LinearLayout.VERTICAL);
 				layout_item.removeAllViews();
 				
-				TextView song_title= new TextView(parent.getContext());
+				//TextView song_title= new TextView(parent.getContext());
 				LinearLayout.LayoutParams song_title_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 				//song_title_params.leftMargin= 3;
 				//song_title_params.topMargin= 2;
 				//song_title_params.rightMargin= 3;
-				song_title.setLayoutParams(song_title_params);
+				//song_title.setLayoutParams(song_title_params);
 				song_name= it.getTitle();
-				song_title.setText(song_name);
-				layout_item.addView(song_title);
+				//song_title.setText(song_name);
+				//layout_item.addView(song_title);
 				
 				ImageView song_cover= new ImageView(parent.getContext());
 				LinearLayout.LayoutParams song_cover_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);

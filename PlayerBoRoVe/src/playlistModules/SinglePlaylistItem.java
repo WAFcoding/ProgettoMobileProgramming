@@ -28,6 +28,11 @@ public class SinglePlaylistItem {
 	
 	private String album_id;
 	private Bitmap cover;
+	private String path_track;
+	private String kind;
+	
+
+	private String singer_name;
 	
 	private final int DIM_HEIGHT 	= 70;
 	private final int DIM_WIDTH 	= 70;
@@ -42,10 +47,12 @@ public class SinglePlaylistItem {
 		
 	}
 	
-	public SinglePlaylistItem(String p_title, String p_image_path, String album_id, Context context){
+	public SinglePlaylistItem(String p_title, String singerName, String kind, String album_id, String path_track, Context context){
+		this.singer_name 		= singerName;
+		this.kind 				= kind;
+		this.album_id 			= album_id;
 		setTitle(p_title);
-		setImagePath(p_image_path);
-		this.album_id = album_id;
+		//setImagePath(p_image_path);
 		cover = getArtworkQuick(context, Integer.parseInt(album_id), DIM_WIDTH, DIM_HEIGHT);
 		
 	}
@@ -55,6 +62,17 @@ public class SinglePlaylistItem {
 
 	public String getTitle() {
 		return title;
+	}
+	public String getKind() {
+		return kind;
+	}
+
+	public String getPath_track() {
+		return path_track;
+	}
+
+	public String getSinger_name() {
+		return singer_name;
 	}
 
 	public void setTitle(String title) {

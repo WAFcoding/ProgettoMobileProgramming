@@ -639,7 +639,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			addPlaylistToDb("secondo", tracks2);
 			
 			ArrayList<String> tracks3 = new ArrayList<String>();
-			tracks3.add("1");
+			//tracks3.add("1");
 			tracks3.add("6");
 			addPlaylistToDb("terzo", tracks3);
 			
