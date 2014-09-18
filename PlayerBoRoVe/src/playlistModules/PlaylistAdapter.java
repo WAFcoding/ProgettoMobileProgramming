@@ -58,12 +58,12 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 		ViewHolder holder;
 		if (m_v == null) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			m_v = inflater.inflate(R.layout.row_playlist, null);
+			m_v = inflater.inflate(R.layout.playlist_layout, null);
 			
-			HorizontalScrollView tmp_h_scroll= (HorizontalScrollView)m_v.findViewById(R.id.horizontalScrollView_row_playlist);
+			HorizontalScrollView tmp_h_scroll= (HorizontalScrollView)m_v.findViewById(R.id.horizontalScrollView_row_playlist1);
 			tmp_h_scroll.removeAllViews();
 			
-			m_vv=  inflater.inflate(R.layout.row_element_playlist, null);
+			m_vv=  inflater.inflate(R.layout.row_element_playlist2, null);
 			//tmp_linear_item= (LinearLayout)m_vv.findViewById(R.id.layout_row_element_playlist);
 			
 			
@@ -92,12 +92,12 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 			playlist_name= tmp_cover.getTitle();
 			//tmp_title.setText(playlist_name);
 			//FIXME forse tocca usare la bitmap image per settare l'imageview
-			ImageView tmp_cover_image= (ImageView)m_v.findViewById(R.id.imageView_row_playlist);
+			//ImageView tmp_cover_image= (ImageView)m_v.findViewById(R.id.imageView_row_playlist);
 			//tmp_cover_image.setImageURI(Uri.parse(tmp_cover.getImagePath()));
 			Bitmap bit = tmp_cover.getBitmapCover();
-			tmp_cover_image.setImageBitmap(bit);
+			//tmp_cover_image.setImageBitmap(bit);
 			//tmp_cover_image.setImageResource(R.drawable.nota_original);
-			tmp_cover_image.setOnLongClickListener(new OnLongClickListener() {
+			/*tmp_cover_image.setOnLongClickListener(new OnLongClickListener() {
 				
 				@Override
 				public boolean onLongClick(View v) {
@@ -107,6 +107,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 					return false;
 				}
 			});
+			*/
 		
 			//caricare i brani nella scroll view 
 			ArrayList<SinglePlaylistItem> tmp_songs= item.getSongs();
@@ -122,36 +123,43 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				SinglePlaylistItem it= tmp_songs.get(i);
 				//LinearLayout layout_item= new LinearLayout(parent.getContext());
 				LinearLayout layout_item= (LinearLayout)holder.layout.getChildAt(i);
-				LinearLayout.LayoutParams layout_item_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-				layout_item_params.leftMargin= 3;
-				layout_item_params.topMargin= 2;
-				layout_item_params.rightMargin= 3;
-				layout_item.setLayoutParams(layout_item_params);
+				//LinearLayout.LayoutParams layout_item_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+				//layout_item_params.leftMargin= 3;
+				//layout_item_params.topMargin= 2;
+				//layout_item_params.rightMargin= 3;
+				//layout_item.setLayoutParams(layout_item_params);
 				layout_item.setOrientation(LinearLayout.VERTICAL);
 				layout_item.removeAllViews();
 				
-				//TextView song_title= new TextView(parent.getContext());
+				TextView song_title= new TextView(parent.getContext());
 				LinearLayout.LayoutParams song_title_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-				//song_title_params.leftMargin= 3;
-				//song_title_params.topMargin= 2;
-				//song_title_params.rightMargin= 3;
-				//song_title.setLayoutParams(song_title_params);
+				song_title_params.leftMargin= 10;
+				song_title_params.topMargin= 2;
+				song_title_params.rightMargin= 10;
+				song_title_params.bottomMargin= 2;
+				song_title.setLayoutParams(song_title_params);
 				song_name= it.getTitle();
-				//song_title.setText(song_name);
-				//layout_item.addView(song_title);
+				if(song_name.length() > 6)
+					song_name = song_name.substring(0, 6);
+				song_title.setText(song_name);
+				
 				
 				ImageView song_cover= new ImageView(parent.getContext());
-				LinearLayout.LayoutParams song_cover_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-				//song_cover_params.leftMargin= 3;
-				//song_cover_params.topMargin= 2;
-				//song_cover_params.rightMargin= 3;
+				LinearLayout.LayoutParams song_cover_params= new LinearLayout.LayoutParams(180, 180);
+				song_cover_params.leftMargin= 10;
+				song_cover_params.topMargin= 10;
+				song_cover_params.rightMargin= 10;
+				song_cover_params.bottomMargin= 10;
 				song_cover.setLayoutParams(song_cover_params);
 				song_cover.setScaleType(ScaleType.FIT_XY);
+				song_cover.setLayoutParams(song_cover_params);
+				
+
 				Bitmap bit2 = it.getBitmapCover();
 				if(bit2 != null)
 					song_cover.setImageBitmap(bit2);
 				else
-					song_cover.setImageResource(R.drawable.nota_small);
+					song_cover.setImageResource(R.drawable.icon);
 				//song_cover.setImageResource(R.drawable.nota_small);
 				
 				song_cover.setOnLongClickListener(new OnLongClickListener() {
@@ -168,6 +176,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				});
 				
 				layout_item.addView(song_cover);
+				layout_item.addView(song_title);
 
 				//holder.layout.addView(layout_item);
 			}

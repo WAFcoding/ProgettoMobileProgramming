@@ -150,11 +150,12 @@ public class PlaylistActivity extends Activity {
 							String kind			= playlistCursor.getString(4);
 							String albumId		= playlistCursor.getString(7);
 							String path_track	= playlistCursor.getString(8);
-							if(!coverUsed){
+							/*if(!coverUsed){
 								//la cover
 								tmp_cover2 = new SinglePlaylistItem(title, name_singer, kind, albumId, path_track, this);
 								coverUsed = true;
 							}
+							*/
 							//la scrollview
 							//String album_id = "-1";
 							//if(!playlistCursor.getString(7).equals(null))
@@ -171,7 +172,7 @@ public class PlaylistActivity extends Activity {
 					PlaylistItem tmp_play= new PlaylistItem(tmp_cover2, tmp_songs);
 					items.add(tmp_play);	
 				}
-				m_adapter= new PlaylistAdapter(this, R.layout.row_playlist, items);
+				m_adapter= new PlaylistAdapter(this, R.layout.playlist_layout, items);
 				m_listview= (ListView)findViewById(R.id.listview_playlist);
 				m_listview.setAdapter(m_adapter);
 		}

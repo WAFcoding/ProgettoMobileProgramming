@@ -342,8 +342,7 @@ public class PlayerController extends SQLiteOpenHelper{
 												MediaStore.Audio.Media.DISPLAY_NAME,
 												MediaStore.Audio.Media.TITLE,
 												MediaStore.Audio.Media.ALBUM_ID,
-												MediaStore.Audio.Media.DURATION}, field, pathC, null);
-						
+												MediaStore.Audio.Media.DURATION}, field, pathC, null);			
 						/*c.moveToFirst();
 						while(!c.isAfterLast()){
 							for(int i=0; i < c.getColumnCount(); i++)
@@ -351,9 +350,7 @@ public class PlayerController extends SQLiteOpenHelper{
 							c.moveToNext();
 						}
 						*/
-						
-						
-						c.moveToLast();
+					c.moveToLast();
 						if(c.getCount() == 0){
 							Log.d(TAG, "onScanCompleted: cursor c non ha elementi!");
 							c.close();
