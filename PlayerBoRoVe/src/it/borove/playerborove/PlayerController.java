@@ -475,11 +475,12 @@ public class PlayerController extends SQLiteOpenHelper{
 	}
 	
 	public static Cursor getCursorPlaylist(){
+		//columnsSelect = {"id_P, nameP, pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack, albumName, duration"};
 		return cursorPlaylist;
 	}
 	
 	public void setCursorPlaylist(Cursor c){
-		this.cursorPlaylist = c;
+		PlayerController.cursorPlaylist = c;
 	}
 	
 	/**
@@ -628,6 +629,8 @@ public class PlayerController extends SQLiteOpenHelper{
 			tracks.add("1");
 			tracks.add("2");
 			tracks.add("3");
+			tracks.add("4");
+			tracks.add("5");
 			addPlaylistToDb("primo", tracks);
 			
 			ArrayList<String> tracks2 = new ArrayList<String>();

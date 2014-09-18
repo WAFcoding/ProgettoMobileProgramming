@@ -27,7 +27,9 @@ public class PlaylistItem {
 	
 	private SinglePlaylistItem cover;
 	private ArrayList<SinglePlaylistItem> songs;
+	private String title_playlist;
 	
+
 	private Cursor cursor;
 	private final int DIM_HEIGHT 	= 70;
 	private final int DIM_WIDTH 	= 70;
@@ -51,21 +53,21 @@ public class PlaylistItem {
 	/*
 	 * costruttore col cursore
 	 */
-	public  PlaylistItem(SinglePlaylistItem p_cover, ArrayList<SinglePlaylistItem> p_songs, Cursor cursor, Context context){
-		this.cursor = cursor;
-		Bitmap bitmap = null;
-		
-		
-		if(p_cover == null){
-			p_cover= new SinglePlaylistItem("", "");
-		}
-		
+	public  PlaylistItem(String title_playlist, ArrayList<SinglePlaylistItem> p_songs){
+		this.title_playlist = title_playlist;
+	
 		if(p_songs == null){
 			p_songs= new ArrayList<SinglePlaylistItem>();
 		}
-		
-		setCover(p_cover);
+
 		setSongs(p_songs);
+	}
+	
+	public String getTitle_playlist() {
+		return title_playlist;
+	}
+	public void setTitle_playlist(String title_playlist) {
+		this.title_playlist = title_playlist;
 	}
 
 	public SinglePlaylistItem getCover() {

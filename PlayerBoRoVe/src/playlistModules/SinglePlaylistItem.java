@@ -34,8 +34,8 @@ public class SinglePlaylistItem {
 
 	private String singer_name;
 	
-	private final int DIM_HEIGHT 	= 70;
-	private final int DIM_WIDTH 	= 70;
+	private final int DIM_HEIGHT 	= 200;
+	private final int DIM_WIDTH 	= 200;
 	private final Uri ART_CONTENT_URI = Uri.parse("content://media/external/audio/albumart");
 	private final BitmapFactory.Options sBitmapOptionsCache = new BitmapFactory.Options();
 	

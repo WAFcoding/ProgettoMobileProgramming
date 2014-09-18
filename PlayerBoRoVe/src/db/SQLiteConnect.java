@@ -739,7 +739,8 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 				try{
 					String field 		= attr + " like ?";
 					String [] filter 	= {where + "%" };
-					query		= "SELECT "+ "a." + COLUMN_ID +" AS id_P,b."+select + " FROM " + table_src + " AS a, " + table_dst + " AS b, " + TABLE_NAME_CONTAINS + " AS c"
+					query		= "SELECT "+ "a." + COLUMN_ID +" AS id_P, a."+ COLUMN_NAME + ",b."+select + " FROM " + table_src + " AS a, " 
+							+ table_dst + " AS b, " + TABLE_NAME_CONTAINS + " AS c"
 							+ " WHERE " + "a." + COLUMN_ID + "=c." + COLUMN_ID_PID + " AND " + "b." + COLUMN_ID + "=c." + COLUMN_ID_BID 
 							+ " AND " + "a." + field;
 					cursor = m_db.rawQuery(query, filter);

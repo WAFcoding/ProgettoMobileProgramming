@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_playlist"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:background="@drawable/gradient_listview">
 	<LinearLayout 
 	   android:orientation="vertical"
 	   android:layout_width="match_parent"
@@ -13,7 +14,9 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:fastScrollEnabled="true"
-		    android:divider="@android:color/darker_gray"	    />
+		    android:padding="3dp"
+		    android:divider="#000080"
+		    android:dividerHeight="2.0sp"	    />
 		
 	</LinearLayout>
 	<!-- the navigation drawer -->

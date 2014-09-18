@@ -9,7 +9,10 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -36,6 +39,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 	
 	private String playlist_name;
 	private String song_name;
+	private String author_name;
 	
 	//TODO per il menu di modifica delle playlist scorrere il dito sulla copertina
 	//e far comparire i pulsanti 
@@ -71,9 +75,14 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 			
 			holder.layout= new LinearLayout(parent.getContext());
 			LinearLayout.LayoutParams layout_item_params= new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+			layout_item_params.leftMargin 	= 10;
+			layout_item_params.topMargin 	= 10;
+			layout_item_params.bottomMargin = 5;
+			
 			holder.layout.setLayoutParams(layout_item_params);
 			holder.layout.setOrientation(LinearLayout.HORIZONTAL);
 			
+			tmp_h_scroll.setPadding(3, 3, 3, 3);
 			tmp_h_scroll.addView(holder.layout);
 			
 			m_vv.setTag(holder);
@@ -87,14 +96,22 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 		if(item != null){
 
 			//visualizzare la copertina
-			SinglePlaylistItem tmp_cover= item.getCover();
-			//TextView tmp_title= (TextView)m_v.findViewById(R.id.textView_row_playlist);
-			playlist_name= tmp_cover.getTitle();
-			//tmp_title.setText(playlist_name);
+			//SinglePlaylistItem tmp_cover	= item.getCover();
+			TextView playlist_title			= (TextView)m_v.findViewById(R.id.textPlaylist_layout);
+			LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			params.leftMargin	= 10;
+			params.topMargin	= 10;
+			params.bottomMargin	= 8;
+			playlist_title.setGravity(Gravity.LEFT);
+			playlist_title.setTypeface(null, Typeface.BOLD);
+			playlist_title.setTextSize(20.0f);
+			playlist_title.setTextColor(Color.parseColor("#c0c0c0"));
+			playlist_name					= item.getTitle_playlist();
+			playlist_title.setText(playlist_name);
 			//FIXME forse tocca usare la bitmap image per settare l'imageview
 			//ImageView tmp_cover_image= (ImageView)m_v.findViewById(R.id.imageView_row_playlist);
 			//tmp_cover_image.setImageURI(Uri.parse(tmp_cover.getImagePath()));
-			Bitmap bit = tmp_cover.getBitmapCover();
+			//Bitmap bit = tmp_cover.getBitmapCover();
 			//tmp_cover_image.setImageBitmap(bit);
 			//tmp_cover_image.setImageResource(R.drawable.nota_original);
 			/*tmp_cover_image.setOnLongClickListener(new OnLongClickListener() {
@@ -133,19 +150,35 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				
 				TextView song_title= new TextView(parent.getContext());
 				LinearLayout.LayoutParams song_title_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-				song_title_params.leftMargin= 10;
-				song_title_params.topMargin= 2;
-				song_title_params.rightMargin= 10;
-				song_title_params.bottomMargin= 2;
+				song_title_params.leftMargin= 5;
+				song_title_params.topMargin= 1;
+				song_title_params.rightMargin= 5;
+				song_title_params.bottomMargin= 1;
+				song_title.setTextColor(Color.parseColor("#00ffff"));
+				song_title.setGravity(Gravity.CENTER);
+				song_title.setTypeface(null, Typeface.BOLD);
 				song_title.setLayoutParams(song_title_params);
-				song_name= it.getTitle();
-				if(song_name.length() > 6)
-					song_name = song_name.substring(0, 6);
+				song_name= it.getTitle();	
+				if(song_name.length() > 20)
+					song_name = song_name.substring(0, 20);				
 				song_title.setText(song_name);
-				
+							
+				TextView author= new TextView(parent.getContext());
+				LinearLayout.LayoutParams author_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				author_params.leftMargin= 5;
+				author_params.rightMargin= 5;
+				author_params.bottomMargin= 7;
+				author.setTextColor(Color.parseColor("#008080"));
+				author.setGravity(Gravity.CENTER);
+				author.setTypeface(null, Typeface.ITALIC);
+				author.setLayoutParams(author_params);
+				author_name= it.getSinger_name();	
+				if(author_name.length() > 12)
+					author_name = author_name.substring(0, 12);	
+				author.setText(author_name);
 				
 				ImageView song_cover= new ImageView(parent.getContext());
-				LinearLayout.LayoutParams song_cover_params= new LinearLayout.LayoutParams(180, 180);
+				LinearLayout.LayoutParams song_cover_params= new LinearLayout.LayoutParams(200, 200);
 				song_cover_params.leftMargin= 10;
 				song_cover_params.topMargin= 10;
 				song_cover_params.rightMargin= 10;
@@ -177,6 +210,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				
 				layout_item.addView(song_cover);
 				layout_item.addView(song_title);
+				layout_item.addView(author);
 
 				//holder.layout.addView(layout_item);
 			}

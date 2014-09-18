@@ -387,7 +387,7 @@ public class LibraryActivity extends Activity {
 
 				if(!isChangedAnything){
 					Log.d(TAG, "!isChangedAnything");
-					Toast.makeText(LibraryActivity.this, "Il Db � gi� aggiornato", Toast.LENGTH_SHORT).show();		
+					Toast.makeText(LibraryActivity.this, "Db is already updated", Toast.LENGTH_SHORT).show();		
 				}
 				else{
 					LibraryActivity.adapter.swapCursor(newCursor);

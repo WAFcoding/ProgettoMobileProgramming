@@ -95,8 +95,8 @@ public class PlaylistActivity extends Activity {
 					id_p.add(playlistCursor.getString(0));
 				}
 				
-				mapper.setIdTrackToContentTitle(playlistCursor.getString(1), playlistCursor.getString(6));
-				mapper.setIdTrackToIdAlbum(playlistCursor.getString(1), playlistCursor.getString(7));
+				mapper.setIdTrackToContentTitle(playlistCursor.getString(2), playlistCursor.getString(7));
+				mapper.setIdTrackToIdAlbum(playlistCursor.getString(2), playlistCursor.getString(8));
 				
 				
 				
@@ -135,32 +135,31 @@ public class PlaylistActivity extends Activity {
 			//}
 		}
 		*/
-		SinglePlaylistItem tmp_cover2 = null;
+		//SinglePlaylistItem tmp_cover2 = null;
 			if(id_p != null){
 				ArrayList<SinglePlaylistItem> tmp_songs;
 				for(int i = 1; i <= id_p.size(); i++){
 					Log.d(TAG, "id_p.size()" + id_p.size());
 					playlistCursor.moveToFirst();
 					boolean coverUsed = false;
+					String name_playlist 		= "";
 					tmp_songs = new ArrayList<SinglePlaylistItem>();
 					while(!playlistCursor.isAfterLast()){
 						if(playlistCursor.getString(0).equals(String.valueOf(i))){
-							String title		= playlistCursor.getString(6);
-							String name_singer 	= playlistCursor.getString(3);
-							String kind			= playlistCursor.getString(4);
-							String albumId		= playlistCursor.getString(7);
-							String path_track	= playlistCursor.getString(8);
-							/*if(!coverUsed){
-								//la cover
-								tmp_cover2 = new SinglePlaylistItem(title, name_singer, kind, albumId, path_track, this);
+							String title		= playlistCursor.getString(7);
+							String name_singer 	= playlistCursor.getString(4);
+							String kind			= playlistCursor.getString(5);
+							String path_track	= playlistCursor.getString(9);
+							if(!coverUsed){
+								name_playlist = playlistCursor.getString(1);								
 								coverUsed = true;
 							}
-							*/
+							
 							//la scrollview
 							//String album_id = "-1";
 							//if(!playlistCursor.getString(7).equals(null))
 							//album_id = map.get(playlistCursor.getString(1));
-							String album_id = mapper.getIdAlbumFromIdTrack(playlistCursor.getString(1));
+							String album_id = mapper.getIdAlbumFromIdTrack(playlistCursor.getString(2));
 							//String path_track = playlistCursor.getString(8);
 							//album_id = playlistCursor.getString(7);
 							SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem(title, name_singer, kind, album_id, path_track, this);
@@ -169,7 +168,7 @@ public class PlaylistActivity extends Activity {
 						playlistCursor.moveToNext();
 					}
 					
-					PlaylistItem tmp_play= new PlaylistItem(tmp_cover2, tmp_songs);
+					PlaylistItem tmp_play= new PlaylistItem(name_playlist, tmp_songs);
 					items.add(tmp_play);	
 				}
 				m_adapter= new PlaylistAdapter(this, R.layout.playlist_layout, items);
