@@ -64,6 +64,10 @@
             android:name="it.borove.playerborove.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+        <activity
+            android:name="it.borove.playerborove.PlaylistAddActivity"
+            android:label="@string/title_activity_playlist_add" >
+        </activity>
     </application>
 
 </manifest>

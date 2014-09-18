@@ -59,5 +59,17 @@
        <item >Aggiorna</item>
        <item >Impostazioni</item>
     </string-array>
+    
+	<!-- *****************add playlist**************** -->
+    <string name="title_activity_playlist_add">PlaylistAddActivity</string>
+    
+    <string name="label_add_playlist">Insert the name of the playlist</string>
+    
+    <string name="playlist_add_hint">New Playlist</string>
+    
+	<!-- *****************popup add playlist**************** -->
+    <string name="playlist_popup_choice1">Elimina</string>
+    <string name="playlist_popup_choice2">Dettagli</string>
+    <string name="playlist_popup_choice3">Annulla</string>
 
 </resources>
