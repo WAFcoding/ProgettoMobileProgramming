@@ -125,7 +125,16 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				}
 			});
 			*/
-		
+
+			//serve per il menu contestuale
+			playlist_title.setOnLongClickListener(new OnLongClickListener() {
+				
+				@Override
+				public boolean onLongClick(View v) {
+					Toast.makeText(getContext(), " long_click su nome playist", Toast.LENGTH_SHORT).show();
+					return false;
+				}
+			});
 			//caricare i brani nella scroll view 
 			ArrayList<SinglePlaylistItem> tmp_songs= item.getSongs();
 			

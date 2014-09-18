@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center_vertical|center_horizontal" >
+    
+    <item 
+        android:id="@+id/playlist_popup_menu_choice1"
+        android:title="@string/playlist_popup_choice1"
+        android:visible="true"/>
+    
+    <item 
+        android:id="@+id/playlist_popup_menu_choice2"
+        android:title="@string/playlist_popup_choice2"
+        android:visible="true"/>
+    
+    <item 
+        android:id="@+id/playlist_popup_menu_choice3"
+        android:title="@string/playlist_popup_choice3"
+        android:visible="true"/>
+
+</menu>

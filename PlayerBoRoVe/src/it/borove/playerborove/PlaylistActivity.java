@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -22,13 +23,17 @@ import android.os.ParcelFileDescriptor;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class PlaylistActivity extends Activity {
 	
@@ -174,6 +179,7 @@ public class PlaylistActivity extends Activity {
 				m_adapter= new PlaylistAdapter(this, R.layout.playlist_layout, items);
 				m_listview= (ListView)findViewById(R.id.listview_playlist);
 				m_listview.setAdapter(m_adapter);
+		        registerForContextMenu(m_listview);
 		}
 		
 		//il navigation drawer
@@ -208,7 +214,7 @@ public class PlaylistActivity extends Activity {
         drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
         drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
         	
-       
+
 	
 	}
 
@@ -249,6 +255,14 @@ public class PlaylistActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			//Add Playlist
+			if(position == 0){
+				startActivity(new Intent(PlaylistActivity.this, PlaylistAddActivity.class));
+			}
+			//Update
+			else if(position == 1){
+				
+			}
 			drawer.closeDrawer(drawer_list_view);
 			Toast.makeText(parent.getContext(), "selezionato elemento " + position, Toast.LENGTH_SHORT).show();
 		}
@@ -294,5 +308,30 @@ public class PlaylistActivity extends Activity {
 		//return album_id;
 	}
 	*/
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+			super.onCreateContextMenu(menu, v, menuInfo);
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.popup_menu_playlist, menu);
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	    switch (item.getItemId()) {
+	        case R.id.playlist_popup_menu_choice1:
+	            
+	            return true;
+	        case R.id.playlist_popup_menu_choice2:
+	            
+	            return true;
+	        case R.id.playlist_popup_menu_choice3:
+	            
+	            return true;
+	        default:
+	            return super.onContextItemSelected(item);
+	    }
+	}
 
 }
