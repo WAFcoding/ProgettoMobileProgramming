@@ -128,8 +128,7 @@ public class LibraryActivity extends Activity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-		
-		
+	
         drawer_list_view= (ListView)findViewById(R.id.left_drawer);
         drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
         drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
@@ -196,8 +195,7 @@ public class LibraryActivity extends Activity {
 						mapper.getIdTrackToContentTitle().remove(idTrack);
 					}
 					isChangedAnything = true;
-					
-					
+					Toast.makeText(LibraryActivity.this, "Please update Library", Toast.LENGTH_SHORT).show();
 				}
 			});
 			popup.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -208,8 +206,8 @@ public class LibraryActivity extends Activity {
 				}
 				
 			});			
-			popup.setTitle("Conferma cancellazione");
-			popup.setMessage("Sei sicuro?");
+			popup.setTitle("Confirm delete");
+			popup.setMessage("Are you Sure?");
 			popup.show();
 				
 		}
@@ -290,7 +288,7 @@ public class LibraryActivity extends Activity {
 		}
 		
 	}
-	//---------------------------------
+
 	protected void listener(){
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -311,7 +309,6 @@ public class LibraryActivity extends Activity {
 		});
 		
 		listView.setOnItemClickListener(new OnItemClickListener(){
-
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				// TODO Auto-generated method stub
@@ -320,8 +317,7 @@ public class LibraryActivity extends Activity {
 				if(reachable){
 					idTrack				= tracks.getInt(0);
 					
-					Bitmap albumId		= adapter.getArtworkQuick(getApplicationContext(), tracks.getInt(6), RESWIDTH, RESHEIGTH);
-				 	
+					Bitmap albumId		= adapter.getArtworkQuick(getApplicationContext(), tracks.getInt(6), RESWIDTH, RESHEIGTH);				 	
 					Bundle b=new Bundle();
 					b.putString("uri",tracks.getString(7));
 					b.putString("title",tracks.getString(5));
@@ -333,73 +329,75 @@ public class LibraryActivity extends Activity {
 			}
 			
 		});
-
-		
+	
 		btnUpdate.setOnClickListener(new OnClickListener() {	
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Log.d(TAG, "Update bottone");
+				//Log.d(TAG, "Update bottone");
 				Cursor newCursor = PlayerController.getCursorTracks();
 				isChangedAnything = false;
-				newCursor.moveToFirst();
-				while(!newCursor.isAfterLast()){
-					boolean found = false;
-					//Log.d(TAG, "newCursor.getString(0): " + newCursor.getString(0));
-					cursor.moveToFirst();
-					while(!cursor.isAfterLast()){
-						if(cursor.getString(0).equals(newCursor.getString(0))){
-							found = true;		
-							break;
-						}
-
-						cursor.moveToNext();
-					}
-					if(!found){
-						isChangedAnything = true;
-						break;
-					}
-				
-					newCursor.moveToNext();
-				}			
-				cursor.moveToFirst();
-				while(!cursor.isAfterLast()){
-					boolean found = false;
+				if(newCursor != null){
 					newCursor.moveToFirst();
 					while(!newCursor.isAfterLast()){
-						if(cursor.getString(0).equals(newCursor.getString(0))){						
-							found = true;
+						boolean found = false;
+						//Log.d(TAG, "newCursor.getString(0): " + newCursor.getString(0));
+						cursor.moveToFirst();
+						while(!cursor.isAfterLast()){
+							if(cursor.getString(0).equals(newCursor.getString(0))){
+								found = true;		
+								break;
+							}
+	
+							cursor.moveToNext();
+						}
+						if(!found){
+							isChangedAnything = true;
 							break;
 						}
-						
+					
 						newCursor.moveToNext();
+					}			
+					cursor.moveToFirst();
+					while(!cursor.isAfterLast()){
+						boolean found = false;
+						newCursor.moveToFirst();
+						while(!newCursor.isAfterLast()){
+							if(cursor.getString(0).equals(newCursor.getString(0))){						
+								found = true;
+								break;
+							}
+							
+							newCursor.moveToNext();
+						}
+						if(!found){
+							//map.remove(cursor.getString(0));
+							mapper.getIdTrackToIdAlbum().remove(cursor.getString(0));
+							mapper.getIdTrackToContentTitle().remove(cursor.getString(0));
+							isChangedAnything = true;
+							break;
+						}
+	
+						cursor.moveToNext();
 					}
-					if(!found){
-						//map.remove(cursor.getString(0));
-						mapper.getIdTrackToIdAlbum().remove(cursor.getString(0));
-						mapper.getIdTrackToContentTitle().remove(cursor.getString(0));
-						isChangedAnything = true;
-						break;
+	
+					if(!isChangedAnything){
+						Log.d(TAG, "!isChangedAnything");
+						Toast.makeText(LibraryActivity.this, "Database is updated", Toast.LENGTH_SHORT).show();		
 					}
-
-					cursor.moveToNext();
+					else{
+						LibraryActivity.adapter.swapCursor(newCursor);
+						setAdapter(newCursor);
+						adapter.notifyDataSetChanged();
+						isChangedAnything = false;
+					}
 				}
-
-				if(!isChangedAnything){
-					Log.d(TAG, "!isChangedAnything");
-					Toast.makeText(LibraryActivity.this, "Db is already updated", Toast.LENGTH_SHORT).show();		
-				}
-				else{
-					LibraryActivity.adapter.swapCursor(newCursor);
-					setAdapter(newCursor);
-					adapter.notifyDataSetChanged();
-					isChangedAnything = false;
-				}
+				else
+					Toast.makeText(LibraryActivity.this, "Database is empty!", Toast.LENGTH_SHORT).show();
 			}
 		});
 		
 	}
-
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event){
 		
@@ -408,13 +406,9 @@ public class LibraryActivity extends Activity {
 			finish();
 			overridePendingTransition(R.anim.right_in, R.anim.left_out);
 			return true;
-		}
-		
+		}	
 		return super.onKeyDown(keyCode, event); 
 	}
-	
-
-	
 	
 	public class MySimpleCursorAdapter extends SimpleCursorAdapter{
 		private Context m_context;
@@ -553,8 +547,9 @@ public class LibraryActivity extends Activity {
 		                }
 		            }
 		        }
-		        else 
-		        	Log.e(TAG, "dentro getArtworkQuick: Uri � NULL");
+		        else {
+		        		Log.e(TAG, "dentro getArtworkQuick: Uri is NULL");
+		        }
 		        return null;
 		    }
 		

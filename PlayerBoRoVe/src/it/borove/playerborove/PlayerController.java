@@ -65,7 +65,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static final String MODIFYTO	= "modifyto";
 	private String value;
 	
-	private Context m_context;
+	private static Context m_context;
 	private static Cursor cursorTracks;
 	private static Cursor cursorPlaylist;
 	private final static String TAG = "PLAYERCONTROLLER";
@@ -122,7 +122,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	}
 	
 	//Crea il database per la prima volta
-	public void createDb(){
+	public static void createDb(){
 		sqlDatabaseHelper.createDatabase();
 	}
 	
@@ -216,11 +216,29 @@ public class PlayerController extends SQLiteOpenHelper{
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 	
-		sqlDatabaseHelper.eraseDatabase();
+		eraseDatabase();
 		createDb();
 		new SynchronizeDb().execute();
 	}
+	
+	public static void eraseDatabase(){
+		if(sqlDatabaseHelper != null)
+			sqlDatabaseHelper.eraseDatabase();
+		cursorPlaylist 	= null;
+		cursorTracks	= null;
+	
+	}
 
+	public static boolean isDatabaseExist(){
+		boolean exist = false;
+		
+		if(sqlDatabaseHelper.getDb() != null)
+			exist = true;
+		
+		return exist;
+	}
+	
+	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
@@ -231,7 +249,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	 * @param context
 	 * @return cursore
 	 */
-	public Cursor getInfoMetaMp3(Context context, final String namePathTrack){
+	public static Cursor getInfoMetaMp3(Context context, final String namePathTrack){
 		Cursor c = null;
 		//Log.d(TAG, "Dentro getInfoMetaMp3");
 		if(namePathTrack == null){
@@ -276,7 +294,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		return c;	
 	}
 	
-	public class updateDbOnTrack extends AsyncTask<String,Void,Void>{
+	public static class updateDbOnTrack extends AsyncTask<String,Void,Void>{
 		 private OnScanCompletedListener callback;
 		 private String artist;
 		 private String pathTrack;
@@ -404,7 +422,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		 
 	 }
 
-	private class SynchronizeDb extends AsyncTask<Void, Void, Cursor>{
+	public static class SynchronizeDb extends AsyncTask<Void, Void, Cursor>{
 		private Cursor getTracksFromDb;
 		@Override
 		protected Cursor doInBackground(Void... params) {
@@ -450,6 +468,9 @@ public class PlayerController extends SQLiteOpenHelper{
 	}
 	
 	public static Cursor getCursorTracks(){
+		if(sqlDatabaseHelper.getDb() == null)
+			return null;
+		
 		String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack, albumName, duration"};
 		sqlDatabaseHelper.openDatabaseReadOnly();
 		Cursor cursorTracks = sqlDatabaseHelper.getDb().query(SQLiteConnect.TABLE_NAME_TRACK, columnsSelect,null,null,null,null,null);
@@ -470,16 +491,25 @@ public class PlayerController extends SQLiteOpenHelper{
 		
 	}
 	
-	public void setCursorTracks(Cursor cursor){
+	public static void setCursorTracks(Cursor cursor){
 		PlayerController.cursorTracks = cursor;
 	}
 	
 	public static Cursor getCursorPlaylist(){
 		//columnsSelect = {"id_P, nameP, pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack, albumName, duration"};
+		
+		try{
+			//String[] columnSelect = {"*"};
+			cursorPlaylist = sqlDatabaseHelper.getQueryResult("", SQLiteConnect.COLUMN_NAME, SQLiteConnect.TABLE_NAME_PLAYLIST,
+																 SQLiteConnect.TABLE_NAME_TRACK, "*");
+		}catch(Exception e){
+			e.printStackTrace();}
+		//Log.d(TAG, "Recupero playlist! su db");
+		
 		return cursorPlaylist;
 	}
 	
-	public void setCursorPlaylist(Cursor c){
+	public static void setCursorPlaylist(Cursor c){
 		PlayerController.cursorPlaylist = c;
 	}
 	
@@ -537,7 +567,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	 * @param arrayIdTrack	insieme di brani associati alla playlist
 	 */
 	
-	public void addPlaylistToDb(String namePlaylist, ArrayList<String> arrayIdTrack){
+	public static void addPlaylistToDb(String namePlaylist, ArrayList<String> arrayIdTrack){
 		try{
 			Cursor pl = sqlDatabaseHelper.addRowPlaylist(namePlaylist);
 			if(pl != null)
@@ -606,7 +636,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	 *
 	 */
 	
-	public class SynchronizePlaylistDb extends AsyncTask<Void, Void, Cursor>{
+	public static class SynchronizePlaylistDb extends AsyncTask<Void, Void, Cursor>{
 		private Cursor cursorPlaylist;
 
 		@Override

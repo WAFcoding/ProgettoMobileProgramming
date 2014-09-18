@@ -188,7 +188,10 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 		}
 	}
 	public SQLiteDatabase getDb(){
-		return this.m_db;
+		if(m_db != null)
+			return this.m_db;
+		else
+			return null;
 	}
 	
 	/**
@@ -692,6 +695,8 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	 * 
 	 */
 	public Cursor getQueryResult(String where, String attr, String table_src, String table_dst, String select){
+		if(this.m_db == null)
+			return null;
 		openDatabaseReadOnly();
 		String query 		= "";
 		Cursor cursor	 	= null;

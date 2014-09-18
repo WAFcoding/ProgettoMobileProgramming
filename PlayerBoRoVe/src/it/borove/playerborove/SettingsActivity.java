@@ -1,14 +1,21 @@
 package it.borove.playerborove;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -20,6 +27,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class SettingsActivity extends Activity{
 	private static final String SETTINGS = "SETTINGS";
@@ -36,6 +44,9 @@ public class SettingsActivity extends Activity{
 	private EditText editTextNLoopPlaylist;
 	private CheckBox infiniteLoopCheckBox;
 	private RadioGroup radioGroup;
+	private Button eraseDatabase;
+	private Button synchronizeDatabase;
+	private AlertDialog.Builder popup;
 	static final int TIME_DIALOG_ID = 0;
 	
 	
@@ -43,17 +54,20 @@ public class SettingsActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settings_activity);
-		final SeekBar seekBarFadeIn=(SeekBar) findViewById(R.id.seekBar1);
-		final SeekBar seekBarFadeOut=(SeekBar) findViewById(R.id.seekBar2);
-		final SeekBar seekBarPreview=(SeekBar) findViewById(R.id.seekBarPreview);
+		final SeekBar seekBarFadeIn		=(SeekBar) findViewById(R.id.seekBar1);
+		final SeekBar seekBarFadeOut	=(SeekBar) findViewById(R.id.seekBar2);
+		final SeekBar seekBarPreview	=(SeekBar) findViewById(R.id.seekBarPreview);
 		
-		textViewFadeIn=(TextView) findViewById(R.id.textViewValue1);
-		textViewFadeOut=(TextView) findViewById(R.id.textViewValue2);
-		textViewPreview=(TextView) findViewById(R.id.textViewValuePreview);
-		editTextDisplayTime=(EditText)findViewById(R.id.editText1);
-		editTextNLoopPlaylist=(EditText)findViewById(R.id.editTextNLoopPlaylist);
-		infiniteLoopCheckBox=(CheckBox) findViewById(R.id.infiniteLoopCheckBox);
-		radioGroup=(RadioGroup) findViewById(R.id.radioGroup);
+		textViewFadeIn			=(TextView)findViewById(R.id.textViewValue1);
+		textViewFadeOut			=(TextView)findViewById(R.id.textViewValue2);
+		textViewPreview			=(TextView)findViewById(R.id.textViewValuePreview);
+		editTextDisplayTime		=(EditText)findViewById(R.id.editText1);
+		editTextNLoopPlaylist	=(EditText)findViewById(R.id.editTextNLoopPlaylist);
+		infiniteLoopCheckBox	=(CheckBox)findViewById(R.id.infiniteLoopCheckBox);
+		radioGroup				=(RadioGroup)findViewById(R.id.radioGroup);
+		eraseDatabase			=(Button)findViewById(R.id.buttonCancelDatabase);
+		synchronizeDatabase		=(Button)findViewById(R.id.buttonSyncronizesDatabase);
+		
 		 getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		
 		SharedPreferences prefs=getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
@@ -191,7 +205,84 @@ public class SettingsActivity extends Activity{
 			}
 			
 		});
+		
+		Cursor someTrack	= PlayerController.getCursorTracks();
+		if(someTrack == null){
+			Log.d(SETTINGS, "someTrack è NULL");
+			eraseDatabase.setBackgroundColor(Color.TRANSPARENT);
+			eraseDatabase.setTextColor(Color.DKGRAY);
+			eraseDatabase.setEnabled(false);
+		}
+		else{
+			Log.d(SETTINGS, "someTrack è diverso da NULL");
+			eraseDatabase.setBackground(getResources().getDrawable(R.drawable.ellipse_button));
+			eraseDatabase.setTextColor(Color.WHITE);
+			eraseDatabase.setEnabled(true);
+		}
+		
+		
+		eraseDatabase.setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
 				
+				popup = new AlertDialog.Builder(SettingsActivity.this);
+				
+				popup.setPositiveButton("Erase", new DialogInterface.OnClickListener() {			
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						
+						PlayerController.eraseDatabase();
+						Log.d(SETTINGS, "popup.setPositiveButton: ->Erase");
+						eraseDatabase.setBackgroundColor(Color.TRANSPARENT);
+						eraseDatabase.setTextColor(Color.DKGRAY);
+						eraseDatabase.setEnabled(false);
+						
+					}
+				});
+				
+				popup.setNegativeButton("Undo", new DialogInterface.OnClickListener() {				
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub		
+					}
+				});
+				
+				popup.setTitle("Confirm erase Database");
+				popup.setMessage("Are you sure? This involves the complete removal of the tracks and playlist");
+				popup.show();
+				
+			
+			}
+		});
+		
+		synchronizeDatabase.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+					PlayerController.createDb();
+					new PlayerController.SynchronizeDb().execute();
+					Toast.makeText(SettingsActivity.this, "database created", Toast.LENGTH_LONG).show();
+				
+				Cursor someTrack	= PlayerController.getCursorTracks();
+				if(someTrack == null){
+					Log.d(SETTINGS, "someTrack è NULL");
+					eraseDatabase.setBackgroundColor(Color.TRANSPARENT);
+					eraseDatabase.setTextColor(Color.DKGRAY);
+					eraseDatabase.setEnabled(false);
+				}
+				else{
+					Log.d(SETTINGS, "someTrack è diverso da NULL");
+					eraseDatabase.setBackground(getResources().getDrawable(R.drawable.ellipse_button));
+					eraseDatabase.setTextColor(Color.WHITE);
+					eraseDatabase.setEnabled(true);
+				}
+			
+			}
+		});
+		
+		
 		
 	}
 	
