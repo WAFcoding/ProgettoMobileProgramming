@@ -71,7 +71,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 			holder= new ViewHolder();
 			
 			holder.layout= new LinearLayout(parent.getContext());
-			LinearLayout.LayoutParams layout_item_params= new LinearLayout.LayoutParams(100, 45);
+			LinearLayout.LayoutParams layout_item_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 			layout_item_params.leftMargin 	= 10;
 			layout_item_params.topMargin 	= 10;
 			layout_item_params.bottomMargin = 5;
@@ -94,7 +94,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 
 			//visualizzare la copertina
 			TextView playlist_title			= (TextView)m_v.findViewById(R.id.textPlaylist_layout);
-			LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 			params.leftMargin	= 10;
 			params.topMargin	= 10;
 			params.bottomMargin	= 8;
@@ -140,8 +140,8 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				layout_item.removeAllViews();
 				
 				TextView song_title= new TextView(parent.getContext());
-				//LinearLayout.LayoutParams song_title_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-				LinearLayout.LayoutParams song_title_params= new LinearLayout.LayoutParams(11, 5);
+				LinearLayout.LayoutParams song_title_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				//LinearLayout.LayoutParams song_title_params= new LinearLayout.LayoutParams(11, 5);
 				song_title_params.leftMargin= 5;
 				song_title_params.topMargin= 1;
 				song_title_params.rightMargin= 5;
@@ -156,8 +156,8 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				song_title.setText(song_name);
 							
 				TextView author= new TextView(parent.getContext());
-				//LinearLayout.LayoutParams author_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-				LinearLayout.LayoutParams author_params= new LinearLayout.LayoutParams(60, 60);
+				LinearLayout.LayoutParams author_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				//LinearLayout.LayoutParams author_params= new LinearLayout.LayoutParams(60, 60);
 				author_params.leftMargin= 5;
 				author_params.rightMargin= 5;
 				author_params.bottomMargin= 7;
@@ -171,7 +171,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				author.setText(author_name);
 				
 				ImageView song_cover= new ImageView(parent.getContext());
-				LinearLayout.LayoutParams song_cover_params= new LinearLayout.LayoutParams(54, 54);
+				LinearLayout.LayoutParams song_cover_params= new LinearLayout.LayoutParams(200, 200);
 				song_cover_params.leftMargin= 10;
 				song_cover_params.topMargin= 10;
 				song_cover_params.rightMargin= 10;
