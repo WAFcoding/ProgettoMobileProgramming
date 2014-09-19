@@ -11,6 +11,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,7 +26,7 @@ import android.widget.TextView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
-
+import android.widget.ExpandableListAdapter;
 /**
  * @author "Pasquale Verlotta - pasquale.verlotta@gmail.com"
  *
@@ -40,7 +41,8 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 	private String playlist_name;
 	private String song_name;
 	private String author_name;
-	
+	private HorizontalScrollView tmp_h_scroll;
+
 	//TODO per il menu di modifica delle playlist scorrere il dito sulla copertina
 	//e far comparire i pulsanti 
 
@@ -53,9 +55,6 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 		this.items= items;
 	}
 	
-	
-	
-	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent){
 		m_v= convertView;
@@ -64,24 +63,22 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			m_v = inflater.inflate(R.layout.playlist_layout, null);
 			
-			HorizontalScrollView tmp_h_scroll= (HorizontalScrollView)m_v.findViewById(R.id.horizontalScrollView_row_playlist1);
+			tmp_h_scroll= (HorizontalScrollView)m_v.findViewById(R.id.horizontalScrollView_row_playlist1);
 			tmp_h_scroll.removeAllViews();
 			
 			m_vv=  inflater.inflate(R.layout.row_element_playlist2, null);
-			//tmp_linear_item= (LinearLayout)m_vv.findViewById(R.id.layout_row_element_playlist);
-			
-			
+		
 			holder= new ViewHolder();
 			
 			holder.layout= new LinearLayout(parent.getContext());
-			LinearLayout.LayoutParams layout_item_params= new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+			LinearLayout.LayoutParams layout_item_params= new LinearLayout.LayoutParams(100, 45);
 			layout_item_params.leftMargin 	= 10;
 			layout_item_params.topMargin 	= 10;
 			layout_item_params.bottomMargin = 5;
 			
 			holder.layout.setLayoutParams(layout_item_params);
 			holder.layout.setOrientation(LinearLayout.HORIZONTAL);
-			
+			holder.layout.setVisibility(View.VISIBLE);
 			tmp_h_scroll.setPadding(3, 3, 3, 3);
 			tmp_h_scroll.addView(holder.layout);
 			
@@ -96,7 +93,6 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 		if(item != null){
 
 			//visualizzare la copertina
-			//SinglePlaylistItem tmp_cover	= item.getCover();
 			TextView playlist_title			= (TextView)m_v.findViewById(R.id.textPlaylist_layout);
 			LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			params.leftMargin	= 10;
@@ -106,25 +102,9 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 			playlist_title.setTypeface(null, Typeface.BOLD);
 			playlist_title.setTextSize(20.0f);
 			playlist_title.setTextColor(Color.parseColor("#c0c0c0"));
-			playlist_name					= item.getTitle_playlist();
+			playlist_name		= item.getTitle_playlist();
 			playlist_title.setText(playlist_name);
-			//FIXME forse tocca usare la bitmap image per settare l'imageview
-			//ImageView tmp_cover_image= (ImageView)m_v.findViewById(R.id.imageView_row_playlist);
-			//tmp_cover_image.setImageURI(Uri.parse(tmp_cover.getImagePath()));
-			//Bitmap bit = tmp_cover.getBitmapCover();
-			//tmp_cover_image.setImageBitmap(bit);
-			//tmp_cover_image.setImageResource(R.drawable.nota_original);
-			/*tmp_cover_image.setOnLongClickListener(new OnLongClickListener() {
-				
-				@Override
-				public boolean onLongClick(View v) {
-					//TODO inserire qui la chiamata al controllore per attivare la riproduzione del brano
-					Toast.makeText(getContext(), "anteprima playlist : " + playlist_name, Toast.LENGTH_SHORT).show();
-					
-					return false;
-				}
-			});
-			*/
+			
 
 			//serve per il menu contestuale
 			playlist_title.setOnLongClickListener(new OnLongClickListener() {
@@ -142,23 +122,26 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 			//holder.layout.removeAllViews();
 			for(int i=0;i<size;i++){
 				holder.layout.addView(new LinearLayout(parent.getContext()));
+				holder.layout.setVisibility(View.VISIBLE);
 			}
 			
 			for(int i=0;i<size;i++){
 				
 				SinglePlaylistItem it= tmp_songs.get(i);
-				//LinearLayout layout_item= new LinearLayout(parent.getContext());
+				if(it == null){
+					holder.layout.setVisibility(View.GONE);
+					m_vv.setVisibility(View.GONE);
+					tmp_h_scroll.setVisibility(View.GONE);
+					
+				}
 				LinearLayout layout_item= (LinearLayout)holder.layout.getChildAt(i);
-				//LinearLayout.LayoutParams layout_item_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-				//layout_item_params.leftMargin= 3;
-				//layout_item_params.topMargin= 2;
-				//layout_item_params.rightMargin= 3;
-				//layout_item.setLayoutParams(layout_item_params);
+				
 				layout_item.setOrientation(LinearLayout.VERTICAL);
 				layout_item.removeAllViews();
 				
 				TextView song_title= new TextView(parent.getContext());
-				LinearLayout.LayoutParams song_title_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				//LinearLayout.LayoutParams song_title_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				LinearLayout.LayoutParams song_title_params= new LinearLayout.LayoutParams(11, 5);
 				song_title_params.leftMargin= 5;
 				song_title_params.topMargin= 1;
 				song_title_params.rightMargin= 5;
@@ -173,7 +156,8 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				song_title.setText(song_name);
 							
 				TextView author= new TextView(parent.getContext());
-				LinearLayout.LayoutParams author_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				//LinearLayout.LayoutParams author_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				LinearLayout.LayoutParams author_params= new LinearLayout.LayoutParams(60, 60);
 				author_params.leftMargin= 5;
 				author_params.rightMargin= 5;
 				author_params.bottomMargin= 7;
@@ -187,7 +171,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				author.setText(author_name);
 				
 				ImageView song_cover= new ImageView(parent.getContext());
-				LinearLayout.LayoutParams song_cover_params= new LinearLayout.LayoutParams(200, 200);
+				LinearLayout.LayoutParams song_cover_params= new LinearLayout.LayoutParams(54, 54);
 				song_cover_params.leftMargin= 10;
 				song_cover_params.topMargin= 10;
 				song_cover_params.rightMargin= 10;
@@ -198,11 +182,15 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				
 
 				Bitmap bit2 = it.getBitmapCover();
-				if(bit2 != null)
+				//m_vv.setVisibility(View.VISIBLE);
+				//tmp_h_scroll.setVisibility(View.VISIBLE);
+
+				if(bit2 != null){
 					song_cover.setImageBitmap(bit2);
-				else
+				}
+				else{
 					song_cover.setImageResource(R.drawable.icon);
-				//song_cover.setImageResource(R.drawable.nota_small);
+				}
 				
 				song_cover.setOnLongClickListener(new OnLongClickListener() {
 					
@@ -221,39 +209,14 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				layout_item.addView(song_title);
 				layout_item.addView(author);
 
-				//holder.layout.addView(layout_item);
 			}
-			/*
-			for(SinglePlaylistItem it : tmp_songs){
-				LinearLayout layout_item= new LinearLayout(parent.getContext());
-				LinearLayout.LayoutParams layout_item_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-				layout_item.setLayoutParams(layout_item_params);
-				layout_item.setOrientation(LinearLayout.VERTICAL);
-				layout_item.setWeightSum(1.0f);
-				
-				TextView song_title= new TextView(parent.getContext());
-				LinearLayout.LayoutParams song_title_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-				song_title.setLayoutParams(song_title_params);
-				song_title.setText(it.getTitle());
-				layout_item.addView(song_title);
-				
-				ImageView song_cover= new ImageView(parent.getContext());
-				LinearLayout.LayoutParams song_cover_params= new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-				song_cover.setLayoutParams(song_cover_params);
-				song_cover.setScaleType(ScaleType.FIT_XY);
-				song_cover.setImageResource(R.drawable.nota_small);
-				layout_item.addView(song_cover);
-				
-				tmp_linear.addView(layout_item);
-				
-			}*/
+			
 		}
 		
 		return m_v;
 	}
 	
 	private static class ViewHolder{
-		//private ArrayList<LinearLayout> layouts;
 		public LinearLayout layout;
 	}
 

@@ -1,5 +1,7 @@
 package it.borove.playerborove;
 
+import it.borove.playerborove.LibraryActivity.MySimpleCursorAdapter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,6 +10,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -18,10 +23,12 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -37,11 +44,9 @@ public class PlaylistAddActivity extends Activity {
 	//----------------------------------
 	private ListView m_list_view;
 	private EditText m_edit_text;
+	private Button btnCreatePlaylist;
 	private static MySimpleCursorAdapter adapter;
-	private Cursor cursor;
-	private HashMap<String,String> map = new HashMap<String,String>();
-	private ArrayList<String> playlist_tracks;
-	private ArrayList<Integer> playlist_tracks_id;
+	private Cursor cursorTracks;
 	
 	private final static String TAG= "PlaylistAddActivity";
 
@@ -50,32 +55,31 @@ public class PlaylistAddActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_playlist_add);
 		
-		m_list_view= (ListView)findViewById(R.id.listview_add_playlist);
-		m_edit_text= (EditText)findViewById(R.id.edit_text_add_playlist);
+		m_list_view			= (ListView)findViewById(R.id.listview_add_playlist);
+		m_edit_text			= (EditText)findViewById(R.id.edit_text_add_playlist);
+		btnCreatePlaylist	= (Button)findViewById(R.id.button_add_playlist);
+		choices				= getResources().getStringArray(R.array.drawer_choice_playlist);
+		drawer				= (DrawerLayout)findViewById(R.id.drawer_add_playlist);
 		
-		playlist_tracks= new ArrayList<String>();
-		playlist_tracks_id= new ArrayList<Integer>();
+		
+		
+		m_edit_text.setTextColor(Color.parseColor("#ff0000"));
+		
 		/*
 		 * TODO implementare la gestione del doppio nome
 		 */
 		
-		cursor= PlayerController.getCursorTracks();
-		if(cursor != null){
-			cursor.moveToFirst();
-			while(!cursor.isAfterLast()){
-				if(!map.containsKey(cursor.getString(0))){
-					if(!map.containsValue(cursor.getString(6))){
-						map.put(cursor.getString(0), cursor.getString(6));
-					}
-					else
-						map.put(cursor.getString(0), "-1");
-				}
-				Log.d(TAG, "HashMap<>  key: " + cursor.getString(0) + " value: " + cursor.getString(6));
-				cursor.moveToNext();
-			}
-		}
+		cursorTracks	= PlayerController.getCursorTracks();
+		cursorTracks.moveToLast();
+		final ArrayList<Boolean> itemColorChanger = new ArrayList<Boolean>();
+		for(int i=0; i< cursorTracks.getCount(); i++)
+			itemColorChanger.add(false);
 		
-		setAdapter(cursor);
+		if(cursorTracks == null)
+			Toast.makeText(PlaylistAddActivity.this, "Warning: database is empty!", Toast.LENGTH_SHORT).show();
+
+		
+		setAdapter(cursorTracks);
 		
 		m_list_view.setOnItemClickListener(new OnItemClickListener() {
 
@@ -83,24 +87,51 @@ public class PlaylistAddActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				
-				int cursor_position= cursor.getPosition();
-				int bacward_different= (cursor_position - position)*-1;
-				if(cursor.move(bacward_different)){
-					
-					playlist_tracks.add(cursor.getString(5));
-					playlist_tracks_id.add(cursor.getPosition());
-					Log.d(TAG, "attuale playlist" + playlist_tracks.toString());
-					Toast.makeText(parent.getContext(), "selezionato: " + cursor.getString(5), Toast.LENGTH_SHORT).show();
+				if(!itemColorChanger.get(position)){			
+					view.setBackgroundColor(Color.parseColor("#F5DEB3"));
+					itemColorChanger.set(position, true);
 				}
+				else{
+					view.setBackgroundColor(Color.TRANSPARENT);
+					itemColorChanger.set(position, false);
+				}
+
 			}
 			
+		});
+		
+		btnCreatePlaylist.setOnClickListener(new OnClickListener() {		
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				String namePlaylist = m_edit_text.getText().toString();
+				ArrayList<String> idTracksSelected = new ArrayList<String>();
+				
+				for(int i=0; i < itemColorChanger.size(); i++){
+					if(itemColorChanger.get(i)){
+						cursorTracks.moveToPosition(i);
+						//cursorTracks.move(i);
+						
+						String idTrack	= cursorTracks.getString(0);
+						if(!idTracksSelected.contains(idTrack))
+							idTracksSelected.add(idTrack);
+						Log.d(TAG, "idTrack: " + idTrack);
+					}
+				}
+				
+				if(idTracksSelected.size() >= 1)
+					PlayerController.addPlaylistToDb(namePlaylist, idTracksSelected);
+				
+				setResult(Activity.RESULT_OK);
+				finish();
+		
+			}
 		});
 
 		//il navigation drawer
 		title= drawer_title = getTitle();
 		
-		choices= getResources().getStringArray(R.array.drawer_choice_playlist);
-		drawer= (DrawerLayout)findViewById(R.id.drawer_add_playlist);
+		
 		
 		drawer_toggle= new ActionBarDrawerToggle(this, drawer, R.drawable.ic_launcher, 
 												R.string.drawer_open, R.string.drawer_close){
@@ -190,9 +221,8 @@ public class PlaylistAddActivity extends Activity {
 	public void setAdapter(Cursor cursor){
 		if(cursor != null){
 			cursor.moveToFirst();
-			String[] from = new String[]{SQLiteConnect.COLUMN_TITLE};
-			int[] to = new int[]{R.id.text_view_add_playlist};
-			
+			String[] from = new String[]{SQLiteConnect.COLUMN_TITLE, SQLiteConnect.COLUMN_SINGER_NAME};
+			int[] to = new int[]{R.id.title_textView_add_playlist, R.id.author_textView_add_playlist};	
 			adapter = new MySimpleCursorAdapter(this, R.layout.item_listview_add_playlist, cursor, from, to, 0);
 			m_list_view.setAdapter(adapter);
 		}
@@ -200,29 +230,10 @@ public class PlaylistAddActivity extends Activity {
 	}
 	
 	public class MySimpleCursorAdapter extends SimpleCursorAdapter{
-
-		private Cursor mCursor;
-
 		public MySimpleCursorAdapter(Context context, int layout, Cursor c,
 				String[] from, int[] to, int flags) {
 			super(context, layout, c, from, to, flags);
-			mCursor = c;
 			
-			mCursor.moveToFirst();
-			while(!mCursor.isAfterLast()){
-				if(!map.containsKey(mCursor.getString(0))){
-					if(!map.containsValue(mCursor.getString(6)))
-						map.put(mCursor.getString(0), mCursor.getString(6));
-					else
-						map.put(mCursor.getString(0), "-1");
-				}
-				else{
-					if(!map.get(mCursor.getString(0)).equals("-1"))
-							map.put(mCursor.getString(0), mCursor.getString(6));
-				}
-				
-				mCursor.moveToNext();
-			}
 		}
 	}
 	

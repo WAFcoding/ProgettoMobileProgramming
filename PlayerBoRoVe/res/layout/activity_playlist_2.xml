@@ -16,9 +16,10 @@
 		    android:fastScrollEnabled="true"
 		    android:padding="3dp"
 		    android:divider="#000080"
-		    android:dividerHeight="2.0sp"	    />
+		    android:dividerHeight="2.0sp"  />
 		
 	</LinearLayout>
+
 	<!-- the navigation drawer -->
     <ListView android:id="@+id/left_drawer_playlist"
         android:layout_width="240dp"

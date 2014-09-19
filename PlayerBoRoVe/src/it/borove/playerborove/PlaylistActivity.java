@@ -15,23 +15,35 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.Gallery;
+import android.widget.HorizontalScrollView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
@@ -42,13 +54,17 @@ public class PlaylistActivity extends Activity {
 	private ListView drawer_list_view;
 	private ActionBarDrawerToggle drawer_toggle;
 	private CharSequence title, drawer_title;
+	private Handler mHandler = new Handler();
 	
 	private ArrayList<PlaylistItem> items;
+	private ArrayList<String> id_p = null;
 	private PlaylistAdapter m_adapter;
 	private ListView m_listview;
+	//private ExpandableListView expView;
 	private Cursor playlistCursor;
 	//private HashMap<String,String> map = new HashMap<String,String>();
 	private AlbumMapper mapper;
+	private final int ADDPLAYLIST	= 270;
 	
 	
 	private static final String TAG = "PLAYLISTACTIVITY";
@@ -64,9 +80,6 @@ public class PlaylistActivity extends Activity {
 		items			= new ArrayList<PlaylistItem>();
 		mapper 			= new AlbumMapper();
 		
-		
-		
-		
 		//_id ---> album_id (brano)
 		/*HashMap<String,String> tracks = new HashMap<String,String>();
 		if(playlistCursor != null){
@@ -78,7 +91,7 @@ public class PlaylistActivity extends Activity {
 			}
 		}
 		*/
-		ArrayList<String> id_p = null;
+		
 		if(playlistCursor != null){
 			id_p = new ArrayList<String>();
 			playlistCursor.moveToFirst();
@@ -102,9 +115,7 @@ public class PlaylistActivity extends Activity {
 				
 				mapper.setIdTrackToContentTitle(playlistCursor.getString(2), playlistCursor.getString(7));
 				mapper.setIdTrackToIdAlbum(playlistCursor.getString(2), playlistCursor.getString(8));
-				
-				
-				
+
 				playlistCursor.moveToNext();
 			}
 		}
@@ -179,6 +190,8 @@ public class PlaylistActivity extends Activity {
 				m_adapter= new PlaylistAdapter(this, R.layout.playlist_layout, items);
 				m_listview= (ListView)findViewById(R.id.listview_playlist);
 				m_listview.setAdapter(m_adapter);
+				
+				
 		        registerForContextMenu(m_listview);
 		}
 		
@@ -255,14 +268,17 @@ public class PlaylistActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			
 			//Add Playlist
 			if(position == 0){
-				startActivity(new Intent(PlaylistActivity.this, PlaylistAddActivity.class));
+				startActivityForResult(new Intent(PlaylistActivity.this, PlaylistAddActivity.class), ADDPLAYLIST);
 			}
+			
 			//Update
 			else if(position == 1){
 				
 			}
+			
 			drawer.closeDrawer(drawer_list_view);
 			Toast.makeText(parent.getContext(), "selezionato elemento " + position, Toast.LENGTH_SHORT).show();
 		}
@@ -334,4 +350,79 @@ public class PlaylistActivity extends Activity {
 	    }
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode,int resultCode, Intent data){
+		if(requestCode == ADDPLAYLIST && resultCode == RESULT_OK){
+			
+			setListPlaylist();
+			
+			
+		}
+	}
+	
+	public void setListPlaylist(){
+		
+		playlistCursor 	= PlayerController.getCursorPlaylist();
+		items			= new ArrayList<PlaylistItem>();
+		
+		if(playlistCursor != null){
+			id_p = new ArrayList<String>();
+			playlistCursor.moveToFirst();
+			while(!playlistCursor.isAfterLast()){
+		
+				if(!id_p.contains(playlistCursor.getString(0))){
+					id_p.add(playlistCursor.getString(0));
+				}
+
+				playlistCursor.moveToNext();
+			}
+		}
+		
+		
+		if(id_p != null){
+			ArrayList<SinglePlaylistItem> tmp_songs;
+			for(int i = 1; i <= id_p.size(); i++){
+				//Log.d(TAG, "id_p.size()" + id_p.size());
+				playlistCursor.moveToFirst();
+				boolean coverUsed = false;
+				String name_playlist 		= "";
+				tmp_songs = new ArrayList<SinglePlaylistItem>();
+				while(!playlistCursor.isAfterLast()){
+					if(playlistCursor.getString(0).equals(String.valueOf(i))){
+						String title		= playlistCursor.getString(7);
+						String name_singer 	= playlistCursor.getString(4);
+						String kind			= playlistCursor.getString(5);
+						String path_track	= playlistCursor.getString(9);
+						if(!coverUsed){
+							name_playlist = playlistCursor.getString(1);								
+							coverUsed = true;
+						}						
+						
+						for(int j=0; j< playlistCursor.getColumnCount(); j++)
+							Log.d(TAG,"**--** " + playlistCursor.getColumnName(j) + ": " + playlistCursor.getString(j));
+						//la scrollview
+
+						String album_id = mapper.getIdAlbumFromIdTrack(playlistCursor.getString(2));
+
+						SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem(title, name_singer, kind, album_id, path_track, this);
+						tmp_songs.add(tmp_pl_item);		
+					}			
+					playlistCursor.moveToNext();
+				}
+				
+				Log.d(TAG,"tmp_songs.size(): ---> " + tmp_songs.size());
+				PlaylistItem tmp_play= new PlaylistItem(name_playlist, tmp_songs);
+				items.add(tmp_play);	
+			}
+			m_adapter= new PlaylistAdapter(this, R.layout.playlist_layout, items);
+
+			m_listview.setAdapter(m_adapter);
+			//m_adapter.notifyDataSetChanged();
+	        registerForContextMenu(m_listview);
+	}
+		
+	}
+	
+	
+	
 }
