@@ -30,8 +30,11 @@ public class SinglePlaylistItem {
 	private Bitmap cover;
 	private String path_track;
 	private String kind;
-	
-
+	private String vote;
+	private String nameFile;
+	private String albumName;
+	private String duration;
+	private String id;
 	private String singer_name;
 	
 	private final int DIM_HEIGHT 	= 200;
@@ -47,16 +50,29 @@ public class SinglePlaylistItem {
 		
 	}
 	
-	public SinglePlaylistItem(String p_title, String singerName, String kind, String album_id, String path_track, Context context){
+	public SinglePlaylistItem(String _id,String p_title, String singerName, String kind, String vote, String nameFile, 
+			String album_id, String path_track, String albumName, String duration, Context context){
+		this.id					= _id;
 		this.singer_name 		= singerName;
 		this.kind 				= kind;
+		this.vote				= vote;
+		this.nameFile			= nameFile;
 		this.album_id 			= album_id;
 		this.path_track			= path_track;
+		this.albumName			= albumName;
+		this.duration			= duration;
+		
 		setTitle(p_title);
 		//setImagePath(p_image_path);
 		cover = getArtworkQuick(context, Integer.parseInt(album_id), DIM_WIDTH, DIM_HEIGHT);
 		
 	}
+	
+	public String getId() {
+		return this.id;
+	}
+	
+	
 	public Bitmap getBitmapCover(){
 		return this.cover;
 	}
@@ -148,5 +164,45 @@ public class SinglePlaylistItem {
 	        	Log.e("PlayListItem: ----> ", " dentro getArtworkQuick: Uri è NULL");
 	        return null;
 	    }
+
+	public String getAlbum_id() {
+		return album_id;
+	}
+
+	public void setAlbum_id(String album_id) {
+		this.album_id = album_id;
+	}
+
+	public String getVote() {
+		return vote;
+	}
+
+	public void setVote(String vote) {
+		this.vote = vote;
+	}
+
+	public String getnameFile() {
+		return this.nameFile;
+	}
+
+	public void setnameFile(String nameFile) {
+		this.nameFile = nameFile;
+	}
+
+	public String getAlbumName() {
+		return albumName;
+	}
+
+	public void setAlbumName(String albumName) {
+		this.albumName = albumName;
+	}
+
+	public String getDuration() {
+		return duration;
+	}
+
+	public void setDuration(String duration) {
+		this.duration = duration;
+	}
 
 }

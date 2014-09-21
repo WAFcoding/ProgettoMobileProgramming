@@ -46,7 +46,7 @@ public class PlaylistAddActivity extends Activity {
 	private EditText m_edit_text;
 	private Button btnCreatePlaylist;
 	private static MySimpleCursorAdapter adapter;
-	private Cursor cursorTracks;
+	private Cursor cursorTracks, cursorPlaylist;
 	
 	private final static String TAG= "PlaylistAddActivity";
 
@@ -70,16 +70,18 @@ public class PlaylistAddActivity extends Activity {
 		 */
 		
 		cursorTracks	= PlayerController.getCursorTracks();
-		cursorTracks.moveToLast();
+		cursorPlaylist	= PlayerController.getCursorPlaylist();
+		
 		final ArrayList<Boolean> itemColorChanger = new ArrayList<Boolean>();
-		for(int i=0; i< cursorTracks.getCount(); i++)
-			itemColorChanger.add(false);
-		
-		if(cursorTracks == null)
-			Toast.makeText(PlaylistAddActivity.this, "Warning: database is empty!", Toast.LENGTH_SHORT).show();
+		if(cursorTracks != null){
+				cursorTracks.moveToLast();
+			for(int i=0; i< cursorTracks.getCount(); i++)
+				itemColorChanger.add(false);
 
-		
-		setAdapter(cursorTracks);
+			setAdapter(cursorTracks);
+		}
+		else
+			Toast.makeText(PlaylistAddActivity.this, "Warning: database is empty!", Toast.LENGTH_SHORT).show();
 		
 		m_list_view.setOnItemClickListener(new OnItemClickListener() {
 
@@ -119,12 +121,34 @@ public class PlaylistAddActivity extends Activity {
 					}
 				}
 				
-				if(idTracksSelected.size() >= 1)
-					PlayerController.addPlaylistToDb(namePlaylist, idTracksSelected);
-				
-				setResult(Activity.RESULT_OK);
-				finish();
-		
+				if(idTracksSelected.size() >= 1){
+					boolean duplicatedNamePlaylist = false;
+					
+					if(cursorPlaylist == null){
+						PlayerController.addPlaylistToDb(namePlaylist, idTracksSelected);
+						setResult(Activity.RESULT_OK);				
+					}
+					else{
+						cursorPlaylist.moveToFirst();
+						while(!cursorPlaylist.isAfterLast()){
+							if(namePlaylist.equals(cursorPlaylist.getString(1))){
+								duplicatedNamePlaylist = true;
+								break;
+							}
+							cursorPlaylist.moveToNext();
+						}
+						if(!duplicatedNamePlaylist){
+							PlayerController.addPlaylistToDb(namePlaylist, idTracksSelected);
+							setResult(Activity.RESULT_OK);
+						}
+						else{
+							setResult(Activity.RESULT_CANCELED);
+						}
+	
+					}
+					finish();
+					
+				}
 			}
 		});
 

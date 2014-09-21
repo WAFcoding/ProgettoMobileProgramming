@@ -26,9 +26,9 @@
     <string name="updateList">Update</string>
     
     <!-- *****************menu_track.xml**************** -->
-     <string name="details">Dettagli </string>
-     <string name="rename">Rinomina </string>
-     <string name="erase">Cancella </string>
+     <string name="details">Details </string>
+     <string name="selectTrack">Select </string>
+     <string name="erase">Cancel </string>
     <!-- *****************menu_track.xml**************** -->
    
     <!-- *****************settings_activity.xml**************** -->
@@ -46,13 +46,16 @@
     <string name="drawer_close">close</string>
     <string name="description">Media Controls</string>
 
+	    <string-array name="drawer_choice_playlist">
+	        <item >Aggiungi Playlist</item>
+	        <item >Rimuovi playlist</item>
+	       <item >Aggiorna</item>
+	       <item >Impostazioni</item>
+	    </string-array>
     
-    <string-array name="drawer_choice_playlist">
-        <item >Aggiungi playlist</item>
-        <item >Rimuovi playlist</item>
-       <item >Aggiorna</item>
-       <item >Impostazioni</item>
-    </string-array>
+    
+    
+    
     <string-array name="drawer_choice_library">
         <item >Aggiungi brano</item>
         <item >Rimuovi brano</item>

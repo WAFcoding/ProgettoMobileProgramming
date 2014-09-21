@@ -12,10 +12,14 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -64,6 +68,8 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 			m_v = inflater.inflate(R.layout.playlist_layout, null);
 			
 			tmp_h_scroll= (HorizontalScrollView)m_v.findViewById(R.id.horizontalScrollView_row_playlist1);
+			//horizon = (CustomScrollView)m_v.findViewById(R.id.horizontalScrollView_row_playlist1);
+			//horizon.removeAllViews();
 			tmp_h_scroll.removeAllViews();
 			
 			m_vv=  inflater.inflate(R.layout.row_element_playlist2, null);
@@ -129,9 +135,9 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				
 				SinglePlaylistItem it= tmp_songs.get(i);
 				if(it == null){
-					holder.layout.setVisibility(View.GONE);
-					m_vv.setVisibility(View.GONE);
-					tmp_h_scroll.setVisibility(View.GONE);
+					//holder.layout.setVisibility(View.GONE);
+					//m_vv.setVisibility(View.GONE);
+					//tmp_h_scroll.setVisibility(View.GONE);
 					
 				}
 				LinearLayout layout_item= (LinearLayout)holder.layout.getChildAt(i);
@@ -170,7 +176,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 					author_name = author_name.substring(0, 12);	
 				author.setText(author_name);
 				
-				ImageView song_cover= new ImageView(parent.getContext());
+				/*ImageView song_cover= new ImageView(parent.getContext());
 				LinearLayout.LayoutParams song_cover_params= new LinearLayout.LayoutParams(200, 200);
 				song_cover_params.leftMargin= 10;
 				song_cover_params.topMargin= 10;
@@ -192,6 +198,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 					song_cover.setImageResource(R.drawable.icon);
 				}
 				
+				
 				song_cover.setOnLongClickListener(new OnLongClickListener() {
 					
 					@Override
@@ -206,6 +213,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				});
 				
 				layout_item.addView(song_cover);
+				*/
 				layout_item.addView(song_title);
 				layout_item.addView(author);
 
@@ -219,5 +227,7 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 	private static class ViewHolder{
 		public LinearLayout layout;
 	}
+	
+	
 
 }

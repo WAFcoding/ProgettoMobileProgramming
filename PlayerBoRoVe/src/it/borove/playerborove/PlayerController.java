@@ -216,7 +216,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 	
-		eraseDatabase();
+		//eraseDatabase();
 		createDb();
 		new SynchronizeDb().execute();
 	}
@@ -594,7 +594,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	 * @param cancel	TRUE se il brano deve essere eliminato, FALSE deve essere aggiunto alla playlist
 	 */
 	
-	public void setPlaylistOnDb(String name, String idTrack, boolean cancel){
+	public static void setPlaylistOnDb(String name, String idTrack, boolean cancel){
 		try{
 			Cursor singlePlaylist = sqlDatabaseHelper.getExactlyNamePlaylist(name);
 			if(singlePlaylist != null){
@@ -617,16 +617,21 @@ public class PlayerController extends SQLiteOpenHelper{
 	 * @param name	il nome della playlist
 	 */
 	
-	public void deletePlaylist(String name){
+	public static void deletePlaylist(ArrayList<String> name){
 		if(name == null)
 			return;
-		try{
-			Cursor c = sqlDatabaseHelper.getExactlyNamePlaylist(name);
-			if(c != null){
-				sqlDatabaseHelper.deleteRowPlaylist(name);
+		if(name.size() == 0)
+			return;
+		
+		for(int i=0; i < name.size(); i++){
+			try{
+				Cursor c = sqlDatabaseHelper.getExactlyNamePlaylist(name.get(i));
+				if(c != null){
+					sqlDatabaseHelper.deleteRowPlaylist(name.get(i));
+				}
+			}catch(Exception e){
+				Log.d(TAG, "Errore in deleteRowPlaylist()");
 			}
-		}catch(Exception e){
-			Log.d(TAG, "Errore in deleteRowPlaylist()");
 		}
 	}
 	
@@ -655,7 +660,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		protected void onPostExecute(Cursor result){
 			setCursorPlaylist(this.cursorPlaylist);
 			
-			ArrayList<String> tracks = new ArrayList<String>();
+			/*ArrayList<String> tracks = new ArrayList<String>();
 			tracks.add("1");
 			tracks.add("2");
 			tracks.add("3");
@@ -686,6 +691,7 @@ public class PlayerController extends SQLiteOpenHelper{
 					test.moveToNext();
 				}
 			}
+			*/
 			
 			/*if(this.cursorPlaylist != null){
 				this.cursorPlaylist.moveToFirst();

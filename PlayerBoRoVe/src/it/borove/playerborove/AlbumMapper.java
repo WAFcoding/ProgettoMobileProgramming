@@ -2,10 +2,13 @@ package it.borove.playerborove;
 
 import java.util.HashMap;
 
+import android.util.Log;
+
 public class AlbumMapper {
 	private String idAlbum;
 	private String contentTitle;
 	private String idTrack;
+	private static String TAG = "ALBUMMAPPER";
 	
 	// id Track --> content_title
 	private HashMap<String,String> idTrackToContentTitle;
@@ -30,8 +33,10 @@ public class AlbumMapper {
 	public void setIdTrackToContentTitle(String idTrack, String contentTitle){
 		if(!idTrack.equals(null) && !contentTitle.equals(null))
 			try{
-				if(!this.idTrackToContentTitle.containsKey(idTrack) && !this.idTrackToContentTitle.containsValue(idTrack))
+				if(!this.idTrackToContentTitle.containsKey(idTrack) && !this.idTrackToContentTitle.containsValue(idTrack)){
 					this.idTrackToContentTitle.put(idTrack, contentTitle);
+					Log.d(TAG, "Aggiunto track in IdTrackToContentTitle: " + idTrack + " " + contentTitle);
+				}
 			}catch(Exception e){e.printStackTrace();}
 	}
 	
@@ -46,10 +51,14 @@ public class AlbumMapper {
 		if(!idTrack.equals(null) && !idAlbum.equals(null))
 			try{
 				if(!this.IdTrackToIdAlbum.containsKey(idTrack))
-					if (!this.IdTrackToIdAlbum.containsValue(idAlbum))
+					if (!this.IdTrackToIdAlbum.containsValue(idAlbum)){
 						this.IdTrackToIdAlbum.put(idTrack, idAlbum);
-					else
+						Log.d(TAG, "Aggiunto track in IdTrackToIdAlbum: " + idTrack + " " + idAlbum);
+					}
+					else{
 						this.IdTrackToIdAlbum.put(idTrack, "-1");
+						Log.d(TAG, "Aggiunto track in IdTrackToIdAlbum: " + idTrack + " -1");
+					}
 			}catch(Exception e){e.printStackTrace();}
 	}
 	
@@ -60,8 +69,10 @@ public class AlbumMapper {
 	}
 	
 	public String getIdAlbumFromIdTrack(String keyNameAlbum){
-		if(!keyNameAlbum.equals(null))
+		if(!keyNameAlbum.equals(null)){
+			//Log.d(TAG,"getidalbum da proprio NULL");
 			return this.IdTrackToIdAlbum.get(keyNameAlbum);
+		}
 		else return null;
 	}
 	

@@ -22,13 +22,13 @@
       android:layout_height="1px" 
       android:background="#DADADA" />
 
-    <!--  <TextView
-        android:id="@+id/rename"
+      <TextView
+        android:id="@+id/select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_margin="4dp"
-        android:text="@string/rename"
+        android:text="@string/selectTrack"
         android:textStyle="italic"
         android:textSize="28sp"
         android:textColor="#FFCC99"
@@ -39,7 +39,7 @@
 	      android:layout_width="match_parent" 
 	      android:layout_height="1px" 
 	      android:background="#DADADA" />
-    -->
+    
 
     <TextView
         android:id="@+id/erase"

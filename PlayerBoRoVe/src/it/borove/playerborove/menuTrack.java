@@ -17,9 +17,11 @@ public class menuTrack extends Activity{
 	private Intent MyCallerIntent;
 	private TextView textViewDetails;
 	private TextView textViewErase;
+	private TextView textViewSelect;
 
 	private final int RESULT_CODE_DETAILS 	= 300;
 	private final int RESULT_CODE_ERASE		= 310;
+	private final int RESULT_CODE_SELECT	= 320;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,8 @@ public class menuTrack extends Activity{
 		
 		textViewDetails 		= (TextView)findViewById(R.id.details);
 		textViewErase 			= (TextView)findViewById(R.id.erase);
+		textViewSelect			= (TextView)findViewById(R.id.select);
+		
 		this.MyCallerIntent 	= getIntent();
 
 		starsListeners();
@@ -47,13 +51,20 @@ public class menuTrack extends Activity{
 		textViewErase.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-							
+				// TODO Auto-generated method stub						
 				setResult(RESULT_CODE_ERASE, MyCallerIntent);
 				finish();
 				
+			}	
+		});
+		textViewSelect.setOnClickListener(new OnClickListener() {		
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				setResult(RESULT_CODE_SELECT, MyCallerIntent);
+				finish();
+				
 			}
-			
 		});
 		
 	}

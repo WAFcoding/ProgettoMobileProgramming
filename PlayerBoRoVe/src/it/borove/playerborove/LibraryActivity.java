@@ -16,6 +16,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
@@ -47,6 +48,7 @@ public class LibraryActivity extends Activity {
 	private int idTrack;						
 	private static  ListView listView;
 	private Button btnUpdate;
+	private int count = 0;
 	private static MySimpleCursorAdapter adapter;
 	private AlbumMapper mapper;
 
@@ -134,6 +136,7 @@ public class LibraryActivity extends Activity {
         drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
 		
 	}
+	
 	@Override
 	protected void onActivityResult(int requestCode,int resultCode, Intent data){
 		if(requestCode == MENU_TRACK && resultCode == 300){
@@ -211,6 +214,13 @@ public class LibraryActivity extends Activity {
 			popup.show();
 				
 		}
+		
+		if(requestCode == MENU_TRACK && resultCode == 320){
+			View selecteditem = listView.getChildAt(this.itemPosition);
+			selecteditem.setBackgroundColor(Color.GRAY);
+		}
+		
+		
 			
 		if(requestCode == REQUEST_VOTE_TRACK && resultCode == RESULT_OK){
 			Bundle bundle2 = data.getExtras();
@@ -290,6 +300,7 @@ public class LibraryActivity extends Activity {
 	}
 
 	protected void listener(){
+		
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
@@ -312,19 +323,25 @@ public class LibraryActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				// TODO Auto-generated method stub
-				Cursor tracks = adapter.getCursor();
-				boolean reachable = tracks.moveToPosition(position);
-				if(reachable){
-					idTrack				= tracks.getInt(0);
-					
-					Bitmap albumId		= adapter.getArtworkQuick(getApplicationContext(), tracks.getInt(6), RESWIDTH, RESHEIGTH);				 	
-					Bundle b=new Bundle();
-					b.putString("uri",tracks.getString(7));
-					b.putString("title",tracks.getString(5));
-					b.putString("singer",tracks.getString(2));
-					b.putString("kind",tracks.getString(3));
-					PlayerController.open_player(b, albumId);
-				}
+				//count++;
+				//if (count % 2 == 0){
+					Cursor tracks = adapter.getCursor();
+					boolean reachable = tracks.moveToPosition(position);
+					if(reachable){
+						idTrack				= tracks.getInt(0);
+						
+						Bitmap albumId		= adapter.getArtworkQuick(getApplicationContext(), tracks.getInt(6), RESWIDTH, RESHEIGTH);				 	
+						Bundle b=new Bundle();
+						b.putString("uri",tracks.getString(7));
+						b.putString("title",tracks.getString(5));
+						b.putString("singer",tracks.getString(2));
+						b.putString("kind",tracks.getString(3));
+						PlayerController.open_player(b, albumId);
+					}
+				//}
+				//else{
+				//	Toast.makeText(LibraryActivity.this, "non è divisibile per 2!", Toast.LENGTH_SHORT).show();
+				//}
 				
 			}
 			
