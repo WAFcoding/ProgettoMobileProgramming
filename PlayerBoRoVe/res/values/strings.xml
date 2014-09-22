@@ -74,5 +74,6 @@
     <string name="playlist_popup_choice1">Elimina</string>
     <string name="playlist_popup_choice2">Dettagli</string>
     <string name="playlist_popup_choice3">Annulla</string>
+    <string name="playlist_popup_choice4">Anteprima</string>
 
 </resources>

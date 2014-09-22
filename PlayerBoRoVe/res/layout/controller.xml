@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:orientation="vertical"
+    android:layout_weight="1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/gradient_listview"
+    tools:ignore="MergeRootFrame" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="4dip"
+        android:orientation="horizontal"
+        android:background="#439DE8"
+        android:layout_weight="0.01">
+
+        <ImageButton android:id="@+id/audio"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_media_audio"
+            android:contentDescription="@string/description" />
+        
+        <ImageButton android:id="@+id/stop"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_media_stop"
+            android:contentDescription="@string/description" />
+        
+        <ImageButton
+            android:id="@+id/pause"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_media_pause"
+            android:contentDescription="@string/description" />
+        
+        <ImageButton android:id="@+id/loop"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_media_loop2"
+            android:contentDescription="@string/description" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#439DE8">
+
+        <TextView android:id="@+id/time_current"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:paddingTop="4dip"
+            android:paddingLeft="4dip"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="4dip" />
+
+        <SeekBar
+            android:id="@+id/mediacontroller_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dip"
+            android:layout_weight="1"
+            android:layout_height="32dip" />
+
+        <TextView android:id="@+id/time"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:paddingTop="4dip"
+            android:paddingRight="4dip"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dip" />
+        
+
+      
+
+
+</LinearLayout>
+
+    
+    
+
+</LinearLayout>

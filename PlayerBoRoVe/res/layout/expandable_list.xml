@@ -9,12 +9,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/anchor" 
     android:background="@drawable/gradient_listview" >
 
     <ExpandableListView
         android:id="@+id/expandableListView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="2"
         android:padding="3dp" >
     </ExpandableListView>
 

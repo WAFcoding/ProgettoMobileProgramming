@@ -13,10 +13,15 @@ import playlistModules.PlaylistExpAdapter;
 import playlistModules.PlaylistItem;
 import playlistModules.SinglePlaylistItem;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.DataSetObserver;
@@ -27,8 +32,11 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -44,6 +52,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -57,12 +66,13 @@ import android.widget.Gallery;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-public class PlaylistActivity extends Activity {
+public class PlaylistActivity extends Activity implements MyMediaController.MediaPlayerControl {
 	
 	private String[] choices;
 	private DrawerLayout drawer;
@@ -95,6 +105,55 @@ public class PlaylistActivity extends Activity {
 	private ImageView star4;
 	private ImageView star5;
     */
+	private String SETTINGS="SETTINGS";
+	protected static final int PREVIEW = 0;
+	private Context myContext;
+	
+	private MusicService musicSrv;
+	private boolean serviceConnected=false;
+	private Intent playIntent;
+	private Uri uri;
+	private BroadcastReceiver receiver;
+	private LocalBroadcastManager lbm;
+	private MyMediaController mediaController;
+	private boolean preview=false;
+	private ServiceConnection musicConnection = new ServiceConnection(){
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			it.borove.playerborove.MusicService.MusicBinder binder = (it.borove.playerborove.MusicService.MusicBinder)service;
+			//get service
+			musicSrv = binder.getService();
+			serviceConnected=true;
+			try {
+			
+				lbm.registerReceiver(receiver, new IntentFilter("Prepared"));
+				
+				Log.d("uri", uri.toString());
+				musicSrv.setPath(uri);
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			serviceConnected=false;
+			Log.d("sevice","onServiceDisconnetcted");
+		}
+	};
+	
+
     
 	
 	
@@ -108,20 +167,49 @@ public class PlaylistActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.expandable_list);
-		
+		myContext=this;
         expListView = (ExpandableListView) findViewById(R.id.expandableListView1);
 
 		//playlistCursor 	= PlayerController.getCursorPlaylist();
 		//playlistMap		= new HashMap<String, ArrayList<SinglePlaylistItem>>();
 		//items			= new ArrayList<PlaylistItem>();
 		mapper 			= new AlbumMapper();
-		
+	
 		 
 		
 		
 		setListPlaylist();
 		
-		
+		mediaController=new MyMediaController(this);
+		mediaController.setMediaPlayer(this);
+		lbm= LocalBroadcastManager.getInstance(this);
+		Log.d("Activity","Created");
+		receiver=new BroadcastReceiver(){
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				// TODO Auto-generated method stub
+				lbm.unregisterReceiver(receiver);
+				
+				/*String artist= getIntent().getExtras().getString("singer");
+				String title= getIntent().getExtras().getString("title");
+				String kind= getIntent().getExtras().getString("kind");
+				setText(artist+" "+title+" "+kind);*/
+				//image
+				SharedPreferences prefs=context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+				int pos=prefs.getInt("Pos", 0);
+				Log.d("activity","before seek");
+				seekTo(pos*1000);
+				if(!preview){
+					start();
+					mediaController.show((LinearLayout)findViewById(R.id.anchor));
+					}
+				else{
+					preview();
+				}
+				}
+			};
+
+
 		
 		
 		/*if(playlistCursor != null){
@@ -254,17 +342,80 @@ public class PlaylistActivity extends Activity {
 			}
 		});
         
+        
         expListView.setOnChildClickListener(new OnChildClickListener() {		
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
-				// TODO Auto-generated method stub
+				
+				preview=false;
+				if(musicSrv!=null)
+				{	
+					if(mediaController.isShowing())
+						mediaController.hide();
+						unbindService(musicConnection);
+				}
+				SinglePlaylistItem track = (SinglePlaylistItem)expAdapter.getChild(groupPosition, childPosition);
+				uri= Uri.parse(track.getPath_track());
+				playIntent = new Intent(myContext, MusicService.class);
+				bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+
+
 		
 				return false;
 			}
 		});
 	
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d("activity","destroy");
+		lbm.unregisterReceiver(receiver);
+		mediaController.hide();
+		unbindService(musicConnection);
+		serviceConnected=false;
+	}
+	
+	private	Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+    		SharedPreferences prefs=getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+    		final int preview=prefs.getInt("Duration Preview",15)+15;
+    		final int initialPos=prefs.getInt("Pos",0);
+            int pos;
+            switch (msg.what) {
+                case PREVIEW:
+                	
+                    pos = getCurrentPosition();
+                    Log.d("pos", Integer.toString(pos));
+                    Log.d("preview", Integer.toString(preview));
+                    Log.d("Initialpos", Integer.toString(initialPos));
+                    if (pos<preview*1000+initialPos*1000) {
+                        msg = obtainMessage(PREVIEW);
+                        sendMessageDelayed(msg, 1000 - (pos % 1000));
+                        
+                    }
+                    else
+                    {	Log.d("preview", "Remove");
+                    	this.removeMessages(PREVIEW);
+                    	unbindService(musicConnection);
+                    	musicSrv=null;
+                    }
+                    break;
+            }
+        }
+    };
+	
+	public void preview(){
+		SharedPreferences prefs=getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+		final int initialPos=prefs.getInt("Pos",0);
+	    start();
+	    seekTo(initialPos*1000);
+	    mHandler.sendEmptyMessage(PREVIEW);
+	}
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -432,7 +583,30 @@ public class PlaylistActivity extends Activity {
 	            return true;
 	        case R.id.playlist_popup_menu_choice3:
 	            
-	            return true;
+	            
+	        case R.id.playlist_popup_menu_choice4:
+	        {
+	        	
+				uri= Uri.parse(track.getPath_track());
+	        	
+				Toast.makeText(myContext, "anteprima brano: " + track.getTitle(), Toast.LENGTH_SHORT).show();
+				
+				if(musicSrv!=null)
+				{	
+					if(mediaController.isShowing())
+						mediaController.hide();
+					if(mHandler!=null)
+						mHandler.removeMessages(PREVIEW);
+					myContext.unbindService(musicConnection);
+				}
+				
+				playIntent = new Intent(myContext, MusicService.class);
+				myContext.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+				preview=true;
+				return true;
+	        }
+	        
+	        	
 	        default:
 	            return super.onContextItemSelected(item);
 	    }
@@ -587,6 +761,96 @@ public class PlaylistActivity extends Activity {
 	}
 	
 	
-	
+	public void start() {
+		if(musicSrv!=null){
+			Log.d("controller","play");
+			musicSrv.playPlayer();
+			}
+	}
+	public void pause() {
+		if(musicSrv!=null){
+			musicSrv.pausePlayer();
+			Log.d("contrller","pause");
+		}
+	}
+
+	public int getDuration() {
+		if(musicSrv!=null && serviceConnected)
+			return musicSrv.getDur();
+		else return 0;
+		}
+
+	public int getCurrentPosition() {
+		if(musicSrv!=null && serviceConnected)
+			return musicSrv.getPosn();
+		else return 0;
+	}
+
+	public void seekTo(int pos) {
+		musicSrv.seek(pos);
+	}
+
+
+	public boolean isPlaying() {
+		// TODO Auto-generated method stub
+		if (musicSrv!=null && serviceConnected)
+		return musicSrv.isPng();
+		return false;
+	}
+
+	@Override
+	public void setLoop() {
+		// TODO Auto-generated method stub
+		if(musicSrv!=null)
+			musicSrv.Loop(true);
+	}
+
+	@Override
+	public void disableLoop() {
+		// TODO Auto-generated method stub
+		if (musicSrv.isLooping())
+			musicSrv.Loop(false);		
+	}
+
+	@Override
+	public boolean isLooping() {
+		// TODO Auto-generated method stub
+		return musicSrv.isLooping();
+		}
+
+	@Override
+	public void mute() {
+		// TODO Auto-generated method stub
+		if (musicSrv!=null)
+				musicSrv.setVolume(0f);
+		}
+
+	@Override
+	public void audio() {
+		// TODO Auto-generated method stub
+			musicSrv.setVolume(1f);
+			}
+
+	@Override
+	public boolean isMute() {
+		// TODO Auto-generated method stub
+		return musicSrv.isMute();
+		}
+
+	@Override
+	public void stop() {
+		// TODO Auto-generated method stub
+		if(musicSrv!=null){
+			lbm.registerReceiver(receiver, new IntentFilter("Prepared"));
+			musicSrv.seek(0);
+			musicSrv.stop();
+		}
+	}
+	public void hideMediaController(){
+		mediaController.hide();
+		unbindService(musicConnection);
+	}
+
+
 	
 }
