@@ -417,7 +417,6 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 		
 		protected void onPostExecute(Void result){
-			
 		}
 		 
 	 }
@@ -473,7 +472,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		
 		String[] columnsSelect = {"pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack, albumName, duration"};
 		sqlDatabaseHelper.openDatabaseReadOnly();
-		Cursor cursorTracks = sqlDatabaseHelper.getDb().query(SQLiteConnect.TABLE_NAME_TRACK, columnsSelect,null,null,null,null,null);
+		cursorTracks = sqlDatabaseHelper.getDb().query(SQLiteConnect.TABLE_NAME_TRACK, columnsSelect,null,null,null,null,null);
 		//sqlDatabaseHelper.closeDatabase();
 		/*cursorTracks.moveToFirst();
 		Log.e(TAG, "*********+DENTRO GetCursorTracks()**********");

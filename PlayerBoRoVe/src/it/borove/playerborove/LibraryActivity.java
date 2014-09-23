@@ -1,5 +1,7 @@
 package it.borove.playerborove;
 
+import it.borove.playerborove.PlayerController.updateDbOnTrack;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -64,6 +66,7 @@ public class LibraryActivity extends Activity {
 	private ListView drawer_list_view;
 	private ActionBarDrawerToggle drawer_toggle;
 	private CharSequence title, drawer_title;
+	private static String notify ="";
 	//--------------------
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -198,7 +201,9 @@ public class LibraryActivity extends Activity {
 						mapper.getIdTrackToContentTitle().remove(idTrack);
 					}
 					isChangedAnything = true;
-					Toast.makeText(LibraryActivity.this, "Please update Library", Toast.LENGTH_SHORT).show();
+					//Toast.makeText(LibraryActivity.this, "Please update Library", Toast.LENGTH_SHORT).show();
+					updateTracksList();
+					Toast.makeText(LibraryActivity.this,  "List updated!", Toast.LENGTH_LONG).show();
 				}
 			});
 			popup.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -245,12 +250,15 @@ public class LibraryActivity extends Activity {
 				if(!nameTrack.equals(fileNameTrack) || !singerName.equals(authorName) || !oldkind.equals(kind) 
 						|| !vote.equals(String.valueOf(valueOfTrack)) || !oldAlbumName.equals(albumName)){
 							isChangedAnything = true;
-							Toast.makeText(LibraryActivity.this, "Please Update list", Toast.LENGTH_LONG).show();
+							
 				}
 							
 			}
-			
-			PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);
+			if(isChangedAnything){
+				PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);
+				updateTracksList();
+				Toast.makeText(LibraryActivity.this,  "List updated!", Toast.LENGTH_LONG).show();
+			}
 		}
 		
 		
@@ -352,7 +360,7 @@ public class LibraryActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				//Log.d(TAG, "Update bottone");
-				Cursor newCursor = PlayerController.getCursorTracks();
+				/*Cursor newCursor = PlayerController.getCursorTracks();
 				isChangedAnything = false;
 				if(newCursor != null){
 					newCursor.moveToFirst();
@@ -411,6 +419,11 @@ public class LibraryActivity extends Activity {
 				}
 				else
 					Toast.makeText(LibraryActivity.this, "Database is empty!", Toast.LENGTH_SHORT).show();
+					*/
+				
+				updateTracksList();
+				
+				
 			}
 		});
 		
@@ -591,5 +604,79 @@ public class LibraryActivity extends Activity {
 		}
 		
 	}
+	
+	/*
+	 * metodo utilizzato dal bottone Update
+	 */
+	public void updateTracksList(){
+		Cursor newCursor = PlayerController.getCursorTracks();
+		isChangedAnything = false;
+		if(newCursor != null){
+			newCursor.moveToFirst();
+			while(!newCursor.isAfterLast()){
+				boolean found = false;
+				//Log.d(TAG, "newCursor.getString(0): " + newCursor.getString(0));
+				cursor.moveToFirst();
+				while(!cursor.isAfterLast()){
+					if(cursor.getString(0).equals(newCursor.getString(0))){
+						found = true;		
+						break;
+					}
 
+					cursor.moveToNext();
+				}
+				if(!found){
+					isChangedAnything = true;
+					break;
+				}
+			
+				newCursor.moveToNext();
+			}			
+			cursor.moveToFirst();
+			while(!cursor.isAfterLast()){
+				boolean found = false;
+				newCursor.moveToFirst();
+				while(!newCursor.isAfterLast()){
+					if(cursor.getString(0).equals(newCursor.getString(0))){				
+						//controlla anche altri tag
+						for(int i = 1; i < cursor.getColumnCount(); i++){
+							if(!cursor.getString(i).equals(newCursor.getString(i)))
+								isChangedAnything = true;
+						}
+						
+						found = true;
+						break;
+					}
+					
+					newCursor.moveToNext();
+				}
+				if(!found){
+					//map.remove(cursor.getString(0));
+					mapper.getIdTrackToIdAlbum().remove(cursor.getString(0));
+					mapper.getIdTrackToContentTitle().remove(cursor.getString(0));
+					isChangedAnything = true;
+					break;
+				}
+
+				cursor.moveToNext();
+			}
+
+			if(!isChangedAnything){
+				Log.d(TAG, "!isChangedAnything");
+				//Toast.makeText(LibraryActivity.this, "Database is updated", Toast.LENGTH_SHORT).show();		
+			}
+			else{
+				Log.d(TAG, "NOTIFYDATASETCHANGED!");
+				LibraryActivity.adapter.swapCursor(newCursor);
+				setAdapter(newCursor);
+				LibraryActivity.listView.invalidateViews();
+				adapter.notifyDataSetChanged();
+				isChangedAnything = false;
+			}
+		}
+		else
+			Toast.makeText(LibraryActivity.this, "Database is empty!", Toast.LENGTH_SHORT).show();
+	
+	}
+	
 }
