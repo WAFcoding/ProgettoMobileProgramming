@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -208,13 +209,13 @@ public class SettingsActivity extends Activity{
 		
 		Cursor someTrack	= PlayerController.getCursorTracks();
 		if(someTrack == null){
-			Log.d(SETTINGS, "someTrack è NULL");
+			Log.d(SETTINGS, "someTrack ï¿½ NULL");
 			eraseDatabase.setBackgroundColor(Color.TRANSPARENT);
 			eraseDatabase.setTextColor(Color.DKGRAY);
 			eraseDatabase.setEnabled(false);
 		}
 		else{
-			Log.d(SETTINGS, "someTrack è diverso da NULL");
+			Log.d(SETTINGS, "someTrack ï¿½ diverso da NULL");
 			eraseDatabase.setBackground(getResources().getDrawable(R.drawable.ellipse_button));
 			eraseDatabase.setTextColor(Color.WHITE);
 			eraseDatabase.setEnabled(true);
@@ -267,13 +268,13 @@ public class SettingsActivity extends Activity{
 				
 				Cursor someTrack	= PlayerController.getCursorTracks();
 				if(someTrack == null){
-					Log.d(SETTINGS, "someTrack è NULL");
+					Log.d(SETTINGS, "someTrack ï¿½ NULL");
 					eraseDatabase.setBackgroundColor(Color.TRANSPARENT);
 					eraseDatabase.setTextColor(Color.DKGRAY);
 					eraseDatabase.setEnabled(false);
 				}
 				else{
-					Log.d(SETTINGS, "someTrack è diverso da NULL");
+					Log.d(SETTINGS, "someTrack ï¿½ diverso da NULL");
 					eraseDatabase.setBackground(getResources().getDrawable(R.drawable.ellipse_button));
 					eraseDatabase.setTextColor(Color.WHITE);
 					eraseDatabase.setEnabled(true);
@@ -319,6 +320,17 @@ public class SettingsActivity extends Activity{
 		}
 		editor.commit();
 		Log.d("destroy", "destroy");
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event){
+		
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			finish();
+			overridePendingTransition(R.anim.left_in, R.anim.right_out);
+			return true;
+		}
+		
+		return super.onKeyDown(keyCode, event); 
 	}
 
 }
