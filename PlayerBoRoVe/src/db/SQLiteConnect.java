@@ -409,13 +409,16 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 					while(!c.isAfterLast()){		
 						//Log.d(LOG, "c.getString(5): " + c.getString(5));
 						if(valueContentTitle.equals(c.getString(5))){
+							Log.d(LOG, "valueContentTitle: " + valueContentTitle);
+							Log.d(LOG, "c.getString(5): " + c.getString(5));
 							trackFound = true;
 							break;			
 						}				
 						c.moveToNext();
 					}
 					if(!trackFound){
-						//Log.d(LOG, "brano cancellato: " + tableTrack.getString(0));
+						Log.d(LOG, "brano cancellato: " + tableTrack.getString(0));
+						Log.d(LOG, "brano cancellato: " + tableTrack.getString(5));
 						this.deleteRowTrack(valueContentTitle, COLUMN_CONTENT_TITLE);			
 					}	
 					tableTrack.moveToNext();
@@ -431,68 +434,63 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 				}
 			}
 		}
+		
 		closeDatabase();
-			if(c != null){
-				while(!c.isAfterLast()){
-					String vote			= "0";
-					String kind			= "unknown";
-					String pathTrack	= c.getString(1);
-					String contentTitle	= c.getString(5);
-					String title 		= c.getString(4);
-					String singerName	= c.getString(2);
-					String albumId		= c.getString(6);
-					String albumName	= c.getString(3);
-					String duration		= c.getString(7);
-					
-					//controllo che non vi siano caratteri strani
-					/*if(title.contains("/")){
-						int start= title.indexOf("/");
-						title= title.substring(0, start) + title.substring(start + 1);
-					}
-					if(contentTitle.contains("/")){
-						int start= contentTitle.indexOf("/");
-						contentTitle= contentTitle.substring(0, start) + contentTitle.substring(start + 2);
-					}*/
-					title= Utils.replaceBadSymbols(title);
-					contentTitle= Utils.replaceBadSymbols(contentTitle);
-					Log.d("SQLiteConnect", "=======================file: " + pathTrack + " " + singerName + " " 
-							+ title + " " + contentTitle + " "+ albumId + " "
-							+ kind + " " + vote + "============================");
-					
-					Log.d(LOG, "SQLite Connect - duration: " + duration);
-					openDatabaseRW();
-					Cursor trackOnDb = getExactlyTrack(contentTitle, COLUMN_CONTENT_TITLE);
-					closeDatabase();
-					if(trackOnDb == null){				
-							//Cursor e = 
-							addRowTrack(title, kind, singerName, vote, contentTitle, albumId, pathTrack, albumName, duration);
-							/*Log.d(LOG, "nuovo brano rilevato e aggiunto al db");
-							e.moveToFirst();
-							while(!e.isAfterLast()){
-								for(int i=0; i < e.getColumnCount(); i++)
-									Log.d(LOG, e.getColumnName(i) + ": " + e.getString(i));
-								e.moveToNext();
-							}
-							*/
-					}
-					else{
-						if(!trackOnDb.getString(1).equals(title)){
-							updateRowTrack(trackOnDb.getString(0), title, COLUMN_TITLE);
-							Log.d(LOG, "aggiornato il titolo del brano: " + trackOnDb.getString(1));
-						}	
-						if(!trackOnDb.getString(2).equals(singerName)){
-							updateRowTrack(trackOnDb.getString(0), singerName, COLUMN_SINGER_NAME);
-							Log.d(LOG, "aggiornato il nome artista: " + trackOnDb.getString(2));			
-						}
-						if(!trackOnDb.getString(8).equals(albumName)){
-							updateRowTrack(trackOnDb.getString(0), albumName, COLUMN_ALBUM_NAME);
-							Log.d(LOG, "aggiornato il nome dell'album: " + trackOnDb.getString(8));			
-						}	
-					}
-					
+		//c.moveToFirst();
+		if(c != null){
+			while(!c.isAfterLast()){
+				String vote			= "0";
+				String kind			= "unknown";
+				String pathTrack	= c.getString(1);
+				String contentTitle	= c.getString(5);
+				String title 		= c.getString(4);
+				String singerName	= c.getString(2);
+				String albumId		= c.getString(6);
+				String albumName	= c.getString(3);
+				String duration		= c.getString(7);
 				
-					c.moveToNext();
+				//controllo che non vi siano caratteri strani
+				title= Utils.replaceBadSymbols(title);
+				contentTitle= Utils.replaceBadSymbols(contentTitle);
+				
+				/*Log.d("SQLiteConnect", "=======================file: " + pathTrack + " " + singerName + " " 
+						+ title + " " + contentTitle + " "+ albumId + " "
+						+ kind + " " + vote + "============================");*/
+				
+				//Log.d(LOG, "SQLite Connect - duration: " + duration);
+				openDatabaseRW();
+				Cursor trackOnDb = getExactlyTrack(contentTitle, COLUMN_CONTENT_TITLE);
+				closeDatabase();
+				if(trackOnDb == null){				
+					//Cursor e = 
+					addRowTrack(title, kind, singerName, vote, contentTitle, albumId, pathTrack, albumName, duration);
+					Log.d(LOG, "nuovo brano rilevato e aggiunto al db: " + title);
+					/*e.moveToFirst();
+					while(!e.isAfterLast()){
+						for(int i=0; i < e.getColumnCount(); i++)
+							Log.d(LOG, e.getColumnName(i) + ": " + e.getString(i));
+						e.moveToNext();
+					}
+					*/
 				}
+				else{
+					if(!trackOnDb.getString(1).equals(title)){
+						updateRowTrack(trackOnDb.getString(0), title, COLUMN_TITLE);
+						Log.d(LOG, "aggiornato il titolo del brano: " + trackOnDb.getString(1));
+					}	
+					if(!trackOnDb.getString(2).equals(singerName)){
+						updateRowTrack(trackOnDb.getString(0), singerName, COLUMN_SINGER_NAME);
+						Log.d(LOG, "aggiornato il nome artista: " + trackOnDb.getString(2));			
+					}
+					if(!trackOnDb.getString(8).equals(albumName)){
+						updateRowTrack(trackOnDb.getString(0), albumName, COLUMN_ALBUM_NAME);
+						Log.d(LOG, "aggiornato il nome dell'album: " + trackOnDb.getString(8));			
+					}	
+				}
+				
+			
+				c.moveToNext();
+			}
 			}
 			else
 				Log.d(LOG, "cursor c � null!!");

@@ -444,12 +444,12 @@ public class PlayerController extends SQLiteOpenHelper{
 			if(result != null){
 				setCursorTracks(getTracksFromDb);
 				getTracksFromDb.moveToFirst();
-				while(!getTracksFromDb.isAfterLast()){
+				/*while(!getTracksFromDb.isAfterLast()){
 					for(int i=0; i< getTracksFromDb.getColumnCount(); i++){
 						Log.e(TAG, getTracksFromDb.getColumnName(i) + ": " + getTracksFromDb.getString(i));
 					}
 					getTracksFromDb.moveToNext();
-				}
+				}*/
 							
 				new SynchronizePlaylistDb().execute();
 			}
@@ -577,7 +577,7 @@ public class PlayerController extends SQLiteOpenHelper{
 					}
 				}
 			else
-				Log.d(TAG, "Errore in addPlaylistToDb(): pl è NULL");
+				Log.d(TAG, "Errore in addPlaylistToDb(): pl ï¿½ NULL");
 		}catch(Exception e){
 			Log.d(TAG, "Errore in addPlaylistToDb()");
 			e.printStackTrace();
@@ -702,7 +702,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			}
 			*/
 			//else
-			//	Log.d(TAG, "test è NULL");
+			//	Log.d(TAG, "test ï¿½ NULL");
 			
 		}
 		

@@ -209,13 +209,13 @@ public class SettingsActivity extends Activity{
 		
 		Cursor someTrack	= PlayerController.getCursorTracks();
 		if(someTrack == null){
-			Log.d(SETTINGS, "someTrack � NULL");
+			Log.d(SETTINGS, "someTrack is NULL");
 			eraseDatabase.setBackgroundColor(Color.TRANSPARENT);
 			eraseDatabase.setTextColor(Color.DKGRAY);
 			eraseDatabase.setEnabled(false);
 		}
 		else{
-			Log.d(SETTINGS, "someTrack � diverso da NULL");
+			Log.d(SETTINGS, "someTrack is not NULL");
 			eraseDatabase.setBackground(getResources().getDrawable(R.drawable.ellipse_button));
 			eraseDatabase.setTextColor(Color.WHITE);
 			eraseDatabase.setEnabled(true);
@@ -268,13 +268,13 @@ public class SettingsActivity extends Activity{
 				
 				Cursor someTrack	= PlayerController.getCursorTracks();
 				if(someTrack == null){
-					Log.d(SETTINGS, "someTrack � NULL");
+					Log.d(SETTINGS, "someTrack is NULL");
 					eraseDatabase.setBackgroundColor(Color.TRANSPARENT);
 					eraseDatabase.setTextColor(Color.DKGRAY);
 					eraseDatabase.setEnabled(false);
 				}
 				else{
-					Log.d(SETTINGS, "someTrack � diverso da NULL");
+					Log.d(SETTINGS, "someTrack is not NULL");
 					eraseDatabase.setBackground(getResources().getDrawable(R.drawable.ellipse_button));
 					eraseDatabase.setTextColor(Color.WHITE);
 					eraseDatabase.setEnabled(true);

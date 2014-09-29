@@ -254,6 +254,7 @@ public class LibraryActivity extends Activity {
 				}
 							
 			}
+			
 			if(isChangedAnything){
 				PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);
 				updateTracksList();
@@ -348,7 +349,7 @@ public class LibraryActivity extends Activity {
 					}
 				//}
 				//else{
-				//	Toast.makeText(LibraryActivity.this, "non è divisibile per 2!", Toast.LENGTH_SHORT).show();
+				//	Toast.makeText(LibraryActivity.this, "non ï¿½ divisibile per 2!", Toast.LENGTH_SHORT).show();
 				//}
 				
 			}
