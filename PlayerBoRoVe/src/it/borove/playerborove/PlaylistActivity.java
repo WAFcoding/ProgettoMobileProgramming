@@ -153,16 +153,8 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 		}
 	};
 	
-
-    
-	
-	
-	
-	
 	private static final String TAG = "PLAYLISTACTIVITY";
 	
-	
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -175,9 +167,6 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 		//items			= new ArrayList<PlaylistItem>();
 		mapper 			= new AlbumMapper();
 	
-		 
-		
-		
 		setListPlaylist();
 		
 		mediaController=new MyMediaController(this);
