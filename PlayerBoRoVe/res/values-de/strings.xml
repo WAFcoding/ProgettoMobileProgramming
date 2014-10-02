@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PlayerBoRoVe</string>
+    <string name="hello_world">Hallo Welt!</string>
+    <string name="title_activity_player">Spieler-Aktivität</string>
+    <string name="title_activity_playlist">Playlist Aktivität</string>
+    <string name="title_activity_library">Bibliothek Aktivität</string>
+    <string name="title_activity_settings">Einstellungen Aktivität</string>
+    <string name="library">Bibliothek</string>
+    <string name="playlist">Playliste</string>
+    <string name="settings">Einstellungen</string>
+     <string name="classification">Einstufung</string>
+    <string name="player">Leser</string>
+    <string name="duration">500</string>
+    
+    <string name="txtButton">Ausgang</string>
+    
+    <string name="artista">Künstler</string>
+    <string name="titolo">Titel</string>
+    <string name="voto">Abstimmung</string>
+    <string name="album">Album</string>
+    <string name="genere">Geschlecht</string>
+    <string name="durata">Lebensdauer</string>
+    
+    <string name="updateList">Aktuelles</string>
+    
+    <!-- *****************menu_track.xml**************** -->
+     <string name="details">Nähere</string>
+     <string name="selectTrack">Wählen</string>
+     <string name="erase">Stornieren</string>
+    <!-- *****************menu_track.xml**************** -->
+   
+    <!-- *****************settings_activity.xml**************** -->
+     <string name="EraseDb">Datenbank löschen</string>
+     <string name="SyncDb">Datenbank synchronisieren</string>
+    <!-- *****************settings_activity.xml**************** -->
+   
+   
+   
+    
+    <string name="content"> </string>
+    
+   <!-- *****************navigation drawer**************** -->
+    <string name="drawer_open">Geöffnet</string>
+    <string name="drawer_close">Schließen</string>
+    <string name="description">Mediensteuerung</string>
+
+	    <string-array name="drawer_choice_playlist">
+	        <item >in den Play</item>
+	        <item >Playlist entfernen</item>
+	       <item >Aktuelles</item>
+	       <item >Einstellungen</item>
+	    </string-array>
+    
+    
+    
+    
+    <string-array name="drawer_choice_library">
+        <item >Song hinzufügen</item>
+        <item >Spur entfernen</item>
+       <item >Aktuelles</item>
+       <item >Einstellungen</item>
+    </string-array>
+    
+	<!-- *****************add playlist**************** -->
+    <string name="title_activity_playlist_add">Playlist hinzufügen Aktivität</string>
+    
+    <string name="label_add_playlist">Fügen Sie den Namen der Playlist</string>
+    
+    <string name="playlist_add_hint">Neue Wiedergabeliste</string>
+    
+	<!-- *****************popup add playlist**************** -->
+    <string name="playlist_popup_choice1">löschen</string>
+    <string name="playlist_popup_choice2">Nähere</string>
+    <string name="playlist_popup_choice3">Stornieren</string>
+
+</resources>

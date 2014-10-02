@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PlayerBoRoVe</string>
+    <string name="hello_world">你好世界</string>
+    <string name="title_activity_player">玩家活動</string>
+    <string name="title_activity_playlist">播放列表活動</string>
+    <string name="title_activity_library">圖書館活動</string>
+    <string name="title_activity_settings">設置活動</string>
+    <string name="library">圖書館</string>
+    <string name="playlist">播放列表</string>
+    <string name="settings">設置</string>
+     <string name="classification">分類</string>
+    <string name="player">閱讀器</string>
+    <string name="duration">500</string>
+    
+    <string name="txtButton">出去</string>
+    
+    <string name="artista">藝術家</string>
+    <string name="titolo">標題</string>
+    <string name="voto">投票</string>
+    <string name="album">相冊</string>
+    <string name="genere">性別</string>
+    <string name="durata">壽命</string>
+    
+    <string name="updateList">更新</string>
+    
+    <!-- *****************menu_track.xml**************** -->
+     <string name="details">詳細 </string>
+     <string name="selectTrack">選擇 </string>
+     <string name="erase">清除 </string>
+    <!-- *****************menu_track.xml**************** -->
+   
+    <!-- *****************settings_activity.xml**************** -->
+     <string name="EraseDb">刪除數據庫</string>
+     <string name="SyncDb">同步數據庫</string>
+    <!-- *****************settings_activity.xml**************** -->
+   
+   
+   
+    
+    <string name="content"> </string>
+    
+   <!-- *****************navigation drawer**************** -->
+    <string name="drawer_open">打開</string>
+    <string name="drawer_close">關閉</string>
+    <string name="description">設置</string>
+
+	    <string-array name="drawer_choice_playlist">
+	        <item >添加到播放列表</item>
+	        <item >刪除播放列表</item>
+	       <item >更新</item>
+	       <item >設置</item>
+	    </string-array>
+    
+    
+    
+    
+    <string-array name="drawer_choice_library">
+        <item >添加歌曲</item>
+        <item >刪除歌曲</item>
+       <item >更新</item>
+       <item >設置</item>
+    </string-array>
+    
+	<!-- *****************add playlist**************** -->
+    <string name="title_activity_playlist_add">播放列表中添加活動</string>
+    
+    <string name="label_add_playlist">輸入播放列表的名稱</string>
+    
+    <string name="playlist_add_hint">新的播放列表</string>
+    
+	<!-- *****************popup add playlist**************** -->
+    <string name="playlist_popup_choice1">刪除</string>
+    <string name="playlist_popup_choice2">詳細</string>
+    <string name="playlist_popup_choice3">取消</string>
+
+</resources>

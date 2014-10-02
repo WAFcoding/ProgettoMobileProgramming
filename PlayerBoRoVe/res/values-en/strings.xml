@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PlayerBoRoVe</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_player">PlayerActivity</string>
+    <string name="title_activity_playlist">PlaylistActivity</string>
+    <string name="title_activity_library">LibraryActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="library">Library</string>
+    <string name="playlist">Playlist</string>
+    <string name="settings">Settings</string>
+     <string name="classification">Classification</string>
+    <string name="player">Player</string>
+    <string name="duration">500</string>
+    
+    <string name="txtButton">Exit</string>
+    
+    <string name="artista">Artist</string>
+    <string name="titolo">Title</string>
+    <string name="voto">Vote</string>
+    <string name="album">Album</string>
+    <string name="genere">Genre</string>
+    <string name="durata">Duration</string>
+    
+    <string name="updateList">Update</string>
+    
+    <!-- *****************menu_track.xml**************** -->
+     <string name="details">Details </string>
+     <string name="selectTrack">Select </string>
+     <string name="erase">Cancel </string>
+    <!-- *****************menu_track.xml**************** -->
+   
+    <!-- *****************settings_activity.xml**************** -->
+     <string name="EraseDb">Erase Database</string>
+     <string name="SyncDb">Synchronize Database</string>
+    <!-- *****************settings_activity.xml**************** -->
+   
+   
+   
+    
+    <string name="content"> </string>
+    
+   <!-- *****************navigation drawer**************** -->
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+    <string name="description">Media Controls</string>
+
+	    <string-array name="drawer_choice_playlist">
+	        <item >Add Playlist</item>
+	        <item >Remove playlist</item>
+	       <item >Update</item>
+	       <item >Settings</item>
+	    </string-array>
+    
+    
+    
+    
+    <string-array name="drawer_choice_library">
+        <item >add Track</item>
+        <item >Remove Track</item>
+       <item >Update</item>
+       <item >Settings</item>
+    </string-array>
+    
+	<!-- *****************add playlist**************** -->
+    <string name="title_activity_playlist_add">PlaylistAddActivity</string>
+    
+    <string name="label_add_playlist">Insert the name of the playlist</string>
+    
+    <string name="playlist_add_hint">New Playlist</string>
+    
+	<!-- *****************popup add playlist**************** -->
+    <string name="playlist_popup_choice1">Cancel</string>
+    <string name="playlist_popup_choice2">Details</string>
+    <string name="playlist_popup_choice3">Abort</string>
+
+</resources>

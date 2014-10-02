@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PlayerBoRoVe</string>
+    <string name="hello_world">Ciao Mondo!</string>
+    <string name="title_activity_player">παίκτης Δραστηριότητα</string>
+    <string name="title_activity_playlist">playlist Δραστηριότητα</string>
+    <string name="title_activity_library">Δραστηριότητα Βιβλιοθήκη</string>
+    <string name="title_activity_settings">Ρυθμίσεις Δραστηριότητα</string>
+    <string name="library">Βιβλιοθήκη</string>
+    <string name="playlist">Playlist</string>
+    <string name="settings">Ρυθμίσεις</string>
+     <string name="classification">Ταξινόμηση</string>
+    <string name="player">Αναγνώστης</string>
+    <string name="duration">500</string>
+    
+    <string name="txtButton">Βγες έξω</string>
+    
+    <string name="artista">Καλλιτέχνης</string>
+    <string name="titolo">Τίτλος</string>
+    <string name="voto">Ψηφοφορία</string>
+    <string name="album">album</string>
+    <string name="genere">Φύλο</string>
+    <string name="durata">Διάρκεια ζωής</string>
+    
+    <string name="updateList">Ενημέρωση</string>
+    
+    <!-- *****************menu_track.xml**************** -->
+     <string name="details">Λεπτομέρειες </string>
+     <string name="selectTrack">Επιλέξτε </string>
+     <string name="erase">Καθαρισμός </string>
+    <!-- *****************menu_track.xml**************** -->
+   
+    <!-- *****************settings_activity.xml**************** -->
+     <string name="EraseDb">διαγράφει βάσης δεδομένων</string>
+     <string name="SyncDb">Συγχρονισμός βάσης δεδομένων</string>
+    <!-- *****************settings_activity.xml**************** -->
+   
+   
+   
+    
+    <string name="content"> </string>
+    
+   <!-- *****************navigation drawer**************** -->
+    <string name="drawer_open">Άνοιγμα</string>
+    <string name="drawer_close">Κλείσιμο</string>
+    <string name="description">Ρυθμίσεις</string>
+
+	    <string-array name="drawer_choice_playlist">
+	        <item >Προσθήκη στη λίστα αναπαραγωγής</item>
+	        <item >Κατάργηση playlist</item>
+	       <item >Ενημέρωση</item>
+	       <item >Ρυθμίσεις</item>
+	    </string-array>
+    
+    
+    
+    
+    <string-array name="drawer_choice_library">
+        <item >Προσθήκη τραγουδιού</item>
+        <item >Κατάργηση τραγούδι</item>
+       <item >Ενημέρωση</item>
+       <item >Ρυθμίσεις</item>
+    </string-array>
+    
+	<!-- *****************add playlist**************** -->
+    <string name="title_activity_playlist_add">Playlist Προσθήκη Δραστηριότητα</string>
+    
+    <string name="label_add_playlist">Πληκτρολογήστε το όνομα της λίστας αναπαραγωγής</string>
+    
+    <string name="playlist_add_hint">Νέα λίστα αναπαραγωγής</string>
+    
+	<!-- *****************popup add playlist**************** -->
+    <string name="playlist_popup_choice1">Διαγραφή</string>
+    <string name="playlist_popup_choice2">Λεπτομέρειες</string>
+    <string name="playlist_popup_choice3">Ακύρωση</string>
+
+</resources>
