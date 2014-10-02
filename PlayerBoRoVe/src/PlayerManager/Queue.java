@@ -5,44 +5,47 @@ package PlayerManager;
 
 import java.util.ArrayList;
 
+import playlistModules.PlaylistItem;
+import playlistModules.SinglePlaylistItem;
+
 public class Queue {
 	
-	private ArrayList<Track> queue;
+	private ArrayList<SinglePlaylistItem> queue;
 	
 	public Queue(){
-		setQueue(new ArrayList<Track>());
+		setQueue(new ArrayList<SinglePlaylistItem>());
 	}
 	
 	public Queue(Queue q){
-		this.queue= new ArrayList<Track>();
-		addTrackList(q.getQueue());
+		this.queue= new ArrayList<SinglePlaylistItem>();
+		addSinglePlaylistItemList(q.getQueue());
 	}
 
-	public ArrayList<Track> getQueue() {
+	public ArrayList<SinglePlaylistItem> getQueue() {
 		return queue;
 	}
 
-	public void setQueue(ArrayList<Track> queue) {
+	public void setQueue(ArrayList<SinglePlaylistItem> queue) {
 		this.queue = queue;
 	}
 	
-	public void addPlaylist(Playlist p){
-		for(Track t : p.getPlaylist()){
+	public void addPlaylist(PlaylistItem p){
+		for(SinglePlaylistItem t : p.getSongs()){
 			this.queue.add(t);
 		}
 	}
 	
-	public void addTrackList(ArrayList<Track> al_t){
-		for(Track t : al_t){
-			addTrack(t);
+	public void addSinglePlaylistItemList(ArrayList<SinglePlaylistItem> al_t){
+		for(SinglePlaylistItem t : al_t){
+			addSinglePlaylistItem(t);
 		}
 	}
 	
-	public void addTrack(Track t){
+	public void addSinglePlaylistItem(SinglePlaylistItem t){
 		this.queue.add(t);
 	}
 	
-	public Track removeTop(){
+	public SinglePlaylistItem removeTop(){
 		return this.queue.remove(0);
 	}
 	
@@ -50,7 +53,7 @@ public class Queue {
 		return this.queue.isEmpty();
 	}
 	
-	public int getNumberOfTracks(){
+	public int getNumberOfSinglePlaylistItems(){
 		return this.queue.size();
 	}
 	/**
@@ -59,8 +62,7 @@ public class Queue {
 	 */
 	public String getDuration(){
 		Duration duration= new Duration(0, 0, 0);
-		for(Track t : getQueue()){
-			duration.sum(t.getDuration());
+		for(SinglePlaylistItem t : getQueue()){
 		}
 		
 		return duration.getDuration();
@@ -69,5 +71,6 @@ public class Queue {
 	public void clear(){
 		this.queue.clear();
 	}
+
 
 }

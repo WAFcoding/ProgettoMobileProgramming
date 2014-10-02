@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
+import playlistModules.SinglePlaylistItem;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -254,7 +255,6 @@ public class LibraryActivity extends Activity {
 				}
 							
 			}
-			
 			if(isChangedAnything){
 				PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);
 				updateTracksList();
@@ -338,18 +338,32 @@ public class LibraryActivity extends Activity {
 					boolean reachable = tracks.moveToPosition(position);
 					if(reachable){
 						idTrack				= tracks.getInt(0);
-						
+						/*
 						Bitmap albumId		= adapter.getArtworkQuick(getApplicationContext(), tracks.getInt(6), RESWIDTH, RESHEIGTH);				 	
 						Bundle b=new Bundle();
 						b.putString("uri",tracks.getString(7));
 						b.putString("title",tracks.getString(5));
 						b.putString("singer",tracks.getString(2));
 						b.putString("kind",tracks.getString(3));
-						PlayerController.open_player(b, albumId);
+						PlayerController.open_player(b, albumId);*/
+						String _id= tracks.getString(0);
+						String p_title= tracks.getString(1);
+						String singerName= tracks.getString(2);
+						String kind=tracks.getString(3);
+						String vote=tracks.getString(4);
+						String nameFile= tracks.getString(5);
+						String album_id= tracks.getString(6);
+						String path_track = tracks.getString(7);
+						String albumName = tracks.getString(8);
+						String duration =tracks.getString(9);
+						
+					
+						SinglePlaylistItem song=new SinglePlaylistItem(_id, p_title, singerName, kind, vote, nameFile, album_id, path_track, albumName, duration, getApplicationContext());
+						PlayerController.playSingleItem(song);
 					}
 				//}
 				//else{
-				//	Toast.makeText(LibraryActivity.this, "non ï¿½ divisibile per 2!", Toast.LENGTH_SHORT).show();
+				//	Toast.makeText(LibraryActivity.this, "non è divisibile per 2!", Toast.LENGTH_SHORT).show();
 				//}
 				
 			}
