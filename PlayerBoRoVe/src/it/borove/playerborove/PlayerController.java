@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -47,11 +48,11 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 	private LibraryActivity libraryActivity;
 	private static PlaylistItem currentPlayingPlaylist;
-	private Queue queue, aux_queue;
+	private static Queue queue, aux_queue;
 	private int q_loop;
 	private Bundle bundleController;
 	private static Activity mainActivity;
-	
+	protected static final String SETTINGS = "SETTINGS";
 	
 	private static final String DELETE		= "delete";
 	private static final String CREATE		= "create";
@@ -79,6 +80,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static Uri uri;
 	private static LocalBroadcastManager lbm;
 	private static int index=0; //index current song playlist
+	
 	private static ServiceConnection musicConnection = new ServiceConnection(){
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
@@ -113,10 +115,26 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static BroadcastReceiver songCompleteReceiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			m_context.unbindService(musicConnection);
 			Log.d("complete song","complete song");
-			index++;
-			set_player(Uri.parse(currentPlayingPlaylist.getSong(index).getPath_track()));
+		
+				currentPlayingTrack=queue.removeTop();
+				uri=Uri.parse(currentPlayingTrack.getPath_track());
+				set_player();
+			if(queue.isEmpty())
+			lbm.unregisterReceiver(songCompleteReceiver);
 			//non parte il secondo forse perchè playlistActivity ha sregistrato il receiver
+		}
+	};
+	private static BroadcastReceiver songPreparedReceiver=new BroadcastReceiver(){
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+			int pos=prefs.getInt("Pos", 0);
+			Log.d("activity","before seek");
+			seekTo(pos*1000);
+			play();
 		}
 	};
 	
@@ -151,10 +169,11 @@ public class PlayerController extends SQLiteOpenHelper{
 	}
 	
 
-	public static void set_player(Uri u){
+	public static void set_player(){
 		playIntent = new Intent(m_context, MusicService.class);
 		m_context.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
-		uri=u;
+		lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
+		Log.d("setPlayer","setPlayer");
 	}
 	
 	public static void end_music_sevice(){
@@ -168,7 +187,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		index=0;
 		currentPlayingPlaylist=playlist;
 		lbm.registerReceiver(songCompleteReceiver, new IntentFilter("Complete"));
-		set_player(Uri.parse(playlist.getSong(index).getPath_track()));//prova
+		//set_player(queue.getQueue(index));//prova
 		//receiver lanciato in on complete
 		Log.d("Playlist","Playlist");		
 	}
@@ -192,17 +211,47 @@ public class PlayerController extends SQLiteOpenHelper{
 	public static void playSingleItem(SinglePlaylistItem i){
 		
 		currentPlayingTrack=i;
+		uri=Uri.parse(currentPlayingTrack.getPath_track());
 		Intent intent=new Intent(mainActivity, PlayerActivity.class);
-		Bundle b=new Bundle();
-		b.putString("uri",i.getPath_track());
-		b.putString("title",i.getTitle());
-		b.putString("singer",i.getSinger_name());
-		b.putString("kind",i.getKind());
-		intent.putExtras(b);
-		intent.putExtra("image",i.getImagePath());
-		//intent.putExtra("image", image);
 		mainActivity.startActivity(intent);
+		PlayerController.set_player();
 		
+	}
+	
+	public static String getArtistCurrentPlayingTrack(){
+		if(currentPlayingTrack!=null)
+		return currentPlayingTrack.getSinger_name();
+		else return null;
+	}
+	
+	public static String getTitleCurrentPlayingTrack(){
+		if(currentPlayingTrack!=null)
+		return currentPlayingTrack.getTitle();
+		else return null;
+	}
+	
+	public static String getKindCurrentPlayingTrack(){
+		if(currentPlayingTrack!=null)
+		return currentPlayingTrack.getKind();
+		else return null;
+	}
+	
+	public static  Bitmap getCoverCurrentPlayingTrack(){
+		if(currentPlayingTrack!=null)
+		return currentPlayingTrack.getBitmapCover();
+		else return null;
+	}
+	
+	
+	
+	
+	public static void playPlaylist(PlaylistItem playlist){
+		queue=new Queue();
+		queue.addPlaylist(playlist);
+		currentPlayingPlaylist=playlist;
+		lbm.registerReceiver(songCompleteReceiver, new IntentFilter("Complete"));
+		currentPlayingTrack=queue.removeTop();
+		playSingleItem(currentPlayingTrack);
 	}
 	
 

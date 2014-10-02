@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
@@ -21,7 +22,7 @@ import android.util.Log;
 
 
 
-public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener{
+public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, OnCompletionListener{
 	
 	private static final String SETTINGS = "SETTINGS";
 	private MediaPlayer player;
@@ -42,6 +43,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		player.setWakeMode(getApplicationContext(),PowerManager.PARTIAL_WAKE_LOCK);
 		player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		player.setOnPreparedListener(this);
+		player.setOnCompletionListener(this);
 		player.setOnErrorListener(this);
 	}
 	
@@ -68,6 +70,17 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	     lbm.sendBroadcast(mIntent);
 	     //playPlayer();
 		//mediacontroller.show();
+	}
+	
+	@Override
+	public void onCompletion(MediaPlayer mp) {
+	
+		LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+	     Intent mIntent= new Intent();
+	     mIntent.setAction("Complete");
+	     Log.d("complete","complete");
+	     lbm.sendBroadcast(mIntent);
+		
 	}
     @Override
     public IBinder onBind(Intent intent) {
@@ -133,10 +146,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		else
 			player.seekTo(posn);
 	}
-	@Override
-	public void onSeekComplete(MediaPlayer mp) {
-		// TODO Auto-generated method stub
-	}
+
 	@Override
 	public boolean onError(MediaPlayer mp, int what, int extra) {
 		Log.d("Error","error");
@@ -212,5 +222,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		}
 	
 	}
+
+
 	
 }

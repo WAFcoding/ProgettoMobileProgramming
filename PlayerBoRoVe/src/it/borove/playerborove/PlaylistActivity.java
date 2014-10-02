@@ -56,6 +56,7 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
@@ -332,12 +333,25 @@ public class PlaylistActivity extends Activity  {
 			}
 		});
         
-        
+        expListView.setOnItemLongClickListener(new OnItemLongClickListener(){
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				PlayerController.playPlaylist((PlaylistItem) parent.getItemAtPosition(position));
+				Log.d("Playlist","playlist");
+				return true;
+			}
+        	
+        });
         expListView.setOnChildClickListener(new OnChildClickListener() {		
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
 				
+				SinglePlaylistItem song = (SinglePlaylistItem)expAdapter.getChild(groupPosition, childPosition);
+				PlayerController.playSingleItem(song);
+				
+		
 				/*preview=false;
 				if(musicSrv!=null)
 				{	
