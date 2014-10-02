@@ -118,10 +118,6 @@ public class PlaylistExpAdapter extends BaseExpandableListAdapter {
 			}
 		});
 		
-		
-		
-		
-		
 		textPlaylist.setTypeface(null, Typeface.BOLD);
 		textPlaylist.setText(namePlaylist);
 		
