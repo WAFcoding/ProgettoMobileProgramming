@@ -72,7 +72,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-public class PlaylistActivity extends Activity implements MyMediaController.MediaPlayerControl {
+public class PlaylistActivity extends Activity  {
 	
 	private String[] choices;
 	private DrawerLayout drawer;
@@ -109,7 +109,7 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 	protected static final int PREVIEW = 0;
 	private Context myContext;
 	
-	private MusicService musicSrv;
+	/*private MusicService musicSrv;
 	private boolean serviceConnected=false;
 	private Intent playIntent;
 	private Uri uri;
@@ -152,7 +152,7 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 			Log.d("sevice","onServiceDisconnetcted");
 		}
 	};
-	
+	*/
 	private static final String TAG = "PLAYLISTACTIVITY";
 	
 	@Override
@@ -169,26 +169,26 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 	
 		setListPlaylist();
 		
-		mediaController=new MyMediaController(this);
-		mediaController.setMediaPlayer(this);
-		lbm= LocalBroadcastManager.getInstance(this);
-		Log.d("Activity","Created");
-		receiver=new BroadcastReceiver(){
-			@Override
-			public void onReceive(Context context, Intent intent) {
+		//mediaController=new MyMediaController(this);
+		//mediaController.setMediaPlayer(this);
+		//lbm= LocalBroadcastManager.getInstance(this);
+		//Log.d("Activity","Created");
+		//receiver=new BroadcastReceiver(){
+			//@Override
+			//public void onReceive(Context context, Intent intent) {
 				// TODO Auto-generated method stub
-				lbm.unregisterReceiver(receiver);
+				//lbm.unregisterReceiver(receiver);
 				
 				/*String artist= getIntent().getExtras().getString("singer");
 				String title= getIntent().getExtras().getString("title");
 				String kind= getIntent().getExtras().getString("kind");
 				setText(artist+" "+title+" "+kind);*/
 				//image
-				SharedPreferences prefs=context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
-				int pos=prefs.getInt("Pos", 0);
-				Log.d("activity","before seek");
-				seekTo(pos*1000);
-				if(!preview){
+				//SharedPreferences prefs=context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+				//int pos=prefs.getInt("Pos", 0);
+				//Log.d("activity","before seek");
+				//seekTo(pos*1000);
+				/*if(!preview){
 					start();
 					mediaController.show((LinearLayout)findViewById(R.id.anchor));
 					}
@@ -197,6 +197,7 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 				}
 				}
 			};
+			*/
 
 
 		
@@ -337,7 +338,7 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
 				
-				preview=false;
+				/*preview=false;
 				if(musicSrv!=null)
 				{	
 					if(mediaController.isShowing())
@@ -350,9 +351,10 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 				bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
 
 
-		
+		*/
 				return false;
 			}
+			
 		});
 	
 	}
@@ -361,13 +363,14 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 	protected void onDestroy() {
 		super.onDestroy();
 		Log.d("activity","destroy");
-		lbm.unregisterReceiver(receiver);
+		/*lbm.unregisterReceiver(receiver);
 		mediaController.hide();
 		unbindService(musicConnection);
 		serviceConnected=false;
+		*/
 	}
 	
-	private	Handler mHandler = new Handler(){
+	/*private	Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg){
     		SharedPreferences prefs=getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
@@ -396,14 +399,16 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
             }
         }
     };
+	*/
 	
-	public void preview(){
+	/*public void preview(){
 		SharedPreferences prefs=getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 		final int initialPos=prefs.getInt("Pos",0);
 	    start();
 	    seekTo(initialPos*1000);
 	    mHandler.sendEmptyMessage(PREVIEW);
 	}
+	*/
 
 
     @Override
@@ -445,6 +450,7 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			Log.d(TAG,"Position: " + position);
 			
 			//Add Playlist
 			if(position == 0){
@@ -456,21 +462,22 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 				for(int i=0; i < isGroupSelected.size(); i++){
 					if(isGroupSelected.get(i)){					
 						String name = ((PlaylistItem)expAdapter.getGroup(i)).getTitle_playlist();
+						Log.d(TAG, "name: " + name);
 						delNameP.add(name);				
-					}
-					
-				}
-				
+					}			
+				}	
 				if(delNameP.size() >= 1){
+					for(int i=0; i< delNameP.size(); i++)
+						Log.d(TAG, "delNameP.get(i): " + delNameP.get(i));
 					PlayerController.deletePlaylist(delNameP);
+					delNameP.clear();
 					clearData();
 					setListPlaylist();
 				}
 				else{
 					Toast.makeText(PlaylistActivity.this, "Not any playlist selected!", Toast.LENGTH_SHORT).show();
 				}
-				
-				
+			
 			}
 			//Update list of Playlist
 			else if(position == 2){
@@ -483,8 +490,7 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 			else if(position == 3){
 				
 			}
-			
-			
+						
 			drawer.closeDrawer(drawer_list_view);
 			//Toast.makeText(parent.getContext(), "selezionato elemento " + position, Toast.LENGTH_SHORT).show();
 		}
@@ -501,10 +507,6 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 		
 		return super.onKeyDown(keyCode, event); 
 	}
-
-	
-	
-	
 	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
@@ -565,15 +567,13 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 				toTrackActivity.putExtra("imageAlbum", cover);
 				toTrackActivity.putExtras(infoTrack);			
 				startActivityForResult(toTrackActivity, REQUEST_INFO_TRACK);
-	        	
-	        	
-	        	
+    	
 	        }   
 	            return true;
 	        case R.id.playlist_popup_menu_choice3:
 	            
 	            
-	        case R.id.playlist_popup_menu_choice4:
+	        /*case R.id.playlist_popup_menu_choice4:
 	        {
 	        	
 				uri= Uri.parse(track.getPath_track());
@@ -594,6 +594,7 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 				preview=true;
 				return true;
 	        }
+	        */
 	        
 	        	
 	        default:
@@ -601,13 +602,12 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 	    }
 	}
 	
-
 	@Override
 	protected void onActivityResult(int requestCode,int resultCode, Intent data){
 		if(requestCode == ADDPLAYLIST && resultCode == RESULT_OK){	
 			clearData();
 			setListPlaylist();
-			Toast.makeText(this, "List of Playlists updated!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "new playlist added!", Toast.LENGTH_SHORT).show();
 		}
 		
 		if(requestCode == ADDPLAYLIST && resultCode == RESULT_CANCELED){
@@ -659,15 +659,11 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 			id_p.clear();
 		if(isGroupSelected != null)
 			isGroupSelected.clear();
-		
+		if(this.expAdapter != null)
+			this.expAdapter= null;
 	}
 
 	private void setListPlaylist(){
-		
-		
-		
-		
-
 		playlistCursor 	= PlayerController.getCursorPlaylist();
 		items			= new ArrayList<PlaylistItem>();
 		playlistMap		= new HashMap<String, ArrayList<SinglePlaylistItem>>();
@@ -683,12 +679,10 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 				
 				mapper.setIdTrackToContentTitle(playlistCursor.getString(2), playlistCursor.getString(7));
 				mapper.setIdTrackToIdAlbum(playlistCursor.getString(2), playlistCursor.getString(8));
-
 				playlistCursor.moveToNext();
 			}
 		}
-		
-		
+	
 		if(id_p != null){
 			ArrayList<SinglePlaylistItem> tmp_songs;
 			for(int i = 1; i <= id_p.size(); i++){
@@ -728,17 +722,35 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 				}
 				
 				//Log.d(TAG,"tmp_songs.size(): ---> " + tmp_songs.size());
-					PlaylistItem tmp_play= new PlaylistItem(name_playlist, tmp_songs);
-					items.add(tmp_play);
-					this.playlistMap.put(name_playlist, tmp_songs);
+				
+					
+					//boolean found = false;
+					//for(int j=0; j< items.size(); j++){
+						//if(items.get(j).getTitle_playlist().equals(name_playlist)){
+							//Log.d(TAG, "items.get(j).getPlaylist_name: " + items.get(j).getTitle_playlist());
+							//found = true;
+							//break;
+						//}				
+					//}
+					
+					//if(!found){
+						PlaylistItem tmp_play= new PlaylistItem(name_playlist, tmp_songs);
+						items.add(tmp_play);
+						this.playlistMap.put(name_playlist, tmp_songs);
+					
+					
+					
 
 			}
 			this.expAdapter = new PlaylistExpAdapter(this, items, playlistMap);
-			
+
 			expListView.setAdapter(expAdapter);
 			expListView.invalidateViews();
-			registerForContextMenu(expListView);
+			
 			expAdapter.notifyDataSetChanged();
+			
+			registerForContextMenu(expListView);
+			
 			
 			for(int i=0; i < expAdapter.getGroupCount(); i++){
 	        	isGroupSelected.add(false);
@@ -749,13 +761,13 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 		
 	}
 	
-	
-	public void start() {
+	/*public void start() {
 		if(musicSrv!=null){
 			Log.d("controller","play");
 			musicSrv.playPlayer();
 			}
 	}
+	
 	public void pause() {
 		if(musicSrv!=null){
 			musicSrv.pausePlayer();
@@ -839,6 +851,7 @@ public class PlaylistActivity extends Activity implements MyMediaController.Medi
 		mediaController.hide();
 		unbindService(musicConnection);
 	}
+	*/
 
 
 	

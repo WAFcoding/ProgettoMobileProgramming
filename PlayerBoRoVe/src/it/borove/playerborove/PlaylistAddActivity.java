@@ -123,6 +123,7 @@ public class PlaylistAddActivity extends Activity {
 				
 				if(idTracksSelected.size() >= 1){
 					boolean duplicatedNamePlaylist = false;
+					//Log.d(TAG, "namePlaylist: " + namePlaylist);
 					
 					if(cursorPlaylist == null){
 						PlayerController.addPlaylistToDb(namePlaylist, idTracksSelected);
@@ -138,6 +139,7 @@ public class PlaylistAddActivity extends Activity {
 							cursorPlaylist.moveToNext();
 						}
 						if(!duplicatedNamePlaylist){
+							Log.d(TAG, "!duplicatedNamePlaylist--> " + namePlaylist);
 							PlayerController.addPlaylistToDb(namePlaylist, idTracksSelected);
 							setResult(Activity.RESULT_OK);
 						}
