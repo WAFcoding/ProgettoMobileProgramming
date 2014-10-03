@@ -9,6 +9,7 @@ package it.borove.playerborove;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import playlistModules.PlaylistItem;
 import playlistModules.SinglePlaylistItem;
@@ -82,8 +83,6 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static Intent playIntent;
 	private static Uri uri;
 	private static LocalBroadcastManager lbm;
-	private static int index=0; //index current song playlist
-	private static ArrayList<Integer> trackLoop;
 	private static int nLoopPlaylistDone;
 	
 	private static ServiceConnection musicConnection = new ServiceConnection(){
@@ -124,8 +123,8 @@ public class PlayerController extends SQLiteOpenHelper{
 			{
 				lbm.unregisterReceiver(songCompleteReceiver);
 				m_context.unbindService(musicConnection);
-				Intent intent2=new Intent(mainActivity, PlaylistActivity.class);						
-				mainActivity.startActivity(intent2);
+				//Intent intent2=new Intent(mainActivity, PlaylistActivity.class);						
+				//mainActivity.startActivity(intent2);
 			}
 			else
 				if(!musicSrv.isLooping())
@@ -133,7 +132,15 @@ public class PlayerController extends SQLiteOpenHelper{
 					m_context.unbindService(musicConnection);//FIXME controllare se necessario
 					Log.d("complete song","complete song");
 
-					currentPlayingTrack=queue.removeTop();
+					if(random){
+						Random gen= new Random();
+						int pos= gen.nextInt(queue.getNumberOfSinglePlaylistItems());
+						currentPlayingTrack= queue.getQueue().remove(pos);
+					}
+					else{
+						currentPlayingTrack=queue.removeTop();
+					}
+					
 					uri=Uri.parse(currentPlayingTrack.getPath_track());
 					set_player();
 
@@ -159,31 +166,11 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 	};
 	
-	
-	private static PhoneStateListener phoneStateListener = new PhoneStateListener() {
-	    @Override
-	    public void onCallStateChanged(int state, String incomingNumber) {
-	        if (state == TelephonyManager.CALL_STATE_RINGING) {
-	        	musicSrv.pausePlayer();
-	        } else if(state == TelephonyManager.CALL_STATE_IDLE) {
-	            play();
-	        } else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
-	        	musicSrv.pausePlayer();
-	        }
-	        else
-	        	play();
-	        super.onCallStateChanged(state, incomingNumber);
-	    }
-	};
-	
-	private static TelephonyManager mgr; 
-	
 	public PlayerController(Context context, Activity v){
 		super(context, DB_NAME, null, DATABASE_VERSION);
 		mainActivity=v;
 		queue=new Queue();
 		lbm= LocalBroadcastManager.getInstance(context);
-		mgr = (TelephonyManager) context.getSystemService(context.TELEPHONY_SERVICE);
 		//db_path 	= context.getFilesDir().getPath();
 		
 		String externalStorageState= Environment.getExternalStorageState();
@@ -204,10 +191,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		//this.queue= new Queue();
 		//this.setQ_loop(1);
 		PlayerController.sqlDatabaseHelper = new SQLiteConnect(context, db_path, DB_NAME, DATABASE_VERSION);
-		//TODO inizializzazione della libreria da db
-		//TODO inizializzazione del media player
-		
-		
+
 	}
 	
 
@@ -226,7 +210,6 @@ public class PlayerController extends SQLiteOpenHelper{
 	public static void playPlayList(PlaylistItem playlist){
 		if(isPlaying())
 			end_music_sevice();
-		index=0;
 		currentPlayingPlaylist=playlist;
 		lbm.registerReceiver(songCompleteReceiver, new IntentFilter("Complete"));
 		//set_player(queue.getQueue(index));//prova
@@ -292,14 +275,21 @@ public class PlayerController extends SQLiteOpenHelper{
 		q_loop=prefs.getInt("NLoopPlaylist", 1);
 		random=prefs.getBoolean("Random Playback", false);
 		if(q_loop>1 && random)
-			trackLoop=new ArrayList<Integer>(playlist.getSongs().size());
+			//trackLoop=new ArrayList<Integer>(playlist.getSongs().size());
 	
 		nLoopPlaylistDone=0;
 		queue.clear();
 		queue.addPlaylist(playlist);
 		currentPlayingPlaylist=playlist;
 		lbm.registerReceiver(songCompleteReceiver, new IntentFilter("Complete"));
-		currentPlayingTrack=queue.removeTop();
+		if(random){
+			Random gen= new Random();
+			int pos= gen.nextInt(queue.getNumberOfSinglePlaylistItems());
+			currentPlayingTrack= queue.getQueue().remove(pos);
+		}
+		else{
+			currentPlayingTrack=queue.removeTop();
+		}
 		playSingleItem(currentPlayingTrack);
 	}
 	
@@ -314,29 +304,20 @@ public class PlayerController extends SQLiteOpenHelper{
 		sqlDatabaseHelper.createDatabase();
 	}
 	
-
-
-	
 	//====================================================================================
 	//=====================GESTIONE DEL PLAYER============================================
 	public static void play(){
 		if(musicSrv!=null){
-			Log.d("controller","play");
+			Log.d(TAG,"play");
 			
-			if(mgr != null) {
-			    mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-			}
 			musicSrv.playPlayer();
-			}
 		}
+	}
 	
 	public static void pause(){
 		if(musicSrv!=null){
-			if(mgr != null) {
-			    mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
-			}
 			musicSrv.pausePlayer();
-			Log.d("contrller","pause");
+			Log.d(TAG,"pause");
 		}	
 	}
 	
@@ -404,9 +385,6 @@ public class PlayerController extends SQLiteOpenHelper{
 		if(musicSrv!=null){
 			musicSrv.seek(0);
 			musicSrv.stop();
-			if(mgr != null) {
-			    mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
-			}
 		}
 	}
 	
@@ -826,7 +804,7 @@ public class PlayerController extends SQLiteOpenHelper{
 					}
 				}
 			else
-				Log.d(TAG, "Errore in addPlaylistToDb(): pl è NULL");
+				Log.d(TAG, "Errore in addPlaylistToDb(): pl ï¿½ NULL");
 		}catch(Exception e){
 			Log.d(TAG, "Errore in addPlaylistToDb()");
 			e.printStackTrace();
@@ -951,7 +929,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			}
 			*/
 			//else
-			//	Log.d(TAG, "test è NULL");
+			//	Log.d(TAG, "test ï¿½ NULL");
 			
 		}
 		

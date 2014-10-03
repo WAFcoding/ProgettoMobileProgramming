@@ -113,8 +113,8 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		int fadeIn=prefs.getInt("FadeIn",0);
 		//Log.d("FADe",Integer.toString(fadeIn));
 		if(!stopped){
-		fadeIn(fadeIn);
-		player.start();
+			fadeIn(fadeIn);
+			player.start();
 		}
 		else{
 			stopped=false;
@@ -133,7 +133,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		return player.getCurrentPosition();
 	}
 	public void seek(int posn){
-		/*si può fare meglio
+		/*si puï¿½ fare meglio
 		  seekTo e pause sono metodi asincroni. Con questa strategia risoviamo
 		  il problema che si aveva invocando prima seekTo e immediatamente dopo, pause.
 		 */
