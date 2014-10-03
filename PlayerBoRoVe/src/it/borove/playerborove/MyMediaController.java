@@ -32,6 +32,7 @@ public class MyMediaController extends FrameLayout{
 	private MediaPlayerControl mPlayer;	
 	private View mRoot;
 	private ViewGroup anchorView=null;
+	private boolean showing=false;
 	
 	public MyMediaController(Context context){
 		super(context);
@@ -197,7 +198,7 @@ public class MyMediaController extends FrameLayout{
 	}
     public void show (ViewGroup view){
     	if(!isShowing()){
-    		
+    		showing=true;
     		anchorView=view;
     		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     		mRoot=inflater.inflate(R.layout.controller, null);
@@ -208,13 +209,18 @@ public class MyMediaController extends FrameLayout{
     	mHandler.sendEmptyMessage(SHOW_PROGRESS);		
     }
     public void hide(){
+    	showing=false;
     	mHandler.removeMessages(SHOW_PROGRESS);
     	anchorView.removeView(mRoot);
     	anchorView=null;
     	
     }
+    
+    public void stopSeek(){
+    	mHandler.removeMessages(SHOW_PROGRESS);
+    }
     public boolean isShowing(){
-    	return (anchorView!=null);
+    	return showing;
     }
     public void initController(View v){
     	pause=(ImageButton)v.findViewById(R.id.pause);

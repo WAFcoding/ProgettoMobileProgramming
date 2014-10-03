@@ -24,7 +24,8 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 	private BroadcastReceiver receiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			//lbm.unregisterReceiver(receiver);
+			lbm.unregisterReceiver(receiver);
+			lbm.registerReceiver(receiverComplete, new IntentFilter("Complete"));
 			String artist= PlayerController.getArtistCurrentPlayingTrack();
 			String title= PlayerController.getTitleCurrentPlayingTrack();
 			String kind= PlayerController.getKindCurrentPlayingTrack();
@@ -34,6 +35,14 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 			}
 		};
 
+		private BroadcastReceiver receiverComplete=new BroadcastReceiver(){
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				mediaController.stopSeek();;
+				lbm.unregisterReceiver(receiverComplete);
+				lbm.registerReceiver(receiver, new IntentFilter("Prepared"));
+				}
+			};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -44,6 +53,7 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 		mediaController.setMediaPlayer(this);
 		lbm= LocalBroadcastManager.getInstance(this);
 		lbm.registerReceiver(receiver, new IntentFilter("Prepared"));
+		//lbm.registerReceiver(receiverComplete, new IntentFilter("Complete"));
 		}
 
 	@Override

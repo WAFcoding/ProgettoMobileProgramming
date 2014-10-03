@@ -40,6 +40,8 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -49,7 +51,8 @@ public class PlayerController extends SQLiteOpenHelper{
 	private LibraryActivity libraryActivity;
 	private static PlaylistItem currentPlayingPlaylist;
 	private static Queue queue, aux_queue;
-	private int q_loop;
+	private static int q_loop;
+	private static boolean random;
 	private Bundle bundleController;
 	private static Activity mainActivity;
 	protected static final String SETTINGS = "SETTINGS";
@@ -80,6 +83,8 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static Uri uri;
 	private static LocalBroadcastManager lbm;
 	private static int index=0; //index current song playlist
+	private static ArrayList<Integer> trackLoop;
+	private static int nLoopPlaylistDone;
 	
 	private static ServiceConnection musicConnection = new ServiceConnection(){
 		@Override
@@ -115,15 +120,31 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static BroadcastReceiver songCompleteReceiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			m_context.unbindService(musicConnection);
-			Log.d("complete song","complete song");
-		
-				currentPlayingTrack=queue.removeTop();
-				uri=Uri.parse(currentPlayingTrack.getPath_track());
-				set_player();
 			if(queue.isEmpty())
-			lbm.unregisterReceiver(songCompleteReceiver);
-			//non parte il secondo forse perchè playlistActivity ha sregistrato il receiver
+			{
+				lbm.unregisterReceiver(songCompleteReceiver);
+				m_context.unbindService(musicConnection);
+				Intent intent2=new Intent(mainActivity, PlaylistActivity.class);						
+				mainActivity.startActivity(intent2);
+			}
+			else
+				if(!musicSrv.isLooping())
+				{
+					m_context.unbindService(musicConnection);//FIXME controllare se necessario
+					Log.d("complete song","complete song");
+
+					currentPlayingTrack=queue.removeTop();
+					uri=Uri.parse(currentPlayingTrack.getPath_track());
+					set_player();
+
+					if(queue.isEmpty())
+					{
+						nLoopPlaylistDone++;
+						if(nLoopPlaylistDone!=q_loop)
+							queue.addPlaylist(currentPlayingPlaylist);
+					}
+
+				}
 		}
 	};
 	private static BroadcastReceiver songPreparedReceiver=new BroadcastReceiver(){
@@ -138,10 +159,31 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 	};
 	
+	
+	private static PhoneStateListener phoneStateListener = new PhoneStateListener() {
+	    @Override
+	    public void onCallStateChanged(int state, String incomingNumber) {
+	        if (state == TelephonyManager.CALL_STATE_RINGING) {
+	        	musicSrv.pausePlayer();
+	        } else if(state == TelephonyManager.CALL_STATE_IDLE) {
+	            play();
+	        } else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
+	        	musicSrv.pausePlayer();
+	        }
+	        else
+	        	play();
+	        super.onCallStateChanged(state, incomingNumber);
+	    }
+	};
+	
+	private static TelephonyManager mgr; 
+	
 	public PlayerController(Context context, Activity v){
 		super(context, DB_NAME, null, DATABASE_VERSION);
 		mainActivity=v;
+		queue=new Queue();
 		lbm= LocalBroadcastManager.getInstance(context);
+		mgr = (TelephonyManager) context.getSystemService(context.TELEPHONY_SERVICE);
 		//db_path 	= context.getFilesDir().getPath();
 		
 		String externalStorageState= Environment.getExternalStorageState();
@@ -246,7 +288,14 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 	
 	public static void playPlaylist(PlaylistItem playlist){
-		queue=new Queue();
+		SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+		q_loop=prefs.getInt("NLoopPlaylist", 1);
+		random=prefs.getBoolean("Random Playback", false);
+		if(q_loop>1 && random)
+			trackLoop=new ArrayList<Integer>(playlist.getSongs().size());
+	
+		nLoopPlaylistDone=0;
+		queue.clear();
 		queue.addPlaylist(playlist);
 		currentPlayingPlaylist=playlist;
 		lbm.registerReceiver(songCompleteReceiver, new IntentFilter("Complete"));
@@ -273,12 +322,19 @@ public class PlayerController extends SQLiteOpenHelper{
 	public static void play(){
 		if(musicSrv!=null){
 			Log.d("controller","play");
+			
+			if(mgr != null) {
+			    mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+			}
 			musicSrv.playPlayer();
 			}
 		}
 	
 	public static void pause(){
 		if(musicSrv!=null){
+			if(mgr != null) {
+			    mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+			}
 			musicSrv.pausePlayer();
 			Log.d("contrller","pause");
 		}	
@@ -348,6 +404,9 @@ public class PlayerController extends SQLiteOpenHelper{
 		if(musicSrv!=null){
 			musicSrv.seek(0);
 			musicSrv.stop();
+			if(mgr != null) {
+			    mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+			}
 		}
 	}
 	
