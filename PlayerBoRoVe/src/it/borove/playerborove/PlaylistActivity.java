@@ -454,6 +454,7 @@ public class PlaylistActivity extends Activity  {
 			
 			//Add Playlist
 			if(position == 0){
+				//clearData();
 				startActivityForResult(new Intent(PlaylistActivity.this, PlaylistAddActivity.class), ADDPLAYLIST);
 			}
 			
@@ -672,6 +673,9 @@ public class PlaylistActivity extends Activity  {
 			id_p = new ArrayList<String>();
 			playlistCursor.moveToFirst();
 			while(!playlistCursor.isAfterLast()){
+				for(int i=0; i<playlistCursor.getColumnCount(); i++){
+					Log.d(TAG, "setListPlaylist()--> " + playlistCursor.getColumnName(i) + ": " + playlistCursor.getString(i));
+				}
 		
 				if(!id_p.contains(playlistCursor.getString(0))){
 					id_p.add(playlistCursor.getString(0));
@@ -681,18 +685,21 @@ public class PlaylistActivity extends Activity  {
 				mapper.setIdTrackToIdAlbum(playlistCursor.getString(2), playlistCursor.getString(8));
 				playlistCursor.moveToNext();
 			}
+			for(int i=0; i< id_p.size(); i++){
+				Log.d(TAG, "id_p: " + id_p.get(i));
+			}
 		}
 	
 		if(id_p != null){
 			ArrayList<SinglePlaylistItem> tmp_songs;
-			for(int i = 1; i <= id_p.size(); i++){
+			for(int i = 0; i < id_p.size(); i++){
 				//Log.d(TAG, "id_p.size()" + id_p.size());
 				playlistCursor.moveToFirst();
 				boolean coverUsed = false;
 				String name_playlist 		= "";
 				tmp_songs = new ArrayList<SinglePlaylistItem>();
 				while(!playlistCursor.isAfterLast()){
-					if(playlistCursor.getString(0).equals(String.valueOf(i))){
+					if(playlistCursor.getString(0).equals(String.valueOf(i+1))){
 						String title		= playlistCursor.getString(7);
 						String name_singer 	= playlistCursor.getString(4);
 						String kind			= playlistCursor.getString(5);
@@ -707,8 +714,8 @@ public class PlaylistActivity extends Activity  {
 							coverUsed = true;
 						}
 
-						//for(int j=0; j< playlistCursor.getColumnCount(); j++)
-						//	Log.d(TAG,"**--** " + playlistCursor.getColumnName(j) + ": " + playlistCursor.getString(j));
+						for(int j=0; j< playlistCursor.getColumnCount(); j++)
+							Log.d(TAG,"**--** " + playlistCursor.getColumnName(j) + ": " + playlistCursor.getString(j));
 						//la scrollview
 
 						String album_id = mapper.getIdAlbumFromIdTrack(playlistCursor.getString(2));
@@ -722,8 +729,6 @@ public class PlaylistActivity extends Activity  {
 				}
 				
 				//Log.d(TAG,"tmp_songs.size(): ---> " + tmp_songs.size());
-				
-					
 					//boolean found = false;
 					//for(int j=0; j< items.size(); j++){
 						//if(items.get(j).getTitle_playlist().equals(name_playlist)){
@@ -736,6 +741,7 @@ public class PlaylistActivity extends Activity  {
 					//if(!found){
 						PlaylistItem tmp_play= new PlaylistItem(name_playlist, tmp_songs);
 						items.add(tmp_play);
+						Log.d(TAG, "name_playlist: " + name_playlist);
 						this.playlistMap.put(name_playlist, tmp_songs);
 					
 					

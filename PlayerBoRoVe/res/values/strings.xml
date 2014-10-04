@@ -59,7 +59,7 @@
     <string-array name="drawer_choice_library">
         <item >Aggiungi brano</item>
         <item >Rimuovi brano</item>
-       <item >Aggiorna</item>
+       <item >Dettagli</item>
        <item >Impostazioni</item>
     </string-array>
     

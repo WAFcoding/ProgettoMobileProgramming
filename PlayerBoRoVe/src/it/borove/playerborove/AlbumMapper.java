@@ -2,9 +2,11 @@ package it.borove.playerborove;
 
 import java.util.HashMap;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
-public class AlbumMapper {
+public class AlbumMapper{
 	private String idAlbum;
 	private String contentTitle;
 	private String idTrack;
@@ -83,6 +85,5 @@ public class AlbumMapper {
 	public HashMap<String,String> getIdTrackToIdAlbum(){
 		return this.IdTrackToIdAlbum;
 	}
-	
 
 }

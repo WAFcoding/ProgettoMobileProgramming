@@ -14,7 +14,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Parcel;
 import android.os.ParcelFileDescriptor;
+import android.os.Parcelable;
 import android.util.Log;
 
 /**
@@ -166,5 +168,6 @@ public class PlaylistItem {
 	        	Log.e("PlayListItem: ----> ", " dentro getArtworkQuick: Uri è NULL");
 	        return null;
 	    }
+
 
 }

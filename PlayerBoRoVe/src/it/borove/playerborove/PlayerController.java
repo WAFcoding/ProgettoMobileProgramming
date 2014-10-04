@@ -501,6 +501,17 @@ public class PlayerController extends SQLiteOpenHelper{
 			//String[] columnSelect = {"*"};
 			cursorPlaylist = sqlDatabaseHelper.getQueryResult("", SQLiteConnect.COLUMN_NAME, SQLiteConnect.TABLE_NAME_PLAYLIST,
 																 SQLiteConnect.TABLE_NAME_TRACK, "*");
+			cursorPlaylist.moveToFirst();
+			while(!cursorPlaylist.isAfterLast()){
+				for(int i=0; i<cursorPlaylist.getColumnCount(); i++){
+					Log.d(TAG, "GETCURSORPLAYLIST--> " + cursorPlaylist.getColumnName(i) + ": " + cursorPlaylist.getString(i));
+				}
+				
+				
+				cursorPlaylist.moveToNext();
+			}
+			
+			
 		}catch(Exception e){
 			e.printStackTrace();}
 		//Log.d(TAG, "Recupero playlist! su db");
@@ -572,7 +583,9 @@ public class PlayerController extends SQLiteOpenHelper{
 			if(pl != null)
 				for(int i=0; i< arrayIdTrack.size(); i++){
 					if(arrayIdTrack.get(i) != null){
-						Log.d(TAG, "pl.getString(0): " + pl.getString(0));
+						//Log.d(TAG, "pl.getString(0): " + pl.getString(0));
+						//Log.d(TAG, "namePlaylist: " + namePlaylist + " pl.getString(0): " + pl.getString(0));
+						
 						sqlDatabaseHelper.addRowContains(pl.getString(0), arrayIdTrack.get(i));
 					}
 				}
