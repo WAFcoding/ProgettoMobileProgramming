@@ -148,7 +148,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				//controller.open_player(uri);
+				controller.open_player();
 				//animazione a comparsa dal basso
 				overridePendingTransition(R.anim.bottom_in, R.anim.top_out); 
 				

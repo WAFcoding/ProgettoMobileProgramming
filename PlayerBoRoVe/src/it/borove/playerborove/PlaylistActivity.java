@@ -169,7 +169,7 @@ public class PlaylistActivity extends Activity  {
 		mapper 			= new AlbumMapper();
 	
 		setListPlaylist();
-		
+	
 		//mediaController=new MyMediaController(this);
 		//mediaController.setMediaPlayer(this);
 		//lbm= LocalBroadcastManager.getInstance(this);

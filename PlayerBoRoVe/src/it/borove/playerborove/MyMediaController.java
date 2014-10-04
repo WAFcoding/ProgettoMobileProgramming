@@ -218,7 +218,7 @@ public class MyMediaController extends FrameLayout{
     	mHandler.removeMessages(SHOW_PROGRESS);
     	anchorView.removeView(mRoot);
     	anchorView=null;
-    	
+
     }
     
     public void stopSeek(){

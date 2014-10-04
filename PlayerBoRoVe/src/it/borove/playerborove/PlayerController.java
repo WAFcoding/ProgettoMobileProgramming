@@ -209,6 +209,10 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 
 	public static void set_player(){
+		SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor=prefs.edit();
+		editor.putString("lastSongId", currentPlayingTrack.getId());
+		editor.commit();
 		playIntent = new Intent(m_context, MusicService.class);
 		m_context.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
 		lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
@@ -230,15 +234,47 @@ public class PlayerController extends SQLiteOpenHelper{
 		Log.d("Playlist","Playlist");		
 	}
 	
-	public static void open_player(Bundle b, Bitmap image){
+	public void open_player(){
+		Log.d("open player","open player");
+		SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+		sqlDatabaseHelper.openDatabaseReadOnly();
+		Cursor tracks=sqlDatabaseHelper.getExactlyTrack(prefs.getString("lastSongId", "0"),SQLiteConnect.COLUMN_ID);
+		Log.d(prefs.getString("lastSongId", "0"),"null");
 		
+
 		
-		Intent intent=new Intent(mainActivity, PlayerActivity.class);
-		intent.putExtras(b);
-		intent.putExtra("image",image);
-		//intent.putExtra("image", image);
-		
-		mainActivity.startActivity(intent);
+		if(tracks!=null){		
+			String _id=null;
+			String p_title=null;
+			String singerName=null;
+			String kind=null;
+			String vote=null;
+			String nameFile=null;
+			String album_id=null;
+			String path_track=null;
+			String albumName=null;
+			String duration=null;
+
+			tracks.moveToFirst();
+			while(!tracks.isAfterLast()){
+				_id= tracks.getString(0);
+				p_title= tracks.getString(1);
+				singerName= tracks.getString(2);
+				kind=tracks.getString(3);
+				vote=tracks.getString(4);
+				nameFile= tracks.getString(5);
+				album_id= tracks.getString(6);
+				path_track = tracks.getString(7);
+				albumName = tracks.getString(8);
+				duration =tracks.getString(9);
+				tracks.moveToNext();
+				Log.d("done","done");
+			}
+			SinglePlaylistItem song=new SinglePlaylistItem(_id, p_title, singerName, kind, vote, nameFile, album_id, path_track, albumName, duration, m_context);
+			playSingleItem(song);
+		}
+			
+		//playSingleItem(PlayerController.cursorTracks.getExatlyTrack()ì);
 		
 	}
 	
