@@ -84,6 +84,8 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static Uri uri;
 	private static LocalBroadcastManager lbm;
 	private static int nLoopPlaylistDone;
+	private static Random gen= new Random();
+	private static boolean playingPlaylist;
 	
 	private static ServiceConnection musicConnection = new ServiceConnection(){
 		@Override
@@ -119,21 +121,30 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static BroadcastReceiver songCompleteReceiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			lbm.unregisterReceiver(songPreparedReceiver);
+			lbm.unregisterReceiver(songCompleteReceiver);
 			if(queue.isEmpty())
 			{
-				lbm.unregisterReceiver(songCompleteReceiver);
-				m_context.unbindService(musicConnection);
+				nLoopPlaylistDone++;
+				if(nLoopPlaylistDone==q_loop && q_loop!=1000 )
+				{
+					playingPlaylist=false;
+					
+					//m_context.unbindService(musicConnection);
+				}
+				else
+				queue.addPlaylist(currentPlayingPlaylist);
 				//Intent intent2=new Intent(mainActivity, PlaylistActivity.class);						
 				//mainActivity.startActivity(intent2);
 			}
-			else
-				if(!musicSrv.isLooping())
+	
+				if(!musicSrv.isLooping()&& (nLoopPlaylistDone!=q_loop || q_loop==1000))
 				{
 					m_context.unbindService(musicConnection);//FIXME controllare se necessario
 					Log.d("complete song","complete song");
 
 					if(random){
-						Random gen= new Random();
+						
 						int pos= gen.nextInt(queue.getNumberOfSinglePlaylistItems());
 						currentPlayingTrack= queue.getQueue().remove(pos);
 					}
@@ -144,12 +155,12 @@ public class PlayerController extends SQLiteOpenHelper{
 					uri=Uri.parse(currentPlayingTrack.getPath_track());
 					set_player();
 
-					if(queue.isEmpty())
+				/*	if(queue.isEmpty())
 					{
 						nLoopPlaylistDone++;
 						if(nLoopPlaylistDone!=q_loop)
 							queue.addPlaylist(currentPlayingPlaylist);
-					}
+					}*/
 
 				}
 		}
@@ -157,7 +168,8 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static BroadcastReceiver songPreparedReceiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
-
+			if(playingPlaylist)
+				lbm.registerReceiver(songCompleteReceiver, new IntentFilter("Complete"));
 			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 			int pos=prefs.getInt("Pos", 0);
 			Log.d("activity","before seek");
@@ -169,6 +181,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	public PlayerController(Context context, Activity v){
 		super(context, DB_NAME, null, DATABASE_VERSION);
 		mainActivity=v;
+		playingPlaylist=false;
 		queue=new Queue();
 		lbm= LocalBroadcastManager.getInstance(context);
 		//db_path 	= context.getFilesDir().getPath();
@@ -274,16 +287,17 @@ public class PlayerController extends SQLiteOpenHelper{
 		SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 		q_loop=prefs.getInt("NLoopPlaylist", 1);
 		random=prefs.getBoolean("Random Playback", false);
-		if(q_loop>1 && random)
+		//if(q_loop>1 && random)
 			//trackLoop=new ArrayList<Integer>(playlist.getSongs().size());
 	
+		playingPlaylist=true;
 		nLoopPlaylistDone=0;
 		queue.clear();
 		queue.addPlaylist(playlist);
 		currentPlayingPlaylist=playlist;
-		lbm.registerReceiver(songCompleteReceiver, new IntentFilter("Complete"));
+		
 		if(random){
-			Random gen= new Random();
+			
 			int pos= gen.nextInt(queue.getNumberOfSinglePlaylistItems());
 			currentPlayingTrack= queue.getQueue().remove(pos);
 		}
@@ -307,15 +321,14 @@ public class PlayerController extends SQLiteOpenHelper{
 	//====================================================================================
 	//=====================GESTIONE DEL PLAYER============================================
 	public static void play(){
-		if(musicSrv!=null){
+		if(musicSrv!=null && serviceConnected){
 			Log.d(TAG,"play");
-			
 			musicSrv.playPlayer();
 		}
 	}
 	
 	public static void pause(){
-		if(musicSrv!=null){
+		if(musicSrv!=null && serviceConnected){
 			musicSrv.pausePlayer();
 			Log.d(TAG,"pause");
 		}	
@@ -334,6 +347,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	}
 
 	public static void seekTo(int pos) {
+		if(musicSrv!=null && serviceConnected)
 		musicSrv.seek(pos);
 	}
 	
@@ -346,42 +360,50 @@ public class PlayerController extends SQLiteOpenHelper{
 
 	public static void setLoop() {
 		// TODO Auto-generated method stub
-		if(musicSrv!=null)
+		if(musicSrv!=null && serviceConnected)
 			musicSrv.Loop(true);
 	}
 
 	public static void disableLoop() {
 		// TODO Auto-generated method stub
+		if(musicSrv!=null && serviceConnected)
 		if (musicSrv.isLooping())
 			musicSrv.Loop(false);		
 	}
 
 	public static boolean isLooping() {
 		// TODO Auto-generated method stub
+		if(musicSrv!=null && serviceConnected)
 		return musicSrv.isLooping();
+		return false;
 		}
 
 	
 	public static void mute() {
 		// TODO Auto-generated method stub
+		if(musicSrv!=null && serviceConnected)
 		if (musicSrv!=null)
 				musicSrv.setVolume(0f);
 		}
 
 	public static void audio() {
 		// TODO Auto-generated method stub
+		if(musicSrv!=null && serviceConnected)
 			musicSrv.setVolume(1f);
 			}
 
 	
 	public static boolean isMute() {
 		// TODO Auto-generated method stub
+		if(musicSrv!=null && serviceConnected)
 		return musicSrv.isMute();
+		return false;
 		}
 
 
 	public static void stop() {
 		// TODO Auto-generated method stub
+		if(musicSrv!=null && serviceConnected)
 		if(musicSrv!=null){
 			musicSrv.seek(0);
 			musicSrv.stop();

@@ -107,9 +107,13 @@ public class MyMediaController extends FrameLayout{
     	        }
     	        long duration =mPlayer.getDuration();
     	        long newposition = (duration * progress) / 1000L;
-    	        mPlayer.seekTo( (int) newposition);
-    	        if (currentTime != null)
-    	            currentTime.setText(stringForTime( (int) newposition));
+    	        if(newposition<duration)
+    	        {
+    	        	mPlayer.seekTo( (int) newposition);
+    	        	if (currentTime != null)
+    	        		currentTime.setText(stringForTime( (int) newposition));
+    	        }
+    	        else mPlayer.seekTo( (int) duration-1000);
     	    }
 
     	    public void onStopTrackingTouch(SeekBar bar) {
@@ -204,8 +208,9 @@ public class MyMediaController extends FrameLayout{
     		mRoot=inflater.inflate(R.layout.controller, null);
     		Log.d("show","show");
     		initController(mRoot);
-    		anchorView.addView(mRoot);
+    		anchorView.addView(mRoot);	
     	}
+    	//enable();
     	mHandler.sendEmptyMessage(SHOW_PROGRESS);		
     }
     public void hide(){
@@ -218,6 +223,7 @@ public class MyMediaController extends FrameLayout{
     
     public void stopSeek(){
     	mHandler.removeMessages(SHOW_PROGRESS);
+    	//disable();
     }
     public boolean isShowing(){
     	return showing;
@@ -236,4 +242,19 @@ public class MyMediaController extends FrameLayout{
     	onClickListener();
 }
 
+    public void disable(){
+    	pause.setEnabled(false);
+    	stop.setEnabled(false);
+    	loop.setEnabled(false);
+    	audio.setEnabled(false);
+    	seekBar.setEnabled(false);
+    }
+    
+    public void enable(){
+    	pause.setEnabled(true);
+    	stop.setEnabled(true);
+    	loop.setEnabled(true);
+    	audio.setEnabled(true);
+    	seekBar.setEnabled(true);
+    }
 }

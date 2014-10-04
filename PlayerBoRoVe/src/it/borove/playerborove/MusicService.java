@@ -1,11 +1,8 @@
 package it.borove.playerborove;
 
-
-
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -19,8 +16,6 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-
-
 
 public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, OnCompletionListener{
 	
