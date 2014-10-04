@@ -610,8 +610,9 @@ public class PlayerController extends SQLiteOpenHelper{
 		try{
 			Cursor singlePlaylist = sqlDatabaseHelper.getExactlyNamePlaylist(name);
 			if(singlePlaylist != null){
-				if(!cancel)
-					sqlDatabaseHelper.addRowContains(name, idTrack);
+				if(!cancel){
+					sqlDatabaseHelper.addRowContains(singlePlaylist.getString(0), idTrack);
+				}
 				else{
 					sqlDatabaseHelper.deleteRowContains(singlePlaylist.getString(0), idTrack);
 				}

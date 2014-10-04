@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -35,8 +36,11 @@ public class PlaylistTracks extends Activity{
 	private Intent MyCallerIntent;
 	private Bundle bundle;
 	private String id_playlist;
+	private String name_playlist = "";
 	
 	private final int REQUEST_DETAILS_TRACK = 500;
+	private final int ADD_TRACKS = 510;
+	
 	private int selectedTrack = -1;
 	private final ArrayList<Boolean> isGroupSelected = new ArrayList<Boolean>();
 	
@@ -83,6 +87,26 @@ public class PlaylistTracks extends Activity{
 		drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
 		drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
 		
+		
+			Cursor playlist = PlayerController.getCursorPlaylist();
+			if(playlist != null){
+				playlist.moveToFirst();
+				while(!playlist.isAfterLast()){
+					if(playlist.getString(0).equals(id_playlist)){
+						name_playlist = playlist.getString(1);
+						break;
+						
+					}					
+					playlist.moveToNext();
+				}
+			}
+		
+		
+		
+		
+		
+		
+		
 		listOfTracks = bundle.getParcelableArrayList("list");
 		
 		for(int i=0; i < listOfTracks.size(); i++){
@@ -91,7 +115,6 @@ public class PlaylistTracks extends Activity{
 		
 		if(listOfTracks != null)
 			setListTracks(listOfTracks);
-		
 		
 		this.listTracks.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -102,6 +125,11 @@ public class PlaylistTracks extends Activity{
 				
 				if(!isGroupSelected.get(position)){
 					view.setBackgroundColor(Color.parseColor("#c0c0c0"));
+					for(int i=0; i < isGroupSelected.size(); i++){
+						if(isGroupSelected.contains(true)){
+							isGroupSelected.set(i, false);
+						}
+					}
 					isGroupSelected.set(position, true);
 					selectedTrack = position;
 				}
@@ -257,32 +285,17 @@ public class PlaylistTracks extends Activity{
 			// TODO Auto-generated method stub
 			//Add Track
 			if(position == 0){
-				//clearData();
-				//startActivityForResult(new Intent(PlaylistActivity.this, PlaylistAddActivity.class), ADDPLAYLIST);
+				startActivityForResult(new Intent(PlaylistTracks.this, AddTracksToPlaylist.class), ADD_TRACKS);
 			}
 			
 			//Remove Track
 			else if(position == 1){
 				if(selectedTrack >= 0){
 					SinglePlaylistItem trackDeleted = listOfTracks.remove(selectedTrack);
-					Cursor playlist = PlayerController.getCursorPlaylist();
-					if(playlist != null){
-						String name_playlist = "";
-						playlist.moveToFirst();
-						while(!playlist.isAfterLast()){
-							if(playlist.getString(0).equals(id_playlist)){
-								name_playlist = playlist.getString(1);
-								break;
-								
-							}					
-							playlist.moveToNext();
-						}
-						
-						PlayerController.setPlaylistOnDb(name_playlist, trackDeleted.getId(), true);
-					}				
-					setListTracks(listOfTracks);
-					
-				}
+					PlayerController.setPlaylistOnDb(name_playlist, trackDeleted.getId(), true);
+				}				
+				setListTracks(listOfTracks);
+
 		
 			}
 			
@@ -345,7 +358,7 @@ public class PlaylistTracks extends Activity{
 					|| !vote.equals(String.valueOf(valueOfTrack)) || !oldAlbumName.equals(albumName)){
 				PlayerController.setTagTrackFromActivityLibrary(Integer.parseInt(idTrack),fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);		
 				Cursor cursorTrack = PlayerController.getCursorTracks();
-				Log.d(TAG, "DOPO CURSOR");
+				//Log.d(TAG, "DOPO CURSOR");
 				
 				if(cursorTrack != null){
 					cursorTrack.moveToFirst();
@@ -353,7 +366,7 @@ public class PlaylistTracks extends Activity{
 					while(!cursorTrack.isAfterLast()){
 						if(cursorTrack.getString(0).equals(idTrack)){
 							found= true;
-							Log.d(TAG, "TRACK TROVATA!!");
+							//Log.d(TAG, "TRACK TROVATA!!");
 							track.setAlbumName(cursorTrack.getString(8));
 							track.setVote(cursorTrack.getString(4));
 							track.setnameFile(cursorTrack.getString(1));
@@ -368,22 +381,68 @@ public class PlaylistTracks extends Activity{
 						cursorTrack.moveToNext();
 					}
 					if(found){
-						Log.d(TAG, "setListPlaylist chiamata!!");
+						//Log.d(TAG, "setListPlaylist chiamata!!");
 						setListTracks(listOfTracks);
 					}
 			
-				}
-				
-			
-				
+				}			
+			}
+	
+		}
+		
+		if(resultCode == 800){
+			Bundle bundle2 = data.getExtras();
+			ArrayList<String> id_tracks = bundle2.getStringArrayList("idListTracks");
+			for(int i=0; i< id_tracks.size(); i++){
+				PlayerController.setPlaylistOnDb(name_playlist, id_tracks.get(i), false);
 			}
 			
-			
-			
-			
-			
-			
-			
+			if(!listOfTracks.isEmpty()){
+				listOfTracks.clear();
+			}
+			//Log.d(TAG, "PLAYLIST_TRACKS");
+			Cursor playlist = PlayerController.getCursorPlaylist();
+			if(playlist != null){
+				//Log.d(TAG, "playlist != null");
+				playlist.moveToFirst();
+				while(!playlist.isAfterLast()){
+					if(playlist.getString(0).equals(id_playlist)){
+						String _id 			= playlist.getString(2);
+						String title 		= playlist.getString(7);
+						String singerName 	= playlist.getString(4);
+						String kind 		= playlist.getString(5);
+						String vote 		= playlist.getString(6);
+						String nameFile 	= playlist.getString(3);
+						String album_id 	= playlist.getString(8);
+						String path_track 	= playlist.getString(9);
+						String albumName 	= playlist.getString(10);
+						String duration 	= playlist.getString(11);
+				
+						//Log.d(TAG, "_id: " + _id + " title: " + title);
+						SinglePlaylistItem track = new SinglePlaylistItem(_id, title, singerName, kind, vote, 
+								nameFile, album_id, path_track, 
+								albumName, duration, PlaylistTracks.this);
+						
+						listOfTracks.add(track);
+						//Log.d(TAG, "listOfTracks.add(track);");
+					}
+	
+					playlist.moveToNext();
+				}
+				setListTracks(listOfTracks);
+				
+				if(!isGroupSelected.isEmpty())
+					isGroupSelected.clear();
+				
+				for(int i=0; i < listOfTracks.size(); i++){
+		        	isGroupSelected.add(false);
+		        }
+				
+				
+				
+				
+			}
+	
 		}
 	}
 	

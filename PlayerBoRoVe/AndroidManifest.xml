@@ -66,6 +66,10 @@
             android:name="it.borove.playerborove.PlaylistTracks"
             android:label="@string/title_activity_player" >
         </activity>
+        <activity
+            android:name="it.borove.playerborove.AddTracksToPlaylist"
+            android:label="@string/title_activity_player" >
+        </activity>
         
         <activity
             android:name="it.borove.playerborove.LibraryActivity"
