@@ -36,7 +36,8 @@
      <string name="SyncDb">مزامنة قاعدة البيانات</string>
     <!-- *****************settings_activity.xml**************** -->
    
-   
+   <string name="detailsPlaylist">مفتوحة</string>
+   <string name="openPlayer">لعب</string>
    
     
     <string name="content"> </string>

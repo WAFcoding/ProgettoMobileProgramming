@@ -36,7 +36,8 @@
      <string name="SyncDb">sincronizar Banco de Dados</string>
     <!-- *****************settings_activity.xml**************** -->
    
-   
+   <string name="detailsPlaylist">Abrir</string>
+   <string name="openPlayer">Jogue</string>
    
     
     <string name="content"> </string>

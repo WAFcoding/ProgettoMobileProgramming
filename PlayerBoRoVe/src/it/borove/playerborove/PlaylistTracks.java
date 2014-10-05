@@ -78,10 +78,7 @@ public class PlaylistTracks extends Activity{
 				cursorTracks.moveToNext();
 			}
 		}
-		
-		
-		
-		
+	
 		//il navigation drawer
 		title			= drawer_title = getTitle();
 		choices			= getResources().getStringArray(R.array.drawer_choice_library);
@@ -211,15 +208,10 @@ public class PlaylistTracks extends Activity{
 			ViewTrack = convertView;
 			if(ViewTrack == null){
 				LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				//ViewTrack 					= inflater.inflate(R.layout.item_listview, null);
 				ViewTrack 					= inflater.inflate(R.layout.listrow_details, null);
 			}
-			
-			//cover 	= (ImageView)ViewTrack.findViewById(R.id.txtImmagine);
 			cover 	= (ImageView)ViewTrack.findViewById(R.id.imageView_list_item);
-			//title	= (TextView)ViewTrack.findViewById(R.id.txtTitolo);
 			title	= (TextView)ViewTrack.findViewById(R.id.lblListItem);
-			//author	= (TextView)ViewTrack.findViewById(R.id.txtAutore);
 			author	= (TextView)ViewTrack.findViewById(R.id.authorItem);
 			
 			star1	= (ImageView)ViewTrack.findViewById(R.id.star10);
@@ -240,7 +232,7 @@ public class PlaylistTracks extends Activity{
 			
 			String titleTrack = track.getTitle();
 			String nameAuthor = track.getSinger_name();
-			Log.d(TAG, "titletrack: " + titleTrack + " nameAuthor: " + nameAuthor);
+			//Log.d(TAG, "titletrack: " + titleTrack + " nameAuthor: " + nameAuthor);
 			title.setText(titleTrack);
 			author.setText(nameAuthor);
 			

@@ -36,7 +36,8 @@
      <string name="SyncDb">Συγχρονισμός βάσης δεδομένων</string>
     <!-- *****************settings_activity.xml**************** -->
    
-   
+   <string name="detailsPlaylist">Άνοιγμα</string>
+   <string name="openPlayer">Παίξτε</string>
    
     
     <string name="content"> </string>

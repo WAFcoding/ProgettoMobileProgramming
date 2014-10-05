@@ -32,7 +32,7 @@
          android:layout_toStartOf="@+id/button_pl2"
          android:background="@drawable/ellipse_button"
          android:textColor="@android:color/white"
-         android:text="Button" />
+         android:text="@string/openPlayer" />
      
      <Button
          android:id="@+id/button_pl2"
@@ -45,7 +45,7 @@
          android:layout_marginStart="5dp"
          android:background="@drawable/ellipse_button"
          android:textColor="@android:color/white"
-         android:text="Button" />
+         android:text="@string/detailsPlaylist" />
 
 
 </RelativeLayout>

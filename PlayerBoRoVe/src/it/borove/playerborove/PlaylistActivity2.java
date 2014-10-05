@@ -342,15 +342,10 @@ public class PlaylistActivity2 extends Activity{
 				
 				if(!id_p.contains(playlistCursor.getString(0))){
 					id_p.add(playlistCursor.getString(0));
-					//Log.d(TAG, "id_p.add : " + playlistCursor.getString(0));
-    				//PlaylistItem singlePlaylist = new PlaylistItem(playlistCursor.getString(1), null);
-    				//listPlaylistItem.add(singlePlaylist);
-				}						
-				
+				}										
 				mapperPlaylist.setIdTrackToContentTitle(playlistCursor.getString(2), playlistCursor.getString(7));
 				mapperPlaylist.setIdTrackToIdAlbum(playlistCursor.getString(2), playlistCursor.getString(8));
-				playlistCursor.moveToNext();
-				
+				playlistCursor.moveToNext();			
 			}
     	}
     	

@@ -242,20 +242,8 @@ public final class R {
         public static final int app_name=0x7f060000;
         public static final int artista=0x7f06000d;
         public static final int classification=0x7f060009;
-        /**  *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
-         */
-        public static final int content=0x7f060019;
-        public static final int description=0x7f06001c;
+        public static final int content=0x7f06001b;
+        public static final int description=0x7f06001e;
         /**  *****************menu_track.xml**************** 
  *****************menu_track.xml**************** 
  *****************menu_track.xml**************** 
@@ -269,7 +257,20 @@ public final class R {
  *****************menu_track.xml**************** 
          */
         public static final int details=0x7f060014;
-        public static final int drawer_close=0x7f06001b;
+        /**  *****************settings_activity.xml**************** 
+ *****************settings_activity.xml**************** 
+ *****************settings_activity.xml**************** 
+ *****************settings_activity.xml**************** 
+ *****************settings_activity.xml**************** 
+ *****************settings_activity.xml**************** 
+ *****************settings_activity.xml**************** 
+ *****************settings_activity.xml**************** 
+ *****************settings_activity.xml**************** 
+ *****************settings_activity.xml**************** 
+ *****************settings_activity.xml**************** 
+         */
+        public static final int detailsPlaylist=0x7f060019;
+        public static final int drawer_close=0x7f06001d;
         /**  *****************navigation drawer**************** 
  *****************navigation drawer**************** 
  *****************navigation drawer**************** 
@@ -282,17 +283,18 @@ public final class R {
  *****************navigation drawer**************** 
  *****************navigation drawer**************** 
          */
-        public static final int drawer_open=0x7f06001a;
+        public static final int drawer_open=0x7f06001c;
         public static final int durata=0x7f060012;
         public static final int duration=0x7f06000b;
         public static final int erase=0x7f060016;
         public static final int genere=0x7f060011;
         public static final int hello_world=0x7f060001;
-        public static final int label_add_playlist=0x7f06001e;
+        public static final int label_add_playlist=0x7f060020;
         public static final int library=0x7f060006;
+        public static final int openPlayer=0x7f06001a;
         public static final int player=0x7f06000a;
         public static final int playlist=0x7f060007;
-        public static final int playlist_add_hint=0x7f06001f;
+        public static final int playlist_add_hint=0x7f060021;
         /**  *****************popup add playlist**************** 
  *****************popup add playlist**************** 
  *****************popup add playlist**************** 
@@ -305,10 +307,10 @@ public final class R {
  *****************popup add playlist**************** 
  *****************popup add playlist**************** 
          */
-        public static final int playlist_popup_choice1=0x7f060020;
-        public static final int playlist_popup_choice2=0x7f060021;
-        public static final int playlist_popup_choice3=0x7f060022;
-        public static final int playlist_popup_choice4=0x7f060023;
+        public static final int playlist_popup_choice1=0x7f060022;
+        public static final int playlist_popup_choice2=0x7f060023;
+        public static final int playlist_popup_choice3=0x7f060024;
+        public static final int playlist_popup_choice4=0x7f060025;
         public static final int selectTrack=0x7f060015;
         public static final int settings=0x7f060008;
         public static final int title_activity_library=0x7f060004;
@@ -326,7 +328,7 @@ public final class R {
  *****************add playlist**************** 
  *****************add playlist**************** 
          */
-        public static final int title_activity_playlist_add=0x7f06001d;
+        public static final int title_activity_playlist_add=0x7f06001f;
         public static final int title_activity_settings=0x7f060005;
         public static final int titolo=0x7f06000e;
         public static final int txtButton=0x7f06000c;
