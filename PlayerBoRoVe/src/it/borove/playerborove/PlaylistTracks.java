@@ -153,14 +153,18 @@ public class PlaylistTracks extends Activity{
 				if(!isGroupSelected.get(position)){
 					view.setBackgroundColor(Color.parseColor("#c0c0c0"));
 					for(int i=0; i < isGroupSelected.size(); i++){
-						if(isGroupSelected.contains(true)){
+						if(isGroupSelected.get(i)){
 							isGroupSelected.set(i, false);
+							View v = listTracks.getChildAt(i);
+							v.setBackgroundColor(Color.TRANSPARENT);
+							
 						}
 					}
 					isGroupSelected.set(position, true);
 					selectedTrack = position;
 				}
-				else{				
+				else{	
+					
 					view.setBackgroundColor(Color.TRANSPARENT);
 					isGroupSelected.set(position, false);
 					selectedTrack = -1;
