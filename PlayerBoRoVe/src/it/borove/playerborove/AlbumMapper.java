@@ -7,10 +7,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 public class AlbumMapper{
-	private String idAlbum;
-	private String contentTitle;
-	private String idTrack;
-	private static String TAG = "ALBUMMAPPER";
+	private static final String TAG = "ALBUMMAPPER";
 	
 	// id Track --> content_title
 	private HashMap<String,String> idTrackToContentTitle;
@@ -20,9 +17,6 @@ public class AlbumMapper{
 	public AlbumMapper(){
 		idTrackToContentTitle = new HashMap<String,String>();
 		IdTrackToIdAlbum = new HashMap<String,String>();
-		idAlbum 			= "";
-		contentTitle 		= "";
-		idTrack				= "";
 	}
 	
 	/**
@@ -35,6 +29,11 @@ public class AlbumMapper{
 	public void setIdTrackToContentTitle(String idTrack, String contentTitle){
 		if(!idTrack.equals(null) && !contentTitle.equals(null))
 			try{
+				/*if(!this.idTrackToContentTitle.containsKey(idTrack) && !this.idTrackToContentTitle.containsValue(idTrack)){
+					this.idTrackToContentTitle.put(idTrack, contentTitle);
+					Log.d(TAG, "Aggiunto track in IdTrackToContentTitle: " + idTrack + " " + contentTitle);
+				}
+				*/
 				if(!this.idTrackToContentTitle.containsKey(idTrack) && !this.idTrackToContentTitle.containsValue(idTrack)){
 					this.idTrackToContentTitle.put(idTrack, contentTitle);
 					Log.d(TAG, "Aggiunto track in IdTrackToContentTitle: " + idTrack + " " + contentTitle);
@@ -84,6 +83,13 @@ public class AlbumMapper{
 	
 	public HashMap<String,String> getIdTrackToIdAlbum(){
 		return this.IdTrackToIdAlbum;
+	}
+	
+	public void setHashMapIdTrackToContentTitle(HashMap<String,String> temp){
+		this.idTrackToContentTitle = temp;
+	}
+	public void setHashMapIdTrackToIdAlbum(HashMap<String,String> temp){
+		this.IdTrackToIdAlbum = temp;
 	}
 
 }

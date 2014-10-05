@@ -243,7 +243,6 @@ public class SinglePlaylistItem implements Parcelable{
 		List<Bitmap> bit = new ArrayList<Bitmap>();
 		bit.add(getBitmapCover());
 		dest.writeTypedList(bit);
-		
 	}
 	
 	

@@ -30,6 +30,7 @@ public class PlaylistItem {
 	private SinglePlaylistItem cover;
 	private ArrayList<SinglePlaylistItem> songs;
 	private String title_playlist;
+	private ArrayList<String> id_tracks;
 	
 
 	private Cursor cursor;
@@ -57,12 +58,26 @@ public class PlaylistItem {
 	 */
 	public  PlaylistItem(String title_playlist, ArrayList<SinglePlaylistItem> p_songs){
 		this.title_playlist = title_playlist;
+		id_tracks = new ArrayList<String>();
 	
 		if(p_songs == null){
 			p_songs= new ArrayList<SinglePlaylistItem>();
 		}
 
 		setSongs(p_songs);
+		setIdSongs(p_songs);
+	}
+	
+	private void setIdSongs(ArrayList<SinglePlaylistItem> p_songs) {
+		// TODO Auto-generated method stub
+		for(int i=0; i< p_songs.size(); i++){
+			if(!id_tracks.contains(p_songs.get(i).getId()))
+				this.id_tracks.add(p_songs.get(i).getId());
+		}
+	}
+	
+	public ArrayList<String> getIdTracks(){
+		return this.id_tracks;
 	}
 	
 	public String getTitle_playlist() {

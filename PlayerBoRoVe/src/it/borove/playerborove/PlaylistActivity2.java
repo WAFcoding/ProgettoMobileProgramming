@@ -1,6 +1,7 @@
 package it.borove.playerborove;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import playlistModules.PlaylistItem;
 import playlistModules.SinglePlaylistItem;
@@ -67,7 +68,7 @@ public class PlaylistActivity2 extends Activity{
 	private PlaylistAdapter adapter;
 	private ArrayList<PlaylistItem> listPlaylistItem;
 	private ArrayList<SinglePlaylistItem> tmp_songs;
-	private AlbumMapper mapper;
+	private AlbumMapper mapperPlaylist;
 
 	private ArrayList<String> id_p;
 
@@ -80,7 +81,7 @@ public class PlaylistActivity2 extends Activity{
 		//tmp_songs			= new ArrayList<SinglePlaylistItem>();
 		listview			= (ListView)findViewById(R.id.listView_playlist_activity);
 		
-		mapper 				= new AlbumMapper();
+		mapperPlaylist		= new AlbumMapper();
 			
 		//il navigation drawer
 		title			= drawer_title = getTitle();
@@ -126,7 +127,6 @@ public class PlaylistActivity2 extends Activity{
 					isGroupSelected.set(position, false);
 				}	
 			}
-		
 		});
 
 	}
@@ -192,9 +192,18 @@ public class PlaylistActivity2 extends Activity{
 					listOfTracks = playlistSelected.getSongs();
 					Intent i = new Intent(m_context, PlaylistTracks.class);
 					Bundle b = new Bundle();
-					b.putParcelableArrayList("list", playlistSelected.getSongs());
-					b.putString("id_playlist", id_playlist);		
+					//b.putParcelableArrayList("list", playlistSelected.getSongs());
+					ArrayList<String> id_tracks = playlistSelected.getIdTracks();
+					b.putString("id_playlist", id_playlist);
+					b.putStringArrayList("id_tracks", id_tracks);
+					
+					//HashMap<String, String> idTrackToContentTitle = mapperPlaylist.getIdTrackToContentTitle();
+					//HashMap<String, String> IdTrackToIdAlbum = mapperPlaylist.getIdTrackToIdAlbum();			
+					//i.putExtra("idTrackToContentTitle", idTrackToContentTitle);
+					//i.putExtra("IdTrackToIdAlbum", IdTrackToIdAlbum);
+					
 					i.putExtras(b);
+					
 					m_context.startActivity(i);
 								
 				}
@@ -344,8 +353,8 @@ public class PlaylistActivity2 extends Activity{
     				//listPlaylistItem.add(singlePlaylist);
 				}						
 				
-				mapper.setIdTrackToContentTitle(playlistCursor.getString(2), playlistCursor.getString(7));
-				mapper.setIdTrackToIdAlbum(playlistCursor.getString(2), playlistCursor.getString(8));
+				mapperPlaylist.setIdTrackToContentTitle(playlistCursor.getString(2), playlistCursor.getString(7));
+				mapperPlaylist.setIdTrackToIdAlbum(playlistCursor.getString(2), playlistCursor.getString(8));
 				playlistCursor.moveToNext();
 				
 			}
@@ -373,7 +382,7 @@ public class PlaylistActivity2 extends Activity{
 							name_playlist = playlistCursor.getString(1);
 							coverUsed = true;
 						}
-						String album_id 	= mapper.getIdAlbumFromIdTrack(playlistCursor.getString(2));
+						String album_id 	= mapperPlaylist.getIdAlbumFromIdTrack(playlistCursor.getString(2));
 						SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem(_id, title, name_singer, kind, vote,
 								nameFile, album_id, path_track, albumName, duration, this);
 						tmp_songs.add(tmp_pl_item);					
@@ -396,14 +405,23 @@ public class PlaylistActivity2 extends Activity{
 		
     }
     
+    @Override
+    public void onResume(){
+    	super.onResume();
+    	clearData();
+    	setListPlaylist();
+    }
+    
+    
+    
     private void clearData() {
 		// TODO Auto-generated method stub
 		if(playlistCursor != null)
 			playlistCursor.close();
 		if(listPlaylistItem != null)
 			listPlaylistItem.clear();
-		if(this.adapter != null)
-			this.adapter = null;
+		if(adapter != null)
+			adapter = null;
 		if(isGroupSelected != null)
 			isGroupSelected.clear();
 		if(id_p != null)

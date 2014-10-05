@@ -1,6 +1,7 @@
 package it.borove.playerborove;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import db.SQLiteConnect;
 import playlistModules.PlaylistItem;
@@ -33,7 +34,8 @@ public class PlaylistTracks extends Activity{
 	private PlaylistTracksAdapter listTracksAdapter;
 	private ListView listTracks;
 	private ArrayList<SinglePlaylistItem> listOfTracks;
-	private Intent MyCallerIntent;
+	private ArrayList<String> id_tracks;
+	private Intent myCallerIntent;
 	private Bundle bundle;
 	private String id_playlist;
 	private String name_playlist = "";
@@ -49,6 +51,7 @@ public class PlaylistTracks extends Activity{
 	private ActionBarDrawerToggle drawer_toggle;
 	private CharSequence title, drawer_title;
 	private String[] choices;
+	private AlbumMapper mapper;
 	
 	private static final String TAG = "PlaylistTrack";
 
@@ -57,9 +60,35 @@ public class PlaylistTracks extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.playlisttracks_activity);
 		this.listTracks 	= (ListView)findViewById(R.id.playlistTracksId1);
-		this.MyCallerIntent = getIntent();
-		this.bundle			= MyCallerIntent.getExtras();
+		this.myCallerIntent = getIntent();
+		this.bundle			= myCallerIntent.getExtras();
 		this.id_playlist	= bundle.getString("id_playlist");
+		this.id_tracks		= bundle.getStringArrayList("id_tracks");
+		
+		this.listOfTracks	= new ArrayList<SinglePlaylistItem>();
+		
+		
+		mapper = new AlbumMapper();
+		/*HashMap<String, String> idTrackToContentTitle = (HashMap<String, String>) myCallerIntent.getSerializableExtra("idTrackToContentTitle");
+		HashMap<String, String> IdTrackToIdAlbum = (HashMap<String, String>) myCallerIntent.getSerializableExtra("IdTrackToIdAlbum");
+		
+		mapper.setHashMapIdTrackToContentTitle(idTrackToContentTitle);
+		mapper.setHashMapIdTrackToIdAlbum(IdTrackToIdAlbum);
+		*/
+		
+		Cursor cursorTracks = PlayerController.getCursorTracks();
+		if(cursorTracks != null){
+			cursorTracks.moveToFirst();
+			while(!cursorTracks.isAfterLast()){
+				mapper.setIdTrackToContentTitle(cursorTracks.getString(0), cursorTracks.getString(5));
+				mapper.setIdTrackToIdAlbum(cursorTracks.getString(0), cursorTracks.getString(6));
+		
+				cursorTracks.moveToNext();
+			}
+		}
+		
+		
+		
 		
 		//il navigation drawer
 		title			= drawer_title = getTitle();
@@ -87,28 +116,39 @@ public class PlaylistTracks extends Activity{
 		drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
 		drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
 		
-		
-			Cursor playlist = PlayerController.getCursorPlaylist();
+		Cursor playlist = PlayerController.getCursorPlaylist();
 			if(playlist != null){
+				boolean name = false;
 				playlist.moveToFirst();
 				while(!playlist.isAfterLast()){
 					if(playlist.getString(0).equals(id_playlist)){
+						if(!name){
 						name_playlist = playlist.getString(1);
-						break;
+						name = true;
+						}					
+						String title		= playlist.getString(7);
+						String name_singer 	= playlist.getString(4);
+						String kind			= playlist.getString(5);
+						String path_track	= playlist.getString(9);
+						String _id			= playlist.getString(2);
+						String vote			= playlist.getString(6);
+						String nameFile		= playlist.getString(3);
+						String duration		= playlist.getString(11);
+						String albumName	= playlist.getString(10);
 						
-					}					
+						String album_id 	= mapper.getIdAlbumFromIdTrack(playlist.getString(2));
+						
+						SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem(_id, title, name_singer, kind, vote,
+								nameFile, album_id, path_track, albumName, duration, this);
+						listOfTracks.add(tmp_pl_item);
+					}
+		
 					playlist.moveToNext();
 				}
 			}
-		
-		
-		
-		
-		
-		
-		
-		listOfTracks = bundle.getParcelableArrayList("list");
-		
+
+		//listOfTracks = bundle.getParcelableArrayList("list");
+
 		for(int i=0; i < listOfTracks.size(); i++){
         	isGroupSelected.add(false);
         }
@@ -274,9 +314,7 @@ public class PlaylistTracks extends Activity{
 		this.listTracks.invalidateViews();
 		this.listTracksAdapter.notifyDataSetChanged();
 	}
-	
-	
-	
+
 	private class DrawerItemClickListener implements ListView.OnItemClickListener{
 
 		@Override
@@ -333,6 +371,7 @@ public class PlaylistTracks extends Activity{
 			
 		}
 	}
+	
 	@Override
 	protected void onActivityResult(int requestCode,int resultCode, Intent data){
 		if(resultCode == RESULT_OK){
@@ -413,7 +452,7 @@ public class PlaylistTracks extends Activity{
 						String kind 		= playlist.getString(5);
 						String vote 		= playlist.getString(6);
 						String nameFile 	= playlist.getString(3);
-						String album_id 	= playlist.getString(8);
+						String album_id 	= mapper.getIdAlbumFromIdTrack(_id);
 						String path_track 	= playlist.getString(9);
 						String albumName 	= playlist.getString(10);
 						String duration 	= playlist.getString(11);
@@ -423,7 +462,15 @@ public class PlaylistTracks extends Activity{
 								nameFile, album_id, path_track, 
 								albumName, duration, PlaylistTracks.this);
 						
-						listOfTracks.add(track);
+						boolean isExist = false;
+						for(int i=0; i < listOfTracks.size(); i++){
+							if(listOfTracks.get(i).getId().equals(track.getId())){
+								isExist = true;
+								break;
+							}
+						}
+						if(!isExist)
+							listOfTracks.add(track);
 						//Log.d(TAG, "listOfTracks.add(track);");
 					}
 	

@@ -86,7 +86,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		String externalStorageState= Environment.getExternalStorageState();
 		if(Environment.MEDIA_MOUNTED.equals(externalStorageState)){
 			//possiamo scrivere sulla memoria esterna
-			Log.d(TAG, "external storage ready for read and write");
+			//Log.d(TAG, "external storage ready for read and write");
 			db_path= Environment.getExternalStorageDirectory().getPath() + "/PlayerBoRoVe/";
 			File db_directory= new File(db_path);
 			if(!db_directory.exists()){
@@ -96,7 +96,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		else
 			db_path 	= context.getFilesDir().getPath();
 		
-		Log.d(TAG, "path of db " + db_path);
+		//Log.d(TAG, "path of db " + db_path);
 		m_context 	= context;
 		//this.queue= new Queue();
 		//this.setQ_loop(1);
@@ -317,7 +317,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			completeString = params[0];
 			
 			if(completeString.contains("$")){
-				Log.d(TAG, "file da aggiornare!!");
+				//Log.d(TAG, "file da aggiornare!!");
 				File file =  Environment.getExternalStorageDirectory();
 				String path2 = file.getPath() + "/Music/";
 				display_name = completeString.substring(path2.length());
@@ -328,7 +328,7 @@ public class PlayerController extends SQLiteOpenHelper{
 				String newValue	= completeString.substring(completeString.indexOf("$")+1, completeString.length());
 				String new_display_name = newValue.substring(path2.length());
 				
-				Log.d(TAG, "old_display_name: " + old_display_name + " new_display_name: "+ new_display_name);
+				//Log.d(TAG, "old_display_name: " + old_display_name + " new_display_name: "+ new_display_name);
 				sqlDatabaseHelper.openDatabaseReadOnly();
 				Cursor c = sqlDatabaseHelper.getExactlyTrack(old_display_name, SQLiteConnect.COLUMN_TITLE);
 				sqlDatabaseHelper.closeDatabase();
@@ -474,7 +474,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		sqlDatabaseHelper.openDatabaseReadOnly();
 		cursorTracks = sqlDatabaseHelper.getDb().query(SQLiteConnect.TABLE_NAME_TRACK, columnsSelect,null,null,null,null,null);
 		//sqlDatabaseHelper.closeDatabase();
-		/*cursorTracks.moveToFirst();
+		cursorTracks.moveToFirst();
 		Log.e(TAG, "*********+DENTRO GetCursorTracks()**********");
 		while(!cursorTracks.isAfterLast()){
 			for(int i=0; i< cursorTracks.getColumnCount(); i++){
@@ -484,7 +484,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 		
 		Log.e(TAG, "***********FUORI GetCursorTracks()************");
-		*/
+		
 		
 		return cursorTracks;
 		
@@ -502,7 +502,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			cursorPlaylist = sqlDatabaseHelper.getQueryResult("", SQLiteConnect.COLUMN_NAME, SQLiteConnect.TABLE_NAME_PLAYLIST,
 																 SQLiteConnect.TABLE_NAME_TRACK, "*");
 			cursorPlaylist.moveToFirst();
-			while(!cursorPlaylist.isAfterLast()){
+			/*while(!cursorPlaylist.isAfterLast()){
 				for(int i=0; i<cursorPlaylist.getColumnCount(); i++){
 					Log.d(TAG, "GETCURSORPLAYLIST--> " + cursorPlaylist.getColumnName(i) + ": " + cursorPlaylist.getString(i));
 				}
@@ -510,7 +510,7 @@ public class PlayerController extends SQLiteOpenHelper{
 				
 				cursorPlaylist.moveToNext();
 			}
-			
+			*/
 			
 		}catch(Exception e){
 			e.printStackTrace();}
@@ -589,8 +589,9 @@ public class PlayerController extends SQLiteOpenHelper{
 						sqlDatabaseHelper.addRowContains(pl.getString(0), arrayIdTrack.get(i));
 					}
 				}
-			else
+			else{
 				Log.d(TAG, "Errore in addPlaylistToDb(): pl � NULL");
+			}
 		}catch(Exception e){
 			Log.d(TAG, "Errore in addPlaylistToDb()");
 			e.printStackTrace();
