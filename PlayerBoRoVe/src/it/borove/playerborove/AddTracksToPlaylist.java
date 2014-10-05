@@ -199,10 +199,8 @@ public class AddTracksToPlaylist extends Activity {
 					star3.setImageResource(R.drawable.star_gold);
 					star4.setImageResource(R.drawable.star_gold);
 					star5.setImageResource(R.drawable.star_gold);
-				}
-				
+				}		
 			}
-	
 			return ViewTrack;
 		}	
 	}

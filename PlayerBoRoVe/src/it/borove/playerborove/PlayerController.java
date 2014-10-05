@@ -474,7 +474,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		sqlDatabaseHelper.openDatabaseReadOnly();
 		cursorTracks = sqlDatabaseHelper.getDb().query(SQLiteConnect.TABLE_NAME_TRACK, columnsSelect,null,null,null,null,null);
 		//sqlDatabaseHelper.closeDatabase();
-		cursorTracks.moveToFirst();
+		/*cursorTracks.moveToFirst();
 		Log.e(TAG, "*********+DENTRO GetCursorTracks()**********");
 		while(!cursorTracks.isAfterLast()){
 			for(int i=0; i< cursorTracks.getColumnCount(); i++){
@@ -484,7 +484,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 		
 		Log.e(TAG, "***********FUORI GetCursorTracks()************");
-		
+		*/
 		
 		return cursorTracks;
 		

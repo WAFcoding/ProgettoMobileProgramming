@@ -66,16 +66,8 @@ public class PlaylistTracks extends Activity{
 		this.id_tracks		= bundle.getStringArrayList("id_tracks");
 		
 		this.listOfTracks	= new ArrayList<SinglePlaylistItem>();
-		
-		
-		mapper = new AlbumMapper();
-		/*HashMap<String, String> idTrackToContentTitle = (HashMap<String, String>) myCallerIntent.getSerializableExtra("idTrackToContentTitle");
-		HashMap<String, String> IdTrackToIdAlbum = (HashMap<String, String>) myCallerIntent.getSerializableExtra("IdTrackToIdAlbum");
-		
-		mapper.setHashMapIdTrackToContentTitle(idTrackToContentTitle);
-		mapper.setHashMapIdTrackToIdAlbum(IdTrackToIdAlbum);
-		*/
-		
+			
+		mapper = new AlbumMapper();	
 		Cursor cursorTracks = PlayerController.getCursorTracks();
 		if(cursorTracks != null){
 			cursorTracks.moveToFirst();
@@ -146,8 +138,6 @@ public class PlaylistTracks extends Activity{
 					playlist.moveToNext();
 				}
 			}
-
-		//listOfTracks = bundle.getParcelableArrayList("list");
 
 		for(int i=0; i < listOfTracks.size(); i++){
         	isGroupSelected.add(false);

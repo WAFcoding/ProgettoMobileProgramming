@@ -29,11 +29,6 @@ public class AlbumMapper{
 	public void setIdTrackToContentTitle(String idTrack, String contentTitle){
 		if(!idTrack.equals(null) && !contentTitle.equals(null))
 			try{
-				/*if(!this.idTrackToContentTitle.containsKey(idTrack) && !this.idTrackToContentTitle.containsValue(idTrack)){
-					this.idTrackToContentTitle.put(idTrack, contentTitle);
-					Log.d(TAG, "Aggiunto track in IdTrackToContentTitle: " + idTrack + " " + contentTitle);
-				}
-				*/
 				if(!this.idTrackToContentTitle.containsKey(idTrack) && !this.idTrackToContentTitle.containsValue(idTrack)){
 					this.idTrackToContentTitle.put(idTrack, contentTitle);
 					Log.d(TAG, "Aggiunto track in IdTrackToContentTitle: " + idTrack + " " + contentTitle);

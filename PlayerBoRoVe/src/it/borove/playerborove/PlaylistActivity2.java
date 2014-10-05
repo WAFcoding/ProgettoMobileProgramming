@@ -192,15 +192,9 @@ public class PlaylistActivity2 extends Activity{
 					listOfTracks = playlistSelected.getSongs();
 					Intent i = new Intent(m_context, PlaylistTracks.class);
 					Bundle b = new Bundle();
-					//b.putParcelableArrayList("list", playlistSelected.getSongs());
 					ArrayList<String> id_tracks = playlistSelected.getIdTracks();
 					b.putString("id_playlist", id_playlist);
 					b.putStringArrayList("id_tracks", id_tracks);
-					
-					//HashMap<String, String> idTrackToContentTitle = mapperPlaylist.getIdTrackToContentTitle();
-					//HashMap<String, String> IdTrackToIdAlbum = mapperPlaylist.getIdTrackToIdAlbum();			
-					//i.putExtra("idTrackToContentTitle", idTrackToContentTitle);
-					//i.putExtra("IdTrackToIdAlbum", IdTrackToIdAlbum);
 					
 					i.putExtras(b);
 					

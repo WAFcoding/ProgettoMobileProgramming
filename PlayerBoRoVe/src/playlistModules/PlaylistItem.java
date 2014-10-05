@@ -32,7 +32,6 @@ public class PlaylistItem {
 	private String title_playlist;
 	private ArrayList<String> id_tracks;
 	
-
 	private Cursor cursor;
 	private final int DIM_HEIGHT 	= 70;
 	private final int DIM_WIDTH 	= 70;
@@ -53,9 +52,11 @@ public class PlaylistItem {
 		setSongs(p_songs);
 		
 	}
+	
 	/*
 	 * costruttore col cursore
 	 */
+	
 	public  PlaylistItem(String title_playlist, ArrayList<SinglePlaylistItem> p_songs){
 		this.title_playlist = title_playlist;
 		id_tracks = new ArrayList<String>();

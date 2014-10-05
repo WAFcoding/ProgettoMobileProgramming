@@ -249,6 +249,7 @@ public class SinglePlaylistItem implements Parcelable{
 	public SinglePlaylistItem(){
 		super();
 	}
+	
 	public SinglePlaylistItem(Parcel in){
 		this();
 		readFromParcel(in);
