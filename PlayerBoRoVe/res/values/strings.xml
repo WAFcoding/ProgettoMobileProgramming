@@ -26,25 +26,26 @@
     <string name="updateList">Update</string>
     
     <!-- *****************menu_track.xml**************** -->
-     <string name="details">Details </string>
-     <string name="selectTrack">Select </string>
-     <string name="erase">Cancel </string>
+     <string name="details">Dettagli </string>
+     <string name="selectTrack">Seleziona </string>
+     <string name="erase">Cancella </string>
     <!-- *****************menu_track.xml**************** -->
    
     <!-- *****************settings_activity.xml**************** -->
-     <string name="EraseDb">Erase Database</string>
-     <string name="SyncDb">Synchronize Database</string>
+     <string name="EraseDb">Cancella Database</string>
+     <string name="SyncDb">Sincronizza Database</string>
     <!-- *****************settings_activity.xml**************** -->
    
-   
+   <string name="detailsPlaylist">Apri</string>
+   <string name="openPlayer">Play</string>
    
     
     <string name="content"> </string>
     
    <!-- *****************navigation drawer**************** -->
-    <string name="drawer_open">open</string>
-    <string name="drawer_close">close</string>
-    <string name="description">Media Controls</string>
+    <string name="drawer_open">Apri</string>
+    <string name="drawer_close">Chiudi</string>
+    <string name="description">Media Controlli</string>
 
 	    <string-array name="drawer_choice_playlist">
 	        <item >Aggiungi Playlist</item>
@@ -59,16 +60,16 @@
     <string-array name="drawer_choice_library">
         <item >Aggiungi brano</item>
         <item >Rimuovi brano</item>
-       <item >Aggiorna</item>
+       <item >Dettagli</item>
        <item >Impostazioni</item>
     </string-array>
     
 	<!-- *****************add playlist**************** -->
     <string name="title_activity_playlist_add">PlaylistAddActivity</string>
     
-    <string name="label_add_playlist">Insert the name of the playlist</string>
+    <string name="label_add_playlist">Inserisci il nome della playlist</string>
     
-    <string name="playlist_add_hint">New Playlist</string>
+    <string name="playlist_add_hint">Nuova Playlist</string>
     
 	<!-- *****************popup add playlist**************** -->
     <string name="playlist_popup_choice1">Elimina</string>

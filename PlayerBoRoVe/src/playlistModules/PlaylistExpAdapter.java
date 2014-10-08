@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +35,7 @@ public class PlaylistExpAdapter extends BaseExpandableListAdapter {
 	private ImageView star5;
 	private Button btn;
 	private final int REQUEST_TRACKS		= 50;
+	private static final String TAG			="PlaylistExpAdapter";
 	
 	
 	
@@ -55,13 +57,14 @@ public class PlaylistExpAdapter extends BaseExpandableListAdapter {
 	@Override
 	public int getChildrenCount(int groupPosition) {
 		// TODO Auto-generated method stub
+		
 		return this.listDataItems.get((this.items.get(groupPosition)).getTitle_playlist()).size();
 	}
 
 	@Override
 	public Object getGroup(int groupPosition) {
 		// TODO Auto-generated method stub
-		return this.items.get(groupPosition);
+			return this.items.get(groupPosition);
 	}
 
 	@Override
@@ -94,8 +97,13 @@ public class PlaylistExpAdapter extends BaseExpandableListAdapter {
 		// TODO Auto-generated method stub
 		String namePlaylist = "";
 		PlaylistItem item = items.get(groupPosition);
-		if(item != null)
+		if(item != null){
 			namePlaylist	= item.getTitle_playlist();
+			Log.d(TAG, "namePlaylist!!!!!: " + namePlaylist);	
+		}
+		
+		else
+			Log.d(TAG, "item è NULL: ");
 		
 		if(convertView == null){
 			LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

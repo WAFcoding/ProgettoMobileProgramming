@@ -3,8 +3,12 @@
  */
 package playlistModules;
 
+import it.borove.playerborove.AlbumMapper;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -12,7 +16,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Parcel;
 import android.os.ParcelFileDescriptor;
+import android.os.Parcelable;
 import android.util.Log;
 
 /**
@@ -21,7 +27,7 @@ import android.util.Log;
  * @author "Pasquale Verlotta - pasquale.verlotta@gmail.com"
  *
  */
-public class SinglePlaylistItem {
+public class SinglePlaylistItem implements Parcelable{
 	
 	private String title;
 	private String image_path;
@@ -36,14 +42,14 @@ public class SinglePlaylistItem {
 	private String duration;
 	private String id;
 	private String singer_name;
+
 	
 	private final int DIM_HEIGHT 	= 200;
 	private final int DIM_WIDTH 	= 200;
 	private final Uri ART_CONTENT_URI = Uri.parse("content://media/external/audio/albumart");
 	private final BitmapFactory.Options sBitmapOptionsCache = new BitmapFactory.Options();
 	
-	
-	
+
 	public SinglePlaylistItem(String p_title, String p_image_path){
 		setTitle(p_title);
 		setImagePath(p_image_path);
@@ -64,14 +70,16 @@ public class SinglePlaylistItem {
 		
 		setTitle(p_title);
 		//setImagePath(p_image_path);
-		cover = getArtworkQuick(context, Integer.parseInt(album_id), DIM_WIDTH, DIM_HEIGHT);
+		if(album_id != null)
+			cover = getArtworkQuick(context, Integer.parseInt(album_id), DIM_WIDTH, DIM_HEIGHT);
+		else
+			cover = null;
 		
 	}
 	
 	public String getId() {
 		return this.id;
 	}
-	
 	
 	public Bitmap getBitmapCover(){
 		return this.cover;
@@ -80,6 +88,7 @@ public class SinglePlaylistItem {
 	public String getTitle() {
 		return title;
 	}
+	
 	public String getKind() {
 		return kind;
 	}
@@ -91,9 +100,16 @@ public class SinglePlaylistItem {
 	public String getSinger_name() {
 		return singer_name;
 	}
+	public void setSinger_name(String author) {
+		this.singer_name = author;
+	}
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	public void setKind(String kind) {
+		this.kind = kind;
 	}
 
 	public String getImagePath() {
@@ -205,4 +221,74 @@ public class SinglePlaylistItem {
 		this.duration = duration;
 	}
 
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		dest.writeString(this.id);
+		dest.writeString(this.singer_name);
+		dest.writeString(this.kind);
+		dest.writeString(this.vote);
+		dest.writeString(this.nameFile);
+		dest.writeString(this.album_id);
+		dest.writeString(this.path_track);
+		dest.writeString(this.albumName);
+		dest.writeString(this.duration);
+		dest.writeString(this.title);
+		List<Bitmap> bit = new ArrayList<Bitmap>();
+		bit.add(getBitmapCover());
+		dest.writeTypedList(bit);
+	}
+	
+	
+	public SinglePlaylistItem(){
+		super();
+	}
+	
+	public SinglePlaylistItem(Parcel in){
+		this();
+		readFromParcel(in);
+	}
+	
+	private void readFromParcel(Parcel in){
+		this.id					= in.readString();
+		this.singer_name 		= in.readString();
+		this.kind 				= in.readString();
+		this.vote				= in.readString();
+		this.nameFile			= in.readString();
+		this.album_id 			= in.readString();
+		this.path_track			= in.readString();
+		this.albumName			= in.readString();
+		this.duration			= in.readString();
+		this.title				= in.readString();
+		
+		List<Bitmap> coverSong	= new ArrayList<Bitmap>();
+		in.readTypedList(coverSong, Bitmap.CREATOR);
+		if(!coverSong.isEmpty())
+			this.cover			= coverSong.get(0);
+	
+	}
+
+	public static final Parcelable.Creator<SinglePlaylistItem> CREATOR = new Parcelable.Creator<SinglePlaylistItem>() {
+
+		@Override
+		public SinglePlaylistItem createFromParcel(Parcel source) {
+			// TODO Auto-generated method stub
+			return new SinglePlaylistItem(source);
+		}
+
+		@Override
+		public SinglePlaylistItem[] newArray(int size) {
+			// TODO Auto-generated method stub
+			return new SinglePlaylistItem[size];
+		}
+		
+		 
+	};
+	
 }

@@ -36,7 +36,8 @@
      <string name="SyncDb">同步數據庫</string>
     <!-- *****************settings_activity.xml**************** -->
    
-   
+   <string name="detailsPlaylist">打開</string>
+   <string name="openPlayer">播放</string>
    
     
     <string name="content"> </string>

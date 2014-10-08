@@ -10,14 +10,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_gravity="left"
+        android:layout_marginEnd="4dp"
+        android:layout_gravity="start"
         android:src="@drawable/icon"/>
     
     <LinearLayout 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="5dp"
         android:orientation="vertical">
  
 	    <TextView
@@ -30,7 +32,7 @@
 	        android:textColor="#00ffff"
 	        android:textStyle="bold"
 	        android:text="testo brano"
-	        android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft" />
+	        />
 	    
     	<TextView
 	        android:id="@+id/authorItem"
@@ -42,7 +44,7 @@
 	        android:text="Author"
 	        android:textColor="#008080"
 	        android:textStyle="italic"
-	        android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft" />
+	         />
     	
     	  
     	<LinearLayout 
@@ -57,7 +59,7 @@
 	             android:layout_width="20dp"
 	             android:layout_height="20dp"
 	             android:layout_gravity="center" 
-	             android:layout_marginRight="5dp"
+	             android:layout_marginEnd="5dp"
 	             android:background="@android:color/transparent"
 	             android:scaleType="fitXY"
 	             android:src="@drawable/star_silver" />
@@ -66,7 +68,7 @@
 	             android:layout_width="20dp"
 	             android:layout_height="20dp"
 	             android:layout_gravity="center"
-	             android:layout_marginRight="5dp"
+	             android:layout_marginEnd="5dp"
 	             android:background="@android:color/transparent"
 	             android:scaleType="fitXY"
 	             android:src="@drawable/star_silver" />
@@ -75,7 +77,7 @@
 	             android:layout_width="20dp"
 	             android:layout_height="20dp"
 	             android:layout_gravity="center"
-	             android:layout_marginRight="5dp"
+	             android:layout_marginEnd="5dp"
 	             android:background="@android:color/transparent"
 	             android:scaleType="fitXY"
 	             android:src="@drawable/star_silver" />
@@ -84,7 +86,7 @@
 	             android:layout_width="20dp"
 	             android:layout_height="20dp"
 	             android:layout_gravity="center"
-	             android:layout_marginRight="5dp"
+	             android:layout_marginEnd="5dp"
 	             android:background="@android:color/transparent"
 	             android:scaleType="fitXY"
 	             android:src="@drawable/star_silver" />

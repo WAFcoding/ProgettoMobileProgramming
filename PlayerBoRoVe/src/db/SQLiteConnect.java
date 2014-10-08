@@ -409,16 +409,16 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 					while(!c.isAfterLast()){		
 						//Log.d(LOG, "c.getString(5): " + c.getString(5));
 						if(valueContentTitle.equals(c.getString(5))){
-							Log.d(LOG, "valueContentTitle: " + valueContentTitle);
-							Log.d(LOG, "c.getString(5): " + c.getString(5));
+							//Log.d(LOG, "valueContentTitle: " + valueContentTitle);
+							//Log.d(LOG, "c.getString(5): " + c.getString(5));
 							trackFound = true;
 							break;			
 						}				
 						c.moveToNext();
 					}
 					if(!trackFound){
-						Log.d(LOG, "brano cancellato: " + tableTrack.getString(0));
-						Log.d(LOG, "brano cancellato: " + tableTrack.getString(5));
+						//Log.d(LOG, "brano cancellato: " + tableTrack.getString(0));
+						//Log.d(LOG, "brano cancellato: " + tableTrack.getString(5));
 						this.deleteRowTrack(valueContentTitle, COLUMN_CONTENT_TITLE);			
 					}	
 					tableTrack.moveToNext();
