@@ -337,8 +337,11 @@ public class PlaylistActivity extends Activity  {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				PlayerController.playPlaylist((PlaylistItem) parent.getItemAtPosition(position));
-				Log.d("Playlist","playlist");
+				
+				PlayerController.previewPlaylist((PlaylistItem) parent.getItemAtPosition(position));
+				
+				//PlayerController.playPlaylist((PlaylistItem) parent.getItemAtPosition(position));
+				//Log.d("Playlist","playlist");
 				return true;
 			}
         	

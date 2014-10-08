@@ -3,6 +3,7 @@ package it.borove.playerborove;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,9 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -22,16 +25,33 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	private static final String SETTINGS = "SETTINGS";
 	private MediaPlayer player;
 	private Uri uri;
-	private final IBinder mBinder = new MusicBinder();
+	private  IBinder mBinder;
 	private float volume=1f;
 	private boolean stopped=false;
+	private boolean fadeOutStarted=false;
 	
+	private static final int    FADE_IN = 1;
+	private static final int    FADE_OUT = 2;
+	private double increment;
+	double decrement;
+	
+	private Timer timerFade;
+	//private MyTask task;
 	
 	public void onCreate(){
 		super.onCreate();
 		initMusicPlayer();
+	
+			
 		Log.d("Service","Created");
 	}
+	
+	public void onDestroy(){
+		Log.d("ondestroy","service");
+		super.onDestroy();
+	}
+	
+
 
 	public void initMusicPlayer(){
 		player=new MediaPlayer();
@@ -40,6 +60,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		player.setOnPreparedListener(this);
 		player.setOnCompletionListener(this);
 		player.setOnErrorListener(this);
+		mBinder = new MusicBinder();
 	}
 	
 	public void setPath(Uri u) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException{
@@ -86,17 +107,19 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     public boolean onUnbind(Intent intent) {
     	player.stop();
     	player.release();
+    	Log.d("unbindservice","musicservice");
 		return false;
     }
     
 	public void pausePlayer(){
 		Log.d("service","pause call");
+		stopFade();
 		player.pause();
-		Log.d("service","pause");
 	}
 	
 	public void stop(){
 		stopped=true;
+		stopFade();
 		player.stop();
 	}
 	
@@ -106,6 +129,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	public void playPlayer(){
 		SharedPreferences prefs=getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 		int fadeIn=prefs.getInt("FadeIn",0);
+		fadeOutStarted=false;
 		//Log.d("FADe",Integer.toString(fadeIn));
 		if(!stopped){
 			fadeIn(fadeIn);
@@ -117,13 +141,33 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		}
 
 	}
+	public void preview(int durationPreview){
+		player.start();
+		timerFade=new Timer();
+		final LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+		TimerTask task=new TimerTask(){
+
+			@Override
+			public void run() {
+			     Intent mIntent= new Intent();
+			     mIntent.setAction("Complete Preview");
+			     Log.d("complete","complete");
+			     lbm.sendBroadcast(mIntent);
+			     this.cancel();
+			     timerFade.purge();
+			     timerFade.cancel();
+			}
+			
+		};
+		timerFade.schedule(task, Math.min(durationPreview,player.getDuration()));
+	}
 	public int getDur() {
 		return player.getDuration();
 	}
 	public int getPosn(){
 		SharedPreferences prefs=getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 		int fadeOut=prefs.getInt("FadeOut", 0);
-		if(fadeOut!=0 && player.getCurrentPosition()>=player.getDuration()-fadeOut*1000)
+		if(!fadeOutStarted &&fadeOut!=0 && player.getCurrentPosition()>=player.getDuration()-fadeOut*1000)
 			fadeOut(fadeOut);
 		return player.getCurrentPosition();
 	}
@@ -162,62 +206,89 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		volume=v;
 		player.setVolume(v, v);
 	}
-	public void fadeOut(int fadeDuration){
-		Log.d("fade out", "fade out");
-		//usare il logaritmo per fare fade
-		if(fadeDuration>0){
-			setVolume(1f);
-			final double decrement=1/(double)(fadeDuration*10);
-			Log.d("fade","fade");
-			final Timer timer=new Timer(true);
-			TimerTask task=new TimerTask(){
+	
+	private class MyTaskFadeIn extends TimerTask{
+
 
 				@Override
 				public void run() {
 					
-					// TODO Auto-generated method stub
-					volume=(float) (volume-decrement);
-					if (volume<=0){
-						volume=0f;
-						timer.cancel();
-						timer.purge();
+					volume=(float) (volume+increment);
+					if (volume>=1){
+						volume=1;
+						stopFade();
+						return;//FIXME 
 					}
 					Log.d("volume", Double.toString(volume));
 					setVolume(volume);
+				
 				}
 			};
-			timer.schedule(task, 100, 100);
-		}
-	
-	}
+			
+			private class MyTaskFadeOut extends TimerTask{
+				@Override
+				public void run() {
+					volume=(float) (volume-decrement);
+					if (volume<=0){
+						volume=0f;
+						stopFade();
+						fadeOutStarted=false;
+						return;
+					}
+					Log.d("volume", Double.toString(volume));
+					setVolume(volume);
+					
+				}
+			};
+		
+		
 	
 	public void fadeIn(int fadeDuration){
 		if(fadeDuration>0){
 			setVolume(0f);
-			final double increment=1/(double)(fadeDuration*10);
-			Log.d("fade","fade");
-			final Timer timer=new Timer(true);
-			TimerTask task=new TimerTask(){
+			increment=1/(double)(fadeDuration*10);
+			//if(timerFade==null)
+			String s=String.valueOf(System.nanoTime());
+			timerFade=new Timer("task_"+s);
+			Log.d("create timer",s);
+			
+			//if(task==null){
+			MyTaskFadeIn task=new MyTaskFadeIn();
+			timerFade.schedule(task, 100,100);
 
-				@Override
-				public void run() {
-					
-					// TODO Auto-generated method stub
-					volume=(float) (volume+increment);
-					if (volume>=1){
-						volume=1;
-						timer.cancel();
-						timer.purge();
-					}
-					Log.d("volume", Double.toString(volume));
-					setVolume(volume);
-				}
-			};
-			timer.schedule(task, 100, 100);
+		}
+		else setVolume(1);
+	
+	}
+	public void fadeOut(int fadeDuration){
+		
+		fadeOutStarted=true;
+		//usare il logaritmo per fare fade
+		if(fadeDuration>0){
+			decrement=volume/(double)(Math.min(fadeDuration*10,(player.getDuration()-player.getCurrentPosition())*10));
+			Log.d("create timer","fadeout");
+			timerFade=new Timer("task_fadeout");
+			MyTaskFadeOut task=new MyTaskFadeOut();
+			timerFade.schedule(task, 100,100);
+			//mHandler.sendEmptyMessage(FADE_OUT);
+
 		}
 	
 	}
+	
 
+	
+	public void stopFade(){
+		//task.cancel();
+		//Log.d("task cancelled",task.toString());
+		if(timerFade!=null){
+			timerFade.purge();
+			timerFade.cancel();
+			Log.d("timer cancelled",timerFade.toString());
+			timerFade=null;
+			}	
+			
+	}
 
 	
 }

@@ -214,6 +214,7 @@ public class MyMediaController extends FrameLayout{
     	mHandler.sendEmptyMessage(SHOW_PROGRESS);		
     }
     public void hide(){
+    	Log.d("mediacontroller","hide");
     	showing=false;
     	mHandler.removeMessages(SHOW_PROGRESS);
     	anchorView.removeView(mRoot);

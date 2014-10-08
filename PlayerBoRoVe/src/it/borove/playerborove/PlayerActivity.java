@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -64,6 +65,17 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 		mediaController.hide();
 		PlayerController.end_music_sevice();
 	}
+	
+	/*public boolean onKeyDown(int keyCode, KeyEvent event){
+		
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			
+			finish();
+			overridePendingTransition(R.anim.right_in, R.anim.left_out);
+			return true;
+		}	
+		return super.onKeyDown(keyCode, event); 
+	}*/
 	
 	public void setText(String s){
 		TextView text=(TextView) findViewById(R.id.textView);
