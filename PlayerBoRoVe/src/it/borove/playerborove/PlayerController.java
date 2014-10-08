@@ -129,6 +129,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static BroadcastReceiver songCompleteReceiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			Log.d("complete","controller");
 			lbm.unregisterReceiver(songPreparedReceiver);
 			lbm.unregisterReceiver(songCompleteReceiver);
 			if(queue.isEmpty())
@@ -214,6 +215,9 @@ public class PlayerController extends SQLiteOpenHelper{
 	public PlayerController(Context context, Activity v){
 		super(context, DB_NAME, null, DATABASE_VERSION);
 		mainActivity=v;
+		playingPlaylist=false;
+		queue=new Queue();
+		lbm= LocalBroadcastManager.getInstance(context);
 		//db_path 	= context.getFilesDir().getPath();
 		
 		String externalStorageState= Environment.getExternalStorageState();

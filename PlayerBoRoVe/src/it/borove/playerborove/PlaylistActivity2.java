@@ -183,6 +183,16 @@ public class PlaylistActivity2 extends Activity{
 			btn2.setFocusable(false);
 			
 			final String id_playlist = id_p.get(position);
+			
+			btn1.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					PlayerController.playPlaylist(playlistSelected);
+				}
+				
+			});
 
 			btn2.setOnClickListener(new OnClickListener() {			
 				@Override
