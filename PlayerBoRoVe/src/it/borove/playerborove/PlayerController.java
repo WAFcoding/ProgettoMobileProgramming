@@ -745,7 +745,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static BroadcastReceiver songCompleteReceiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			lbm.unregisterReceiver(songPreparedReceiver);
+			//lbm.unregisterReceiver(songPreparedReceiver);
 			lbm.unregisterReceiver(songCompleteReceiver);
 			if(queue.isEmpty())
 			{
@@ -790,8 +790,8 @@ public class PlayerController extends SQLiteOpenHelper{
 		public void onReceive(Context context, Intent intent) {
 			if(playingPlaylist)
 				lbm.registerReceiver(songCompleteReceiver, new IntentFilter("Complete"));
-			else
-				lbm.unregisterReceiver(songPreparedReceiver);
+			
+			lbm.unregisterReceiver(songPreparedReceiver);
 			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 			int pos=prefs.getInt("Pos", 0);
 			Log.d("activity","before seek");

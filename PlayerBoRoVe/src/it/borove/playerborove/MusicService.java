@@ -111,6 +111,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 			LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
 			Intent mIntent= new Intent();
 			mIntent.setAction("Complete");
+			//stopFade();
 			Log.d("complete","complete");
 			lbm.sendBroadcast(mIntent);
 		}
@@ -291,7 +292,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		if(fadeDuration>0){
 			decrement=1/(double)(Math.min(fadeDuration*10,(player.getDuration()-player.getCurrentPosition())/100));
 			Log.d("create timer","fadeout");
-			timerFade=new Timer("task_fadeout");
+			if(timerFade!=null)
+			{
+				stopFade();
+				timerFade=new Timer("task_fadeout");
+			}
 			MyTaskFadeOut task=new MyTaskFadeOut();
 			timerFade.schedule(task, 100,100);
 			//mHandler.sendEmptyMessage(FADE_OUT);
