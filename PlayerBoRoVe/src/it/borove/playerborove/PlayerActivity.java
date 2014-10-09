@@ -154,4 +154,23 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 	public void stop() {
 			PlayerController.stop();
 	}
+
+	@Override
+	public boolean canBackForward() {
+		// TODO Auto-generated method stub
+		return PlayerController.canBackForward();
+	}
+
+	@Override
+	public void forward() {
+		// TODO Auto-generated method stub
+		Log.d("forward","forward");
+		PlayerController.forward();
+	}
+
+	@Override
+	public void back() {
+		// TODO Auto-generated method stub
+		PlayerController.back();
+	}
 }

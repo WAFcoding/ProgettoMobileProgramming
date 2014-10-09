@@ -190,6 +190,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		int fadeOut=prefs.getInt("FadeOut", 0);
 		if(!fadeOutStarted &&fadeOut!=0 && player.getCurrentPosition()>=player.getDuration()-fadeOut*1000)
 			fadeOut(fadeOut);
+	
 		return player.getCurrentPosition();
 	}
 	public void seek(int posn){
@@ -199,6 +200,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		 */
 		if (player.isPlaying())
 		{
+			stopFade();
 			player.pause();
 			player.seekTo(posn);
 			player.start();
@@ -242,7 +244,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 						stopFade();
 						return;//FIXME 
 					}
-					Log.d("volume", Double.toString(volume));
+					//Log.d("volume", Double.toString(volume));
 					setVolume(volume);
 				
 				}
@@ -258,7 +260,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 						
 						return;
 					}
-					Log.d("volume", Double.toString(volume));
+					//Log.d("volume", Double.toString(volume));
 					setVolume(volume);
 					
 				}
@@ -267,7 +269,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		
 	
 	public void fadeIn(int fadeDuration){
-		Log.d("fadein","started");
+		//Log.d("fadein","started");
 		fadeOutStarted=false;
 		if(fadeDuration>0){
 			setVolume(0f);
@@ -294,9 +296,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 			Log.d("create timer","fadeout");
 			if(timerFade!=null)
 			{
+				Log.d("fade out","timerfade!=null");
 				stopFade();
-				timerFade=new Timer("task_fadeout");
+				
+			
 			}
+			timerFade=new Timer("task_fadeout");
 			MyTaskFadeOut task=new MyTaskFadeOut();
 			timerFade.schedule(task, 100,100);
 			//mHandler.sendEmptyMessage(FADE_OUT);

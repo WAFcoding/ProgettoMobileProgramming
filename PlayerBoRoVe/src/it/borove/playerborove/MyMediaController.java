@@ -26,6 +26,8 @@ public class MyMediaController extends FrameLayout{
 	private ImageButton audio;
 	private TextView endTime;
 	private TextView currentTime;
+	private ImageButton back;
+	private ImageButton forward;
 	private static final int    SHOW_PROGRESS = 2;
 	StringBuilder               mFormatBuilder;
 	Formatter                   mFormatter;
@@ -34,8 +36,10 @@ public class MyMediaController extends FrameLayout{
 	private ViewGroup anchorView=null;
 	private boolean showing=false;
 	
+	
 	public MyMediaController(Context context){
 		super(context);
+		
 	}
 	
 	private String stringForTime(int timeMs) {
@@ -179,6 +183,22 @@ public class MyMediaController extends FrameLayout{
 				}
     			}
     		});
+    	forward.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mPlayer.forward();
+				
+			}
+		});
+    	
+    	back.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				mPlayer.back();
+			}
+		});
     	}
     
     public interface MediaPlayerControl {
@@ -195,6 +215,9 @@ public class MyMediaController extends FrameLayout{
     	boolean isPlaying();
     	boolean isLooping();
     	boolean isMute();
+    	void forward();
+    	void back();
+    	boolean canBackForward();
     	}
 
     public void setMediaPlayer(MediaPlayerControl m) {
@@ -240,6 +263,20 @@ public class MyMediaController extends FrameLayout{
     	mFormatBuilder = new StringBuilder();
     	mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
     	seekBar.setMax(1000);
+
+    	back=(ImageButton)v.findViewById(R.id.back);
+    	forward=(ImageButton)v.findViewById(R.id.forward);
+    	if(mPlayer.canBackForward())
+    	{
+    		back.setVisibility(VISIBLE);
+    		forward.setVisibility(VISIBLE);
+    	}
+    	else{
+    		back.setVisibility(INVISIBLE);
+    		forward.setVisibility(INVISIBLE);
+    		
+    	}
+
     	onClickListener();
 }
 

@@ -5,6 +5,7 @@ package PlayerManager;
 
 import java.util.ArrayList;
 
+import android.util.Log;
 import playlistModules.PlaylistItem;
 import playlistModules.SinglePlaylistItem;
 
@@ -35,6 +36,12 @@ public class Queue {
 		}
 	}
 	
+	public void printQueue(){
+		for(SinglePlaylistItem t : this.queue){
+			Log.d("queue", t.getTitle());
+		}
+	}
+	
 	public void addSinglePlaylistItemList(ArrayList<SinglePlaylistItem> al_t){
 		for(SinglePlaylistItem t : al_t){
 			addSinglePlaylistItem(t);
@@ -43,6 +50,10 @@ public class Queue {
 	
 	public void addSinglePlaylistItem(SinglePlaylistItem t){
 		this.queue.add(t);
+	}
+	
+	public void addSinglePlaylistItemOnTop(SinglePlaylistItem t){
+		this.queue.add(0, t);;
 	}
 	
 	public SinglePlaylistItem removeTop(){
