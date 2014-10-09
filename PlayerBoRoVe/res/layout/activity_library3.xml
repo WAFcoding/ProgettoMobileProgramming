@@ -10,12 +10,13 @@
 	    android:orientation="vertical"
 	    android:background="@drawable/gradient_listview" >
 	
-	    <Button
+	    <!-- <Button
 	        android:id="@+id/btnUpdateListView"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:background="@drawable/ellipse_button"
 	        android:text="@string/updateList" />
+	         -->
 	 
 	    <ListView
 	        android:id="@+id/listView1"

@@ -67,11 +67,15 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	String COLUMN_ID_PID			= "pid";
 		
 	private SQLiteDatabase m_db;
+	
 	private Context m_context;
+	
+	private static SQLiteConnect mIstance = null;
 	
 	//private MyFileObserver fileOb;
 	
-	public SQLiteConnect(Context context, final String path, final String dbName, final int version){
+	
+	private SQLiteConnect(Context context, final String path, final String dbName, final int version){
 		super(context, dbName, null, version);
 		m_context			= context;
 		db_path 			= path;
@@ -80,11 +84,20 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 
 	}
 	
+	public static SQLiteConnect getInstance(Context context, final String path, final String dbName, final int version){
+		if(mIstance == null){
+			mIstance = new SQLiteConnect(context.getApplicationContext(), path, dbName, version);
+		}
+		
+		
+		return mIstance;
+	}
+	
 	/**
 	 * Se non esiste crea il nuovo database(solo tabelle e senza entry)
 	 * @return true se il database gi� esisteva, false se � stato appena creato
 	 */
-	public boolean createDatabase(){
+ 	public boolean createDatabase(){
 		boolean dbExist = checkDatabase();
 		if(dbExist){
 			// non fare nulla, il db esiste gi�
@@ -181,7 +194,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	
 	public void closeDatabase(){
 		if(m_db != null){
-			m_db.close();
+			m_db.close();		
 		}
 		else{
 			Log.d(LOG, "db null.");
@@ -199,7 +212,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	 * @param namePlaylist		nome della playlist da aggiungere
 	 * @return
 	 */
-	public Cursor addRowPlaylist(String namePlaylist){
+	public void addRowPlaylist(String namePlaylist){
 		ContentValues content = new ContentValues();
 		content.put(COLUMN_NAME, namePlaylist);
 		try{
@@ -210,7 +223,8 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 		}catch(Exception e){
 			Log.d(LOG, "Errore nella addRowPlaylist!! " + e.getMessage());
 		}
-		return getExactlyNamePlaylist(namePlaylist);	
+		//return getExactlyNamePlaylist(namePlaylist);
+		
 	}
 	/**
 	 * Aggiunge un nuovo brano
@@ -363,6 +377,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 			openDatabaseRW();
 			m_db.execSQL("PRAGMA foreign_keys = ON");
 			m_db.delete(TABLE_NAME_CONTAINS, condition, null);
+			closeDatabase();
 		}catch(SQLiteException e ){
 			e.printStackTrace();
 			}
@@ -409,7 +424,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 					while(!c.isAfterLast()){		
 						//Log.d(LOG, "c.getString(5): " + c.getString(5));
 						if(valueContentTitle.equals(c.getString(5))){
-							//Log.d(LOG, "valueContentTitle: " + valueContentTitle);
+							Log.d(LOG, "valueContentTitle: " + valueContentTitle);
 							//Log.d(LOG, "c.getString(5): " + c.getString(5));
 							trackFound = true;
 							break;			
@@ -417,7 +432,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 						c.moveToNext();
 					}
 					if(!trackFound){
-						//Log.d(LOG, "brano cancellato: " + tableTrack.getString(0));
+						Log.d(LOG, "brano cancellato: " + tableTrack.getString(0) + ": " + tableTrack.getString(1));
 						//Log.d(LOG, "brano cancellato: " + tableTrack.getString(5));
 						this.deleteRowTrack(valueContentTitle, COLUMN_CONTENT_TITLE);			
 					}	
@@ -514,8 +529,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 		
 		ContentValues contentValues = new ContentValues();
 		if(columnType.equals(COLUMN_SINGER_NAME) || columnType.equals(COLUMN_KIND) || columnType.equals(COLUMN_TITLE) || columnType.equals(COLUMN_VOTE)
-				|| columnType.equals(COLUMN_ALBUM_NAME))
-			
+				|| columnType.equals(COLUMN_ALBUM_NAME))	
 			/*
 			 * questo parser elimina eventuali apici e slash presenti in newValue
 			 */
@@ -532,17 +546,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 					}					
 				}
 			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+
 			contentValues.put(columnType, newValue);
 		
 		String where = COLUMN_ID + "='" + idTrack + "'";

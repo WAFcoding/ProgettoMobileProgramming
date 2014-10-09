@@ -50,7 +50,7 @@ public class LibraryActivity extends Activity {
 	private final int MENU_TRACK			= 102;
 	private int idTrack;						
 	private static  ListView listView;
-	private Button btnUpdate;
+	//private Button btnUpdate;
 	private int count = 0;
 	private static MySimpleCursorAdapter adapter;
 	private AlbumMapper mapper;
@@ -75,7 +75,7 @@ public class LibraryActivity extends Activity {
 		setContentView(R.layout.activity_library3);
 		
 		listView			= (ListView)findViewById(R.id.listView1);
-		btnUpdate			= (Button)findViewById(R.id.btnUpdateListView);
+		//btnUpdate			= (Button)findViewById(R.id.btnUpdateListView);
 		isChangedAnything 	= false;
 		idTrack				= 0;
 		mapper = new AlbumMapper();
@@ -255,6 +255,7 @@ public class LibraryActivity extends Activity {
 				}
 							
 			}
+			
 			if(isChangedAnything){
 				PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);
 				updateTracksList();
@@ -338,14 +339,10 @@ public class LibraryActivity extends Activity {
 					boolean reachable = tracks.moveToPosition(position);
 					if(reachable){
 						idTrack				= tracks.getInt(0);
-						/*
-						Bitmap albumId		= adapter.getArtworkQuick(getApplicationContext(), tracks.getInt(6), RESWIDTH, RESHEIGTH);				 	
-						Bundle b=new Bundle();
-						b.putString("uri",tracks.getString(7));
-						b.putString("title",tracks.getString(5));
-						b.putString("singer",tracks.getString(2));
-						b.putString("kind",tracks.getString(3));
-						PlayerController.open_player(b, albumId);*/
+						
+						
+	
+						
 						String _id= tracks.getString(0);
 						String p_title= tracks.getString(1);
 						String singerName= tracks.getString(2);
@@ -357,19 +354,18 @@ public class LibraryActivity extends Activity {
 						String albumName = tracks.getString(8);
 						String duration =tracks.getString(9);
 						
-					
 						SinglePlaylistItem song=new SinglePlaylistItem(_id, p_title, singerName, kind, vote, nameFile, album_id, path_track, albumName, duration, getApplicationContext());
 						PlayerController.playSingleItem(song);
 					}
 				//}
 				//else{
-				//	Toast.makeText(LibraryActivity.this, "non è divisibile per 2!", Toast.LENGTH_SHORT).show();
+				//	Toast.makeText(LibraryActivity.this, "non ï¿½ divisibile per 2!", Toast.LENGTH_SHORT).show();
 				//}
 				
 			}
 			
 		});
-	
+	/*
 		btnUpdate.setOnClickListener(new OnClickListener() {	
 			@Override
 			public void onClick(View v) {
@@ -439,8 +435,9 @@ public class LibraryActivity extends Activity {
 				updateTracksList();
 				
 				
-			}
-		});
+		//	}
+		//});
+		
 		
 	}
 	

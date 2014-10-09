@@ -33,6 +33,7 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
@@ -111,6 +112,16 @@ public class PlaylistActivity2 extends Activity{
 	
 		setListPlaylist();
 		
+		listview.setOnItemLongClickListener(new OnItemLongClickListener(){
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				PlayerController.previewPlaylist((PlaylistItem) parent.getItemAtPosition(position));
+				return true;
+			}
+			
+		});
 		
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -134,6 +145,28 @@ public class PlaylistActivity2 extends Activity{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if(playlistCursor != null){
+			playlistCursor.close();
+			PlayerController.closeConnectionDB();
+		}
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if(playlistCursor != null){
+			playlistCursor.close();
+			PlayerController.closeConnectionDB();
+		}
+	}
+	
+	@Override
+	protected void onStop(){
+		super.onStop();
+		if(playlistCursor != null){
+			playlistCursor.close();
+			PlayerController.closeConnectionDB();
+		}
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event){
@@ -184,14 +217,12 @@ public class PlaylistActivity2 extends Activity{
 			
 			final String id_playlist = id_p.get(position);
 			
-			btn1.setOnClickListener(new OnClickListener(){
-
+			btn1.setOnClickListener(new OnClickListener() {
+				
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					PlayerController.playPlaylist(playlistSelected);
 				}
-				
 			});
 
 			btn2.setOnClickListener(new OnClickListener() {			
@@ -331,6 +362,7 @@ public class PlaylistActivity2 extends Activity{
 						|| !voteTrack.equals(String.valueOf(valueOfTrack)) || !albumNameTrack.equals(albumName)){
 							
 	        		PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);
+	        		clearData();
 	        		setListPlaylist();
 	        		Toast.makeText(this, "Track's Tags updated!", Toast.LENGTH_SHORT).show();
 				}		
@@ -415,8 +447,10 @@ public class PlaylistActivity2 extends Activity{
     
     private void clearData() {
 		// TODO Auto-generated method stub
-		if(playlistCursor != null)
+		if(playlistCursor != null){
 			playlistCursor.close();
+			PlayerController.closeConnectionDB();
+		}
 		if(listPlaylistItem != null)
 			listPlaylistItem.clear();
 		if(adapter != null)

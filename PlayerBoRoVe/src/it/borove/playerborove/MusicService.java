@@ -29,11 +29,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	private float volume=1f;
 	private boolean stopped=false;
 	private boolean fadeOutStarted=false;
+	private boolean isLooping=false;
 	
 	private static final int    FADE_IN = 1;
 	private static final int    FADE_OUT = 2;
 	private double increment;
-	double decrement;
+	private double decrement;
 	
 	private Timer timerFade;
 	//private MyTask task;
@@ -48,6 +49,10 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	
 	public void onDestroy(){
 		Log.d("ondestroy","service");
+	     LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+	     Intent mIntent= new Intent();
+	     mIntent.setAction("Service destroy");
+	     lbm.sendBroadcast(mIntent);
 		super.onDestroy();
 	}
 	
@@ -91,12 +96,25 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	@Override
 	public void onCompletion(MediaPlayer mp) {
 	
-		LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-	     Intent mIntent= new Intent();
-	     mIntent.setAction("Complete");
-	     Log.d("complete","complete");
-	     lbm.sendBroadcast(mIntent);
+		stopFade();
 		
+		if(isLooping())
+		{
+			Log.d("loop","true");
+		//	fadeIn(3);
+			playPlayer();
+		}
+		else{
+			Log.d("loop","false");
+		
+		
+			LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+			Intent mIntent= new Intent();
+			mIntent.setAction("Complete");
+			Log.d("complete","complete");
+			lbm.sendBroadcast(mIntent);
+		}
+			
 	}
     @Override
     public IBinder onBind(Intent intent) {
@@ -127,9 +145,9 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		return player.isPlaying();
 	}
 	public void playPlayer(){
+		Log.d("playplayer","service");
 		SharedPreferences prefs=getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 		int fadeIn=prefs.getInt("FadeIn",0);
-		fadeOutStarted=false;
 		//Log.d("FADe",Integer.toString(fadeIn));
 		if(!stopped){
 			fadeIn(fadeIn);
@@ -142,6 +160,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
 	}
 	public void preview(int durationPreview){
+	
 		player.start();
 		timerFade=new Timer();
 		final LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
@@ -151,11 +170,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 			public void run() {
 			     Intent mIntent= new Intent();
 			     mIntent.setAction("Complete Preview");
-			     Log.d("complete","complete");
+			     Log.d("complete","Preview");
 			     lbm.sendBroadcast(mIntent);
-			     this.cancel();
+			     player.pause();
 			     timerFade.purge();
 			     timerFade.cancel();
+			     this.cancel();
 			}
 			
 		};
@@ -193,13 +213,15 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	}
 	
 	public void Loop(boolean b){
-			player.setLooping(b);
+			//player.setLooping(b);
+		isLooping=b;
 	}
 	public boolean isMute(){
 		return (volume==0);
 	}
 	public boolean isLooping(){
-		return player.isLooping();	
+		return isLooping;
+		//return player.isLooping();	
 	}
 
 	public void setVolume(float v){
@@ -212,7 +234,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
 				@Override
 				public void run() {
-					
+					Log.d("fadein","step");
 					volume=(float) (volume+increment);
 					if (volume>=1){
 						volume=1;
@@ -232,7 +254,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 					if (volume<=0){
 						volume=0f;
 						stopFade();
-						fadeOutStarted=false;
+						
 						return;
 					}
 					Log.d("volume", Double.toString(volume));
@@ -244,6 +266,8 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		
 	
 	public void fadeIn(int fadeDuration){
+		Log.d("fadein","started");
+		fadeOutStarted=false;
 		if(fadeDuration>0){
 			setVolume(0f);
 			increment=1/(double)(fadeDuration*10);
@@ -265,7 +289,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		fadeOutStarted=true;
 		//usare il logaritmo per fare fade
 		if(fadeDuration>0){
-			decrement=volume/(double)(Math.min(fadeDuration*10,(player.getDuration()-player.getCurrentPosition())*10));
+			decrement=1/(double)(Math.min(fadeDuration*10,(player.getDuration()-player.getCurrentPosition())/100));
 			Log.d("create timer","fadeout");
 			timerFade=new Timer("task_fadeout");
 			MyTaskFadeOut task=new MyTaskFadeOut();

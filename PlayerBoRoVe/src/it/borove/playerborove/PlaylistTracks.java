@@ -39,6 +39,7 @@ public class PlaylistTracks extends Activity{
 	private Bundle bundle;
 	private String id_playlist;
 	private String name_playlist = "";
+	private Cursor playlist, cursorTracks, cursorTrack;
 	
 	private final int REQUEST_DETAILS_TRACK = 500;
 	private final int ADD_TRACKS = 510;
@@ -68,7 +69,7 @@ public class PlaylistTracks extends Activity{
 		this.listOfTracks	= new ArrayList<SinglePlaylistItem>();
 			
 		mapper = new AlbumMapper();	
-		Cursor cursorTracks = PlayerController.getCursorTracks();
+		cursorTracks = PlayerController.getCursorTracks();
 		if(cursorTracks != null){
 			cursorTracks.moveToFirst();
 			while(!cursorTracks.isAfterLast()){
@@ -105,7 +106,7 @@ public class PlaylistTracks extends Activity{
 		drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
 		drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
 		
-		Cursor playlist = PlayerController.getCursorPlaylist();
+		playlist = PlayerController.getCursorPlaylist();
 			if(playlist != null){
 				boolean name = false;
 				playlist.moveToFirst();
@@ -168,17 +169,77 @@ public class PlaylistTracks extends Activity{
 					view.setBackgroundColor(Color.TRANSPARENT);
 					isGroupSelected.set(position, false);
 					selectedTrack = -1;
-				}	
-				
-				
+				}				
 			}
 		});
-	
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if(playlist != null){
+			playlist.close();
+			PlayerController.closeConnectionDB();
+		}
+		if(cursorTrack != null){
+			cursorTrack.close();
+			PlayerController.closeConnectionDB();
+		}
+		if(cursorTracks != null){
+			cursorTracks.close();
+			PlayerController.closeConnectionDB();
+		}
+	}
+	
+	@Override
+	protected void onStop(){
+		super.onStop();
+		if(playlist != null){
+			playlist.close();
+			PlayerController.closeConnectionDB();
+		}
+		if(cursorTrack != null){
+			cursorTrack.close();
+			PlayerController.closeConnectionDB();
+		}
+		if(cursorTracks != null){
+			cursorTracks.close();
+			PlayerController.closeConnectionDB();
+		}
+		
+	}
+	@Override
+	protected void onPause(){
+		super.onPause();
+		if(playlist != null){
+			playlist.close();
+			PlayerController.closeConnectionDB();
+		}
+		if(cursorTrack != null){
+			cursorTrack.close();
+			PlayerController.closeConnectionDB();
+		}
+		if(cursorTracks != null){
+			cursorTracks.close();
+			PlayerController.closeConnectionDB();
+		}
+	}
+	@Override
+	protected void onResume(){
+		super.onResume();
+		if(playlist != null){
+			playlist.close();
+			PlayerController.closeConnectionDB();
+		}
+		if(cursorTrack != null){
+			cursorTrack.close();
+			PlayerController.closeConnectionDB();
+		}
+		if(cursorTracks != null){
+			cursorTracks.close();
+			PlayerController.closeConnectionDB();
+		}
+	
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event){
@@ -354,7 +415,7 @@ public class PlaylistTracks extends Activity{
 					startActivityForResult(trackActivity, REQUEST_DETAILS_TRACK);
 				}
 			}
-			
+			drawer.closeDrawer(drawer_list_view);
 		}
 	}
 	
@@ -382,7 +443,7 @@ public class PlaylistTracks extends Activity{
 			if(!nameTrack.equals(fileNameTrack) || !singerName.equals(authorName) || !oldkind.equals(kind) 
 					|| !vote.equals(String.valueOf(valueOfTrack)) || !oldAlbumName.equals(albumName)){
 				PlayerController.setTagTrackFromActivityLibrary(Integer.parseInt(idTrack),fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);		
-				Cursor cursorTrack = PlayerController.getCursorTracks();
+				cursorTrack = PlayerController.getCursorTracks();
 				//Log.d(TAG, "DOPO CURSOR");
 				
 				if(cursorTrack != null){
@@ -425,8 +486,11 @@ public class PlaylistTracks extends Activity{
 			if(!listOfTracks.isEmpty()){
 				listOfTracks.clear();
 			}
+			if(playlist != null)
+				playlist.close();
+			
 			//Log.d(TAG, "PLAYLIST_TRACKS");
-			Cursor playlist = PlayerController.getCursorPlaylist();
+			playlist = PlayerController.getCursorPlaylist();
 			if(playlist != null){
 				//Log.d(TAG, "playlist != null");
 				playlist.moveToFirst();
