@@ -112,16 +112,7 @@ public class PlaylistActivity2 extends Activity{
 	
 		setListPlaylist();
 		
-		listview.setOnItemLongClickListener(new OnItemLongClickListener(){
 
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				PlayerController.previewPlaylist((PlaylistItem) parent.getItemAtPosition(position));
-				return true;
-			}
-			
-		});
 		
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -129,6 +120,9 @@ public class PlaylistActivity2 extends Activity{
 					int position, long id) {
 				// TODO Auto-generated method stub
 				
+				PlayerController.previewPlaylist((PlaylistItem) parent.getItemAtPosition(position));
+				
+				/*
 				if(!isGroupSelected.get(position)){
 					view.setBackgroundColor(Color.parseColor("#c0c0c0"));
 					isGroupSelected.set(position, true);
@@ -136,7 +130,7 @@ public class PlaylistActivity2 extends Activity{
 				else{				
 					view.setBackgroundColor(Color.TRANSPARENT);
 					isGroupSelected.set(position, false);
-				}	
+				}	*/
 			}
 		});
 

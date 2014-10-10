@@ -814,8 +814,9 @@ public class PlayerController extends SQLiteOpenHelper{
 			lbm.unregisterReceiver(previewPreparedReceiver);
 			lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
 			printToast("Preview of: "+currentPreviewTrack.getTitle());
-			musicSrv.preview(2*1000);
-			
+			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+			int durationPreview=(prefs.getInt("Duration Preview", 0)+15)*1000;
+			musicSrv.preview(2000);
 		}
 	};
 	
@@ -830,11 +831,13 @@ public class PlayerController extends SQLiteOpenHelper{
 			m_context.unbindService(musicConnection);//FIXME controllare se necessario
 			if(!queue.isEmpty()){
 				
+				lbm.registerReceiver(waitForDestroyService, new IntentFilter("Service destroy"));
 				//lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared"));
 				lbm.unregisterReceiver(previewCompleteReceiver);
 				currentPreviewTrack=queue.removeTop();
 				uri=Uri.parse(currentPreviewTrack.getPath_track());
-				lbm.registerReceiver(waitForDestroyService, new IntentFilter("Service destroy"));
+				
+			
 				//set_player();	
 			}
 			else{
@@ -902,19 +905,20 @@ public class PlayerController extends SQLiteOpenHelper{
 
 
 	public static void set_player(){
-		if(!preview){
-			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
-			SharedPreferences.Editor editor=prefs.edit();
-			editor.putString("lastSongId", currentPlayingTrack.getId());
-			editor.commit();
-		}
-		playIntent = new Intent(m_context, MusicService.class);
-		m_context.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
-		if(preview)
-			lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared"));
-		else
-			lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
-		Log.d("setPlayer","setPlayer");
+		
+			if(!preview){
+				SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+				SharedPreferences.Editor editor=prefs.edit();
+				editor.putString("lastSongId", currentPlayingTrack.getId());
+				editor.commit();
+			}
+			playIntent = new Intent(m_context, MusicService.class);
+			m_context.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+			if(preview)
+				lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared"));
+			else
+				lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
+			Log.d("setPlayer","setPlayer");
 	}
 	
 	protected static final String SETTINGS = "SETTINGS";
@@ -1044,12 +1048,25 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 	public static void previewPlaylist(PlaylistItem playlist){
 		Log.d(TAG," preview playlist");
-		
-		preview=true;
 		queue.clear();
 		queue.addPlaylist(playlist);
+		
+		if(preview)
+		{
+			
+			musicSrv.stopFade();
+			//lbm.unregisterReceiver(songPreviewReceiver);
+			m_context.unbindService(musicConnection);
+			lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
+			lbm.sendBroadcast(new Intent("Complete Preview"));
+			
+		}
+		else
+		{
+		preview=true;
 		currentPreviewTrack=queue.removeTop();
 		previewSingleItem(currentPreviewTrack);//preview single item
+		}
 	}
 	
 	public static void previewSingleItem(SinglePlaylistItem i){
@@ -1074,19 +1091,23 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 	public static void forward(){
 		if(playingPlaylist){
-			musicSrv.stopFade();
-			LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(m_context);
-			Intent mIntent= new Intent();
-			mIntent.setAction("Complete");
-			//stopFade();
-			Log.d("complete","complete");
-			lbm.sendBroadcast(mIntent);	
+			
+			if(!queue.isEmpty() || nLoopPlaylistDone+1!=q_loop){
+				musicSrv.stopFade();
+				LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(m_context);
+				Intent mIntent= new Intent();
+				mIntent.setAction("Complete");
+				//stopFade();
+				Log.d("forward","pressed");
+				lbm.sendBroadcast(mIntent);	
+
+			}
 		}
 		
 	}
 	
 	public static void back(){
-		if(playingPlaylist){
+		if(playingPlaylist && !aux_queue.isEmpty()){
 			backPressed=true;
 			queue.addSinglePlaylistItemOnTop(currentPlayingTrack);
 			queue.addSinglePlaylistItemOnTop(aux_queue.removeTop());

@@ -35,6 +35,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	private static final int    FADE_OUT = 2;
 	private double increment;
 	private double decrement;
+	private TimerTask task;
 	
 	private Timer timerFade;
 	//private MyTask task;
@@ -161,14 +162,15 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
 	}
 	public void preview(int durationPreview){
-	
+		//Log.d("start","Preview");
 		player.start();
 		timerFade=new Timer();
 		final LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-		TimerTask task=new TimerTask(){
+		 task=new TimerTask(){
 
 			@Override
 			public void run() {
+				try{
 			     Intent mIntent= new Intent();
 			     mIntent.setAction("Complete Preview");
 			     Log.d("complete","Preview");
@@ -176,7 +178,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 			     player.pause();
 			     timerFade.purge();
 			     timerFade.cancel();
-			     this.cancel();
+			     this.cancel();}
+				catch(IllegalStateException e)
+				{
+					Log.d("exception",e.toString());
+				}
 			}
 			
 		};
@@ -269,7 +275,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		
 	
 	public void fadeIn(int fadeDuration){
-		//Log.d("fadein","started");
+		Log.d("fadein","started");
 		fadeOutStarted=false;
 		if(fadeDuration>0){
 			setVolume(0f);
@@ -320,7 +326,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 			timerFade.cancel();
 			Log.d("timer cancelled",timerFade.toString());
 			timerFade=null;
+			if(task!=null)
+				task.cancel();
 			}	
+		
+	
 			
 	}
 
