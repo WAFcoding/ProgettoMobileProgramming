@@ -45,15 +45,15 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		initMusicPlayer();
 	
 			
-		Log.d("Service","Created");
+		Log.d("Service","Created service");
 	}
 	
 	public void onDestroy(){
-		Log.d("ondestroy","service");
-	     LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-	     Intent mIntent= new Intent();
-	     mIntent.setAction("Service destroy");
-	     lbm.sendBroadcast(mIntent);
+		Log.d("Service","Destroyed service");
+		LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+		Intent mIntent= new Intent();
+		mIntent.setAction("Service destroy");
+		lbm.sendBroadcast(mIntent);
 		super.onDestroy();
 	}
 	
@@ -72,6 +72,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	public void setPath(Uri u) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException{
 		uri=u;
 		player.setDataSource(getApplicationContext(), uri);
+		//Log.d("service", "chiamata prepareAsync");
 		player.prepareAsync();
 	}
 	
@@ -115,6 +116,9 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 			//stopFade();
 			Log.d("complete","complete");
 			lbm.sendBroadcast(mIntent);
+			
+			//mIntent.setAction("Complete Preview");
+			//lbm.sendBroadcast(mIntent);
 		}
 			
 	}
@@ -126,8 +130,9 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     @Override
     public boolean onUnbind(Intent intent) {
     	player.stop();
+    	player.reset();
     	player.release();
-    	Log.d("unbindservice","musicservice");
+    	Log.d("onUnbind di service","unbind musicservice");
 		return false;
     }
     
@@ -163,30 +168,39 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	}
 	public void preview(int durationPreview){
 		//Log.d("start","Preview");
+		/*if(!stopped)
+			
+			player.start();
+		else{
+			stopped=false;
+			player.prepareAsync();
+		}*/
 		player.start();
 		timerFade=new Timer();
 		final LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-		 task=new TimerTask(){
+		task=new TimerTask(){
 
 			@Override
 			public void run() {
 				try{
-			     Intent mIntent= new Intent();
-			     mIntent.setAction("Complete Preview");
-			     Log.d("complete","Preview");
-			     lbm.sendBroadcast(mIntent);
-			     player.pause();
-			     timerFade.purge();
-			     timerFade.cancel();
-			     this.cancel();}
-				catch(IllegalStateException e)
-				{
+					Intent mIntent= new Intent();
+					mIntent.setAction("Complete Preview");
+					lbm.sendBroadcast(mIntent);
+					Log.d("run di timer","inviato intent complete preview");
+					player.pause();
+					//player.stop();
+					timerFade.purge();
+					timerFade.cancel();
+					this.cancel();
+				} catch(IllegalStateException e) {
 					Log.d("exception",e.toString());
 				}
 			}
 			
 		};
-		timerFade.schedule(task, Math.min(durationPreview,player.getDuration()));
+		//timerFade.schedule(task, Math.min(durationPreview,player.getDuration()));
+		if(getDur() >= durationPreview)
+			timerFade.schedule(task, durationPreview);
 	}
 	public int getDur() {
 		return player.getDuration();
@@ -217,8 +231,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
 	@Override
 	public boolean onError(MediaPlayer mp, int what, int extra) {
-		Log.d("Error","error");
-		return false;
+		Log.d("onError","error");
+		player.stop();
+		player.reset();
+		player.release();
+		return true;//se falso viene chiamato automaticamente onCompletion
 	}
 	
 	public void Loop(boolean b){
@@ -241,36 +258,36 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	private class MyTaskFadeIn extends TimerTask{
 
 
-				@Override
-				public void run() {
-					Log.d("fadein","step");
-					volume=(float) (volume+increment);
-					if (volume>=1){
-						volume=1;
-						stopFade();
-						return;//FIXME 
-					}
-					//Log.d("volume", Double.toString(volume));
-					setVolume(volume);
-				
-				}
-			};
-			
-			private class MyTaskFadeOut extends TimerTask{
-				@Override
-				public void run() {
-					volume=(float) (volume-decrement);
-					if (volume<=0){
-						volume=0f;
-						stopFade();
-						
-						return;
-					}
-					//Log.d("volume", Double.toString(volume));
-					setVolume(volume);
-					
-				}
-			};
+		@Override
+		public void run() {
+			Log.d("fadein","step");
+			volume=(float) (volume+increment);
+			if (volume>=1){
+				volume=1;
+				stopFade();
+				return;//FIXME 
+			}
+			//Log.d("volume", Double.toString(volume));
+			setVolume(volume);
+
+		}
+	};
+
+	private class MyTaskFadeOut extends TimerTask{
+		@Override
+		public void run() {
+			volume=(float) (volume-decrement);
+			if (volume<=0){
+				volume=0f;
+				stopFade();
+
+				return;
+			}
+			//Log.d("volume", Double.toString(volume));
+			setVolume(volume);
+
+		}
+	};
 		
 		
 	
@@ -316,8 +333,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	
 	}
 	
-
-	
 	public void stopFade(){
 		//task.cancel();
 		//Log.d("task cancelled",task.toString());
@@ -328,11 +343,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 			timerFade=null;
 			if(task!=null)
 				task.cancel();
-			}	
-		
-	
-			
+		}		
 	}
-
-	
 }

@@ -738,60 +738,12 @@ public class PlayerController extends SQLiteOpenHelper{
 		musicSrv.stopFade();
 		lbm.unregisterReceiver(songPreparedReceiver);
 		m_context.unbindService(musicConnection);
-		musicSrv.stop();
+		m_context.stopService( new Intent(m_context, MusicService.class));
+		//musicSrv.stop();
 		playingPlaylist=false;
 		serviceConnected=false;
 	}
 	
-	private static BroadcastReceiver songCompleteReceiver=new BroadcastReceiver(){
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			//lbm.unregisterReceiver(songPreparedReceiver);
-			lbm.unregisterReceiver(songCompleteReceiver);
-			//queue.printQueue();
-			Log.d("queue", "size= " + queue.getQueue().size());
-			Log.d("queue", "aux_queue size= " + aux_queue.getQueue().size());
-			if(queue.isEmpty())
-			{
-				nLoopPlaylistDone++;
-				if(nLoopPlaylistDone==q_loop && q_loop!=1000 )
-				{
-					playingPlaylist=false;
-					
-					//m_context.unbindService(musicConnection);
-				}
-				else
-				queue.addPlaylist(currentPlayingPlaylist);
-				//Intent intent2=new Intent(mainActivity, PlaylistActivity.class);						
-				//mainActivity.startActivity(intent2);
-			}
-	
-				if(!musicSrv.isLooping()&& (nLoopPlaylistDone!=q_loop || q_loop==1000))
-				{
-					m_context.unbindService(musicConnection);//FIXME controllare se necessario
-					m_context.stopService( new Intent(m_context, MusicService.class));
-					Log.d("complete song","complete song");
-					if(!backPressed)
-						aux_queue.addSinglePlaylistItemOnTop(currentPlayingTrack);
-					backPressed=false;
-					
-					if(random){
-						
-						int pos= gen.nextInt(queue.getNumberOfSinglePlaylistItems());
-						currentPlayingTrack= queue.getQueue().remove(pos);
-					}
-					else{
-						currentPlayingTrack=queue.removeTop();
-					}
-					
-					uri=Uri.parse(currentPlayingTrack.getPath_track());
-					set_player();
-
-		
-
-				}
-		}
-	};
 	private static BroadcastReceiver songPreparedReceiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -807,45 +759,103 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 	};
 	
-	private static BroadcastReceiver previewPreparedReceiver=new BroadcastReceiver(){
+	private static BroadcastReceiver songCompleteReceiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d("prepared","preview");
-			lbm.unregisterReceiver(previewPreparedReceiver);
-			lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
-			printToast("Preview of: "+currentPreviewTrack.getTitle());
-			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
-			int durationPreview=(prefs.getInt("Duration Preview", 0)+15)*1000;
-			musicSrv.preview(2000);
+			lbm.unregisterReceiver(songCompleteReceiver);
+			//queue.printQueue();
+			//Log.d("queue", "size= " + queue.getQueue().size());
+			//Log.d("queue", "aux_queue size= " + aux_queue.getQueue().size());
+			if(queue.isEmpty())
+			{
+				nLoopPlaylistDone++;
+				if(nLoopPlaylistDone==q_loop && q_loop!=1000 )
+				{
+					playingPlaylist=false;
+					
+					//m_context.unbindService(musicConnection);
+				}
+				else
+					queue.addPlaylist(currentPlayingPlaylist);
+				//Intent intent2=new Intent(mainActivity, PlaylistActivity.class);						
+				//mainActivity.startActivity(intent2);
+			}
+	
+			if(!musicSrv.isLooping()&& (nLoopPlaylistDone!=q_loop || q_loop==1000))
+			{
+				Log.d("complete song","complete song");
+				m_context.unbindService(musicConnection);//FIXME controllare se necessario
+				m_context.stopService( new Intent(m_context, MusicService.class));
+				if(!backPressed)
+					aux_queue.addSinglePlaylistItemOnTop(currentPlayingTrack);
+				backPressed=false;
+				
+				if(random){
+					
+					int pos= gen.nextInt(queue.getNumberOfSinglePlaylistItems());
+					currentPlayingTrack= queue.getQueue().remove(pos);
+				}
+				else{
+					currentPlayingTrack=queue.removeTop();
+				}
+				
+				uri=Uri.parse(currentPlayingTrack.getPath_track());
+				set_player();
+			}
 		}
 	};
 	
-	private static void printToast(String s){
-		Toast.makeText(m_context, s, Toast.LENGTH_SHORT).show();
-	}
+	private static BroadcastReceiver previewPreparedReceiver=new BroadcastReceiver(){
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			//Log.d("prepared","preview");
+			
+			lbm.unregisterReceiver(previewPreparedReceiver);
+			
+			//if(preview)
+			lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
+			
+			//lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
+			printToast("Preview of: "+currentPreviewTrack.getTitle());
+			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+			int durationPreview=(prefs.getInt("Duration Preview", 0)+15)*1000;
+			//musicSrv.preview(2000);
+			preview(2000);
+		}
+	};
 	
 	private static BroadcastReceiver previewCompleteReceiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d("on complete preview","on complete preview");
-			m_context.unbindService(musicConnection);//FIXME controllare se necessario
+			//Log.d("on complete preview","on complete preview");
+			lbm.unregisterReceiver(previewCompleteReceiver);
+			
 			if(!queue.isEmpty()){
 				
-				lbm.registerReceiver(waitForDestroyService, new IntentFilter("Service destroy"));
-				//lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared"));
-				lbm.unregisterReceiver(previewCompleteReceiver);
+				queue.printQueue();
+
 				currentPreviewTrack=queue.removeTop();
 				uri=Uri.parse(currentPreviewTrack.getPath_track());
+				//set_player();
 				
-			
-				//set_player();	
+				
+				//Log.d("on preview complete ", "chiamato wait for destroy");
+				//lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared"));
 			}
 			else{
-				lbm.unregisterReceiver(previewCompleteReceiver);
-				lbm.unregisterReceiver(previewPreparedReceiver);
+				//lbm.unregisterReceiver(previewPreparedReceiver);
 				preview=false;
-				Log.d("end","preview");
+				Log.d("preview", "impostato false in onComplete");
 			}
+			
+			lbm.registerReceiver(waitForDestroyService, new IntentFilter("Service destroy"));
+			
+			try{
+				m_context.unbindService(musicConnection);
+			}catch(IllegalArgumentException e){
+				Log.d("Exception", e.toString());
+			}
+			m_context.stopService( new Intent(m_context, MusicService.class));
 		}
 	};
 	
@@ -854,11 +864,20 @@ public class PlayerController extends SQLiteOpenHelper{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			lbm.unregisterReceiver(waitForDestroyService);
-			set_player();
-			
+
+			if(preview){
+				Log.d("wait for destroy", "eseguo set player");
+				set_player();
+			}
+			else{
+				Log.d("preview", "end");
+			}	
 		}
-		
 	};
+	
+	private static void printToast(String s){
+		Toast.makeText(m_context, s, Toast.LENGTH_SHORT).show();
+	}
 	
 	private static MusicService musicSrv;
 	private static boolean serviceConnected=false;
@@ -869,56 +888,68 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static Random gen= new Random();
 	private static boolean playingPlaylist;
 	private static SinglePlaylistItem currentPreviewTrack;
+	private static PlaylistItem currentPreviewPlayingPlaylist;
 	private static boolean preview=false;
-	private static ServiceConnection musicConnection = new ServiceConnection(){
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			it.borove.playerborove.MusicService.MusicBinder binder = (it.borove.playerborove.MusicService.MusicBinder)service;
-			//get service
-			Log.d("service","onConnected");
-			musicSrv = binder.getService();
-			serviceConnected=true;
-			try {
-				musicSrv.setPath(uri);	
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			serviceConnected=false;
-			Log.d("Disc","onServiceDisconnetcted");
-		}
-	};
+	private static ServiceConnection musicConnection;
 	
+	private static void initMusicConnection(){
+		
+		musicConnection = new ServiceConnection(){
+			@Override
+			public void onServiceConnected(ComponentName name, IBinder service) {
+				it.borove.playerborove.MusicService.MusicBinder binder = (it.borove.playerborove.MusicService.MusicBinder)service;
+				//get service
+				Log.d("service","onConnected");
+				musicSrv = binder.getService();
+				serviceConnected=true;
+				try {
+					musicSrv.setPath(uri);	
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+			}
 
+			@Override
+			public void onServiceDisconnected(ComponentName name) {
+				serviceConnected=false;
+				Log.d("Disc","onServiceDisconnetcted");
+			}
+		};
+	}
 
 	public static void set_player(){
 		
-			if(!preview){
+			/*if(!preview){
 				SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 				SharedPreferences.Editor editor=prefs.edit();
 				editor.putString("lastSongId", currentPlayingTrack.getId());
 				editor.commit();
-			}
+			}*/
 			playIntent = new Intent(m_context, MusicService.class);
+			
+			if(musicConnection == null){
+				initMusicConnection();
+			}
 			m_context.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
-			if(preview)
+			
+			if(preview){
 				lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared"));
+			}
 			else
 				lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
+
 			Log.d("setPlayer","setPlayer");
+			Log.d("currentPreviewTrack",currentPreviewTrack.getTitle());
 	}
 	
 	protected static final String SETTINGS = "SETTINGS";
@@ -927,6 +958,13 @@ public class PlayerController extends SQLiteOpenHelper{
 		if(musicSrv!=null && serviceConnected){
 			Log.d(TAG,"play");
 			musicSrv.playPlayer();
+		}
+	}
+	
+	public static void preview(int duration){
+		if(musicSrv!=null && serviceConnected){
+			Log.d("preview","play preview");
+			musicSrv.preview(duration);
 		}
 	}
 	
@@ -1045,27 +1083,39 @@ public class PlayerController extends SQLiteOpenHelper{
 		//aux_queue.addSinglePlaylistItemOnTop(currentPlayingTrack);
 		playSingleItem(currentPlayingTrack);
 	}
+	public static void playSingleItem(SinglePlaylistItem i){
+		currentPlayingTrack=i;
+		uri=Uri.parse(currentPlayingTrack.getPath_track());
+		Intent intent=new Intent(mainActivity, PlayerActivity.class);
+		mainActivity.startActivity(intent);
+		PlayerController.set_player();
+		
+	}
 	
 	public static void previewPlaylist(PlaylistItem playlist){
-		Log.d(TAG," preview playlist");
+		//Log.d(TAG," preview playlist");
 		queue.clear();
 		queue.addPlaylist(playlist);
+		currentPreviewPlayingPlaylist = playlist;
 		
 		if(preview)
 		{
 			
-			musicSrv.stopFade();
-			//lbm.unregisterReceiver(songPreviewReceiver);
-			m_context.unbindService(musicConnection);
-			lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
-			lbm.sendBroadcast(new Intent("Complete Preview"));
+			//musicSrv.stopFade();//non serve a niente qua :D
+			
+			//m_context.unbindService(musicConnection);
+			//lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
+			//lbm.sendBroadcast(new Intent("Complete Preview"));
+			//lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared") );
+			//lbm.sendBroadcast(new Intent("Prepared"));
+			set_player();
 			
 		}
 		else
 		{
-		preview=true;
-		currentPreviewTrack=queue.removeTop();
-		previewSingleItem(currentPreviewTrack);//preview single item
+			preview=true;
+			currentPreviewTrack=queue.removeTop();
+			previewSingleItem(currentPreviewTrack);
 		}
 	}
 	
@@ -1073,15 +1123,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		
 		currentPreviewTrack=i;
 		uri=Uri.parse(currentPreviewTrack.getPath_track());
-		PlayerController.set_player();
-		
-	}
-	public static void playSingleItem(SinglePlaylistItem i){
-		currentPlayingTrack=i;
-		uri=Uri.parse(currentPlayingTrack.getPath_track());
-		Intent intent=new Intent(mainActivity, PlayerActivity.class);
-		mainActivity.startActivity(intent);
-		PlayerController.set_player();
+		set_player();
 		
 	}
 	
@@ -1171,7 +1213,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			playSingleItem(song);
 		}
 			
-		//playSingleItem(PlayerController.cursorTracks.getExatlyTrack()ì);
+		//playSingleItem(PlayerController.cursorTracks.getExatlyTrack()ï¿½);
 		
 	}
 
