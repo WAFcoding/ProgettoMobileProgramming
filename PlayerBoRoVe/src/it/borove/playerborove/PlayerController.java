@@ -1108,8 +1108,9 @@ public class PlayerController extends SQLiteOpenHelper{
 			//lbm.sendBroadcast(new Intent("Complete Preview"));
 			//lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared") );
 			//lbm.sendBroadcast(new Intent("Prepared"));
-			set_player();
-			
+			//set_player();
+			preview= false;
+			queue.clear();
 		}
 		else
 		{
