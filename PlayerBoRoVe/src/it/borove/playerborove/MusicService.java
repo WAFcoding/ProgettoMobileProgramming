@@ -368,7 +368,8 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
 	@Override
 	public void onAudioFocusChange(int focusChange) {
-		switch (focusChange){
+		try{
+			switch (focusChange){
 
 			case AudioManager.AUDIOFOCUS_GAIN:
 				//il focus è ritornato all'applicazione
@@ -380,16 +381,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 				break;
 			case AudioManager.AUDIOFOCUS_LOSS:
 				//il focus è stato perso per parecchio tempo, liberare memoria e rilasciare risorse
-				try{
-					if(player.isPlaying()) 
-						player.stop();
-					player.reset();
-					player.release();
-					player= null;
-				}
-				catch(IllegalStateException e){
-					Log.d("onAudioFocusChange exception",e.toString());
-				}
+
+				if(player.isPlaying()) 
+					player.stop();
+				player.reset();
+				player.release();
+				player= null;
 				break;
 			case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
 				//il focus è stato perso per un breve istante di tempo, si deve mettere almeno in pausa
@@ -402,7 +399,10 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 					setVolume(0.1f);
 				break;
 
+			}
 		}
-
+		catch(IllegalStateException e){
+			Log.d("onAudioFocusChange exception",e.toString());
+		}
 	}
 }
