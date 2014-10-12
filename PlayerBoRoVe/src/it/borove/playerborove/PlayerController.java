@@ -36,6 +36,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaScannerConnection;
@@ -53,21 +54,20 @@ import android.widget.Toast;
 
 public class PlayerController extends SQLiteOpenHelper{
 	
-
-
+	private static Activity mainActivity;
+	private static Context m_context;
+	private final static String TAG = "PLAYERCONTROLLER";
+	
+	//================PLAYLIST/PREVIEW================
+	private static Cursor cursorTracks;
+	private static Cursor cursorPlaylist;
 	private static SinglePlaylistItem currentPlayingTrack;
 	private static PlaylistItem currentPlayingPlaylist;
 	private static Queue queue;
 	private static Queue aux_queue;
 	private static int q_loop;
-	private static Activity mainActivity;
 	private static boolean backPressed=false;
-
-	
-	private static Context m_context;
-	private static Cursor cursorTracks;
-	private static Cursor cursorPlaylist;
-	private final static String TAG = "PLAYERCONTROLLER";
+	//================DB==============================
 	//private SQLiteDatabase myDatabase;
 	private static SQLiteConnect sqlDatabaseHelper;
 	private static String db_path;
@@ -77,15 +77,20 @@ public class PlayerController extends SQLiteOpenHelper{
 	int DATABASE_VERSION = 1;
 	
 	
+	
 	public PlayerController(Context context, Activity v){
 		super(context, DB_NAME, null, DATABASE_VERSION);
 		mainActivity=v;
 		playingPlaylist=false;
 		queue=new Queue();
 		aux_queue= new Queue();
+		m_context 	= context;
 		lbm= LocalBroadcastManager.getInstance(context);
-		//db_path 	= context.getFilesDir().getPath();
 		
+		/**
+		 * impostazione percorso del DB
+		 */
+		//db_path 	= context.getFilesDir().getPath();
 		String externalStorageState= Environment.getExternalStorageState();
 		if(Environment.MEDIA_MOUNTED.equals(externalStorageState)){
 			//possiamo scrivere sulla memoria esterna
@@ -98,22 +103,14 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 		else
 			db_path 	= context.getFilesDir().getPath();
-		
 		//Log.d(TAG, "path of db " + db_path);
-		m_context 	= context;
-		//this.queue= new Queue();
-		//this.setQ_loop(1);
 		
-		//PlayerController.sqlDatabaseHelper = new SQLiteConnect(context, db_path, DB_NAME, DATABASE_VERSION);
 		PlayerController.sqlDatabaseHelper = SQLiteConnect.getInstance(context, db_path, DB_NAME, DATABASE_VERSION);
-		
-		//TODO inizializzazione della libreria da db
-		//TODO inizializzazione del media player
-		
-		
 	}
 	
-
+	public static Context getContext(){
+		return m_context;
+	}
 
 	public void open_settings() {
 		Intent intent=new Intent( mainActivity, SettingsActivity.class);
@@ -744,6 +741,22 @@ public class PlayerController extends SQLiteOpenHelper{
 		serviceConnected=false;
 	}
 	
+	public static void end_music_service_preview(){
+		Log.d("MusicService","end_music_service_preview");
+		musicSrv.stopFade();
+		lbm.unregisterReceiver(previewPreparedReceiver);
+		lbm.unregisterReceiver(previewCompleteReceiver);
+		lbm.unregisterReceiver(waitForDestroyService);
+		m_context.unbindService(musicConnection);
+		m_context.stopService( new Intent(m_context, MusicService.class));
+		//musicSrv.stop();
+		if(preview){
+			preview=false;
+			Log.d("end_music_service_preview", "impostato preview a false");
+		}
+		serviceConnected=false;
+	}
+	
 	private static BroadcastReceiver songPreparedReceiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -832,7 +845,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			
 			if(!queue.isEmpty()){
 				
-				queue.printQueue();
+				//queue.printQueue();//stampa la coda
 
 				currentPreviewTrack=queue.removeTop();
 				uri=Uri.parse(currentPreviewTrack.getPath_track());
@@ -875,7 +888,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 	};
 	
-	private static void printToast(String s){
+	public static void printToast(String s){
 		Toast.makeText(m_context, s, Toast.LENGTH_SHORT).show();
 	}
 	
@@ -949,7 +962,7 @@ public class PlayerController extends SQLiteOpenHelper{
 				lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
 
 			Log.d("setPlayer","setPlayer");
-			Log.d("currentPreviewTrack",currentPreviewTrack.getTitle());
+			//Log.d("currentPreviewTrack",currentPreviewTrack.getTitle());
 	}
 	
 	protected static final String SETTINGS = "SETTINGS";
@@ -1062,26 +1075,31 @@ public class PlayerController extends SQLiteOpenHelper{
 		SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 		q_loop=prefs.getInt("NLoopPlaylist", 1);
 		random=prefs.getBoolean("Random Playback", false);
-		//if(q_loop>1 && random)
-			//trackLoop=new ArrayList<Integer>(playlist.getSongs().size());
-	
-		playingPlaylist=true;
-		nLoopPlaylistDone=0;
-		queue.clear();
-		aux_queue.clear();
-		queue.addPlaylist(playlist);
-		currentPlayingPlaylist=playlist;
 		
-		if(random){
-			
-			int pos= gen.nextInt(queue.getNumberOfSinglePlaylistItems());
-			currentPlayingTrack= queue.getQueue().remove(pos);
+		if(!preview){
+			playingPlaylist=true;
+			nLoopPlaylistDone=0;
+			queue.clear();
+			aux_queue.clear();
+			queue.addPlaylist(playlist);
+			currentPlayingPlaylist=playlist;
+
+			if(random){
+
+				int pos= gen.nextInt(queue.getNumberOfSinglePlaylistItems());
+				currentPlayingTrack= queue.getQueue().remove(pos);
+			}
+			else{
+				currentPlayingTrack=queue.removeTop();
+			}
+			//aux_queue.addSinglePlaylistItemOnTop(currentPlayingTrack);
+			playSingleItem(currentPlayingTrack);
 		}
 		else{
-			currentPlayingTrack=queue.removeTop();
+			printToast("Anteprima fermata, premere di nuovo per riprodurre");
+			end_music_service_preview();
+			Log.d("playPlaylist", "playlist in riproduzione");
 		}
-		//aux_queue.addSinglePlaylistItemOnTop(currentPlayingTrack);
-		playSingleItem(currentPlayingTrack);
 	}
 	public static void playSingleItem(SinglePlaylistItem i){
 		currentPlayingTrack=i;
@@ -1094,20 +1112,16 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 	public static void previewPlaylist(PlaylistItem playlist){
 		//Log.d(TAG," preview playlist");
-		queue.clear();
-		queue.addPlaylist(playlist);
-		currentPreviewPlayingPlaylist = playlist;
-		
+
 		if(preview)
 		{
-			
-			//musicSrv.stopFade();//non serve a niente qua :D
-			
 			//m_context.unbindService(musicConnection);
 			//lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
 			//lbm.sendBroadcast(new Intent("Complete Preview"));
 			//lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared") );
 			//lbm.sendBroadcast(new Intent("Prepared"));
+			printToast("Anteprima fermata");
+			end_music_service_preview();
 			//set_player();
 			preview= false;
 			queue.clear();
@@ -1115,9 +1129,13 @@ public class PlayerController extends SQLiteOpenHelper{
 		else
 		{
 			preview=true;
-			currentPreviewTrack=queue.removeTop();
-			previewSingleItem(currentPreviewTrack);
+			queue.clear();
+			queue.addPlaylist(playlist);
+			currentPreviewPlayingPlaylist = playlist;
+			previewSingleItem(queue.removeTop());
 		}
+		
+
 	}
 	
 	public static void previewSingleItem(SinglePlaylistItem i){
