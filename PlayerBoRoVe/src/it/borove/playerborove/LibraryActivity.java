@@ -4,6 +4,7 @@ import it.borove.playerborove.PlayerController.updateDbOnTrack;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import playlistModules.SinglePlaylistItem;
@@ -301,10 +302,28 @@ public class LibraryActivity extends Activity {
 	private class DrawerItemClickListener implements ListView.OnItemClickListener{
 
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			//add track
+			if(position == 0){
+				
+			}
+			//update library
+			else if(position == 1){
+				updateTracksList();
+				PlayerController.printToast("Library Updated");
+			}
+			//details 
+			else if(position == 2){
+				
+			}
+			//settings
+			else if(position == 3){
+				PlayerController.open_settings();
+				//animazione a comparsa da sinistra
+				overridePendingTransition(R.anim.right_in, R.anim.left_out); 
+			}
 			drawer.closeDrawer(drawer_list_view);
-			Toast.makeText(parent.getContext(), "selezionato elemento " + position, Toast.LENGTH_SHORT).show();
+			//Toast.makeText(parent.getContext(), "selezionato elemento " + position, Toast.LENGTH_SHORT).show();
 		}
 		
 	}
@@ -339,10 +358,6 @@ public class LibraryActivity extends Activity {
 					boolean reachable = tracks.moveToPosition(position);
 					if(reachable){
 						idTrack				= tracks.getInt(0);
-						
-						
-	
-						
 						String _id= tracks.getString(0);
 						String p_title= tracks.getString(1);
 						String singerName= tracks.getString(2);
@@ -689,6 +704,16 @@ public class LibraryActivity extends Activity {
 		else
 			Toast.makeText(LibraryActivity.this, "Database is empty!", Toast.LENGTH_SHORT).show();
 	
+	}
+	
+	private void details(){
+		
+		String number_of_all_track;
+		String duration_of_library;
+		String memory_occupation;//occupazione di memoria di tutta la libreria
+		ArrayList<Integer> number_of_track_for_kind;//numero di brani per tipo
+		ArrayList<Integer> vote_of_track_for_kind;//voto medio dei brani per tipo
+		
 	}
 	
 }

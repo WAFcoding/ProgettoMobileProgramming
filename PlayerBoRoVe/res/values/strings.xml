@@ -14,7 +14,7 @@
     <string name="player">Lettore</string>
     <string name="duration">500</string>
     
-    <string name="txtButton">Exit</string>
+    <string name="txtButton">Done</string>
     
     <string name="artista">Artista</string>
     <string name="titolo">Titolo</string>
@@ -32,36 +32,31 @@
     <!-- *****************menu_track.xml**************** -->
    
     <!-- *****************settings_activity.xml**************** -->
-     <string name="EraseDb">Cancella Database</string>
-     <string name="SyncDb">Sincronizza Database</string>
+     <string name="EraseDb">Erase Database</string>
+     <string name="SyncDb">Syncronize Database</string>
     <!-- *****************settings_activity.xml**************** -->
    
-   <string name="detailsPlaylist">Apri</string>
+   <string name="detailsPlaylist">Open</string>
    <string name="openPlayer">Play</string>
-   
-    
     <string name="content"> </string>
     
    <!-- *****************navigation drawer**************** -->
-    <string name="drawer_open">Apri</string>
-    <string name="drawer_close">Chiudi</string>
-    <string name="description">Media Controlli</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="description">Media Controls</string>
 
-	    <string-array name="drawer_choice_playlist">
-	        <item >Aggiungi Playlist</item>
-	        <item >Rimuovi playlist</item>
-	       <item >Aggiorna</item>
-	       <item >Impostazioni</item>
-	    </string-array>
-    
-    
-    
+    <string-array name="drawer_choice_playlist">
+       <item >Add Playlist</item>
+       <item >Update Playlist</item>
+       <item >Details</item>
+       <item >Settings</item>
+    </string-array>
     
     <string-array name="drawer_choice_library">
-        <item >Aggiungi brano</item>
-        <item >Rimuovi brano</item>
-       <item >Dettagli</item>
-       <item >Impostazioni</item>
+       <item >Add Track</item>
+       <item >Update Library</item>
+       <item >Details</item>
+       <item >Settings</item>
     </string-array>
     
 	<!-- *****************add playlist**************** -->

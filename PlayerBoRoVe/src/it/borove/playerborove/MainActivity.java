@@ -92,9 +92,7 @@ public class MainActivity extends Activity {
 			};
 		registerReceiver(rec,inf);
 		
-		
-		this.addButtonListener();			
-			
+		this.addButtonListener();	
 	}
 	
 	@Override

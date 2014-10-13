@@ -111,26 +111,24 @@ public class PlaylistActivity2 extends Activity{
 		drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
 	
 		setListPlaylist();
-		
 
-		
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
 				
 				PlayerController.previewPlaylist((PlaylistItem) parent.getItemAtPosition(position));
 				
-				/*
-				if(!isGroupSelected.get(position)){
-					view.setBackgroundColor(Color.parseColor("#c0c0c0"));
-					isGroupSelected.set(position, true);
-				}
-				else{				
-					view.setBackgroundColor(Color.TRANSPARENT);
-					isGroupSelected.set(position, false);
-				}	*/
+				for(int i=0;i<isGroupSelected.size();i++){
+					if(i==position){
+						view.setBackgroundColor(Color.parseColor("#c0c0c0"));
+						isGroupSelected.set(position, true);
+					}
+					else{
+						listview.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+						isGroupSelected.set(i, false);
+					}
+				}	
 			}
 		});
 
@@ -233,13 +231,15 @@ public class PlaylistActivity2 extends Activity{
 					
 					i.putExtras(b);
 					
-					m_context.startActivity(i);
-								
+					m_context.startActivity(i);		
+					//animazione a comparsa da sinistra
+					overridePendingTransition(R.anim.right_in, R.anim.left_out); 
 				}
 			});
 
 			return myView;
 		}
+		
 		public PlaylistItem getPlaylistItem(int position){
 			if(namePlaylists == null)
 				return null;	
@@ -274,15 +274,15 @@ public class PlaylistActivity2 extends Activity{
 		private ArrayList<String> delNameP = new ArrayList<String>();
 
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			// TODO Auto-generated method stub
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
 			if(position == 0){
 				startActivityForResult(new Intent(PlaylistActivity2.this, PlaylistAddActivity.class), ADDPLAYLIST);
+				//animazione a comparsa da sinistra
+				overridePendingTransition(R.anim.left_in, R.anim.right_out);  
 			}
-			
 			//Remove Playlist
-			else if(position == 1){
+			/*else if(position == 1){
 				for(int i=0; i < isGroupSelected.size(); i++){
 					if(isGroupSelected.get(i)){					
 						String name = adapter.getPlaylistItem(i).getTitle_playlist();
@@ -301,19 +301,22 @@ public class PlaylistActivity2 extends Activity{
 				else{
 					Toast.makeText(PlaylistActivity2.this, "Not any playlist selected!", Toast.LENGTH_SHORT).show();
 				}
-				
-			
-			}
+			}*/
 			//Update list of Playlist
-			else if(position == 2){
+			else if(position == 1){
 				clearData();
 				setListPlaylist();
 				Toast.makeText(PlaylistActivity2.this, "list of Playlists updated!", Toast.LENGTH_SHORT).show();
 			}
-			
+			//Show details
+			else if(position == 2 ){
+				
+			}
 			//Settings
 			else if(position == 3){
-				
+				PlayerController.open_settings();
+				//animazione a comparsa da sinistra
+				overridePendingTransition(R.anim.right_in, R.anim.left_out); 
 			}
 			
 			
@@ -330,7 +333,7 @@ public class PlaylistActivity2 extends Activity{
 			Toast.makeText(this, "new playlist added!", Toast.LENGTH_SHORT).show();
 		}
 		
-		if(requestCode == ADDPLAYLIST && resultCode == RESULT_CANCELED){
+		if(requestCode == ADDPLAYLIST && resultCode == 666){
 			Toast.makeText(this, "Name playlist duplicated! Please change name of new playlist", Toast.LENGTH_SHORT).show();
 		}
 		
@@ -342,7 +345,6 @@ public class PlaylistActivity2 extends Activity{
 				String albumName		= bundle2.getString("albumName");
 				String kind				= bundle2.getString("kind");
 				int valueOfTrack 		= bundle2.getInt("valueTrack");
-				
 				
 				int idTrack				= Integer.parseInt(track.getId());
 				String nameTrack		= track.getnameFile();
