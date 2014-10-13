@@ -62,7 +62,8 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static int q_loop;
 	private static Activity mainActivity;
 	private static boolean backPressed=false;
-
+	private static boolean player=false;
+	
 	
 	private static Context m_context;
 	private static Cursor cursorTracks;
@@ -733,14 +734,21 @@ public class PlayerController extends SQLiteOpenHelper{
 		return currentPlayingTrack.getBitmapCover();
 		else return null;
 	}
-	public static void end_music_sevice(){
+	public static void end_music_sevice(){//change
 		Log.d("MusicService","end_music_service");
-		musicSrv.stopFade();
+
+		lbm.unregisterReceiver(previewCompleteReceiver);
 		lbm.unregisterReceiver(songPreparedReceiver);
-		m_context.unbindService(musicConnection);
-		musicSrv.stop();
+		if(preview || playingPlaylist || player)
+			m_context.unbindService(musicConnection);
+		
+		if(musicSrv!=null)
+			musicSrv.stopFade();
+			
 		playingPlaylist=false;
 		serviceConnected=false;
+		preview=false;
+		player=false;
 	}
 	
 	private static BroadcastReceiver songCompleteReceiver=new BroadcastReceiver(){
@@ -758,7 +766,7 @@ public class PlayerController extends SQLiteOpenHelper{
 				{
 					playingPlaylist=false;
 					
-					//m_context.unbindService(musicConnection);
+					m_context.unbindService(musicConnection);
 				}
 				else
 				queue.addPlaylist(currentPlayingPlaylist);
@@ -807,16 +815,16 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 	};
 	
-	private static BroadcastReceiver previewPreparedReceiver=new BroadcastReceiver(){
+	private static BroadcastReceiver previewPreparedReceiver=new BroadcastReceiver(){//change
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d("prepared","preview");
+			Log.d("On receive prepared","preview");
 			lbm.unregisterReceiver(previewPreparedReceiver);
-			lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
+			//lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
 			printToast("Preview of: "+currentPreviewTrack.getTitle());
 			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 			int durationPreview=(prefs.getInt("Duration Preview", 0)+15)*1000;
-			musicSrv.preview(2000);
+			musicSrv.preview(5000);
 		}
 	};
 	
@@ -824,16 +832,17 @@ public class PlayerController extends SQLiteOpenHelper{
 		Toast.makeText(m_context, s, Toast.LENGTH_SHORT).show();
 	}
 	
-	private static BroadcastReceiver previewCompleteReceiver=new BroadcastReceiver(){
+	private static BroadcastReceiver previewCompleteReceiver=new BroadcastReceiver(){//change
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.d("on complete preview","on complete preview");
-			m_context.unbindService(musicConnection);//FIXME controllare se necessario
+			//FIXME controllare se necessario
+			m_context.unbindService(musicConnection);
 			if(!queue.isEmpty()){
 				
 				lbm.registerReceiver(waitForDestroyService, new IntentFilter("Service destroy"));
 				//lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared"));
-				lbm.unregisterReceiver(previewCompleteReceiver);
+				//lbm.unregisterReceiver(previewCompleteReceiver);
 				currentPreviewTrack=queue.removeTop();
 				uri=Uri.parse(currentPreviewTrack.getPath_track());
 				
@@ -914,6 +923,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			}
 			playIntent = new Intent(m_context, MusicService.class);
 			m_context.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+			
 			if(preview)
 				lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared"));
 			else
@@ -1010,17 +1020,19 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 
 
-	public static void stop() {
+	public static void stop() {//change
 		// TODO Auto-generated method stub
 		if(musicSrv!=null && serviceConnected)
 		{	lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
-			musicSrv.seek(0);
+			//musicSrv.seek(0);
 			musicSrv.stop();
 		}
 	}
 	private static boolean random;
 	
 	public static void playPlaylist(PlaylistItem playlist){
+		if(preview)
+			end_music_sevice();
 		SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 		q_loop=prefs.getInt("NLoopPlaylist", 1);
 		random=prefs.getBoolean("Random Playback", false);
@@ -1046,24 +1058,26 @@ public class PlayerController extends SQLiteOpenHelper{
 		playSingleItem(currentPlayingTrack);
 	}
 	
-	public static void previewPlaylist(PlaylistItem playlist){
+	public static void previewPlaylist(PlaylistItem playlist){//change
 		Log.d(TAG," preview playlist");
 		queue.clear();
 		queue.addPlaylist(playlist);
 		
 		if(preview)
-		{
+		{  Log.d(TAG, "stop previus preview");
 			
 			musicSrv.stopFade();
 			//lbm.unregisterReceiver(songPreviewReceiver);
-			m_context.unbindService(musicConnection);
-			lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
+			//m_context.unbindService(musicConnection);
+			//lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
 			lbm.sendBroadcast(new Intent("Complete Preview"));
+			Log.d(TAG, "Intent complete preview lanced");
 			
 		}
 		else
 		{
 		preview=true;
+		lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
 		currentPreviewTrack=queue.removeTop();
 		previewSingleItem(currentPreviewTrack);//preview single item
 		}
@@ -1130,6 +1144,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	public void open_player(){
 		
 		Log.d("open player","open player");
+		player=true;
 		SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 		sqlDatabaseHelper.openDatabaseReadOnly();
 		Cursor tracks=sqlDatabaseHelper.getExactlyTrack(prefs.getString("lastSongId", "0"),SQLiteConnect.COLUMN_ID);

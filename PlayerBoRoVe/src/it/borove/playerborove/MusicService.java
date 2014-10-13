@@ -137,10 +137,14 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		player.pause();
 	}
 	
-	public void stop(){
+	public void stop(){// change
+		if(!stopped){
+			player.seekTo(0);
+			player.stop();
+		}
 		stopped=true;
 		stopFade();
-		player.stop();
+		
 	}
 	
 	public boolean isPng(){

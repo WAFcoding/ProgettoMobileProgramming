@@ -139,6 +139,7 @@ public class PlaylistActivity2 extends Activity{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		PlayerController.end_music_sevice();
 		if(playlistCursor != null){
 			playlistCursor.close();
 			PlayerController.closeConnectionDB();
