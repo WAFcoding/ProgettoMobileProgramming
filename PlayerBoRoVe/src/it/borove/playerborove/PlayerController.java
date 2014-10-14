@@ -1193,14 +1193,15 @@ public class PlayerController extends SQLiteOpenHelper{
 			playSingleItem(song);
 		}
 			
-		//playSingleItem(PlayerController.cursorTracks.getExatlyTrack()ì);
+		//playSingleItem(PlayerController.cursorTracks.getExatlyTrack()ï¿½);
 		
 	}
 	
-public static void details(){
+public static void library_details(){
 		
 		int number_of_all_track=0;
 		Duration duration_of_library= new Duration(0, 0, 0);
+		Duration longest_track= new Duration(0,0,0);
 		double memory_occupation= 0.0;//occupazione di memoria di tutta la libreria
 		ArrayList<Integer> number_of_track_for_kind;//numero di brani per tipo
 		ArrayList<Integer> vote_of_track_for_kind;//voto medio dei brani per tipo
@@ -1214,6 +1215,7 @@ public static void details(){
 				number_of_all_track++;
 				
 				//incremento la durata totale della libreria
+				//e cerco il brano di durata maggiore
 				String duration= newCursor.getString(9);
 				int sec 	= Integer.parseInt(duration) / 1000;
 				int min 	= sec / 60;
@@ -1221,9 +1223,14 @@ public static void details(){
 				int hour	= min / 60;
 				min = min % 60; 
 				Duration tmp_duration= new Duration(hour, min, sec);
+				Log.d("tmp duration", tmp_duration.getDuration());
 				duration_of_library.sum(tmp_duration);
+				if(longest_track.isSmallerOf(tmp_duration)){
+					longest_track.setDuration(tmp_duration);
+				}
 				
 				//incremento la memoria totale occupata dalla libreria
+				//e certo il file con maggior occupazione
 				String pathTrack= newCursor.getString(7);
 				File file= new File(pathTrack);
 				double tmp_size= (file.length()/1048576.0);
@@ -1232,7 +1239,7 @@ public static void details(){
 				newCursor.moveToNext();
 			}	
 			Log.d("stat library", "num of track: " + number_of_all_track + ", total duration: " + duration_of_library.getDuration()
-									+ ", memory: " + memory_occupation);
+									+ ", memory: " + memory_occupation + ", longest track: " + longest_track.getDuration());
 		}
 		
 		/*Intent trackActivity 	= new Intent(m_context, TrackActivity.class);
@@ -1244,6 +1251,10 @@ public static void details(){
 
 		trackActivity.putExtras(details);*/
 		//m_context.startActivity(trackActivity);
+	}
+
+	public static void playlist_details(){
+		
 	}
 
 

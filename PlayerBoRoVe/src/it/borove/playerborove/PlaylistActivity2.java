@@ -120,10 +120,7 @@ public class PlaylistActivity2 extends Activity{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
-				
-			//	PlayerController.previewPlaylist((PlaylistItem) parent.getItemAtPosition(position));
-				
+
 				for( int i=0; i<isGroupSelected.size();i++)
 				{
 					if(i==position){
@@ -135,18 +132,9 @@ public class PlaylistActivity2 extends Activity{
 						listview.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
 						isGroupSelected.set(position, false);
 					}
-						
-					
+
+
 				}
-				/*
-				if(!isGroupSelected.get(position)){
-					view.setBackgroundColor(Color.parseColor("#c0c0c0"));
-					isGroupSelected.set(position, true);
-				}
-				else{				
-					view.setBackgroundColor(Color.TRANSPARENT);
-					isGroupSelected.set(position, false);
-				}	*/
 			}
 		});
 		
@@ -160,11 +148,7 @@ public class PlaylistActivity2 extends Activity{
 				selectedPlaylist=position;
 				startActivityForResult(j, REQUEST_INFO_PLAYLIST);
 				return false;
-			}
-
-			
-		
-			
+			}			
 		});
 
 	}
@@ -310,13 +294,28 @@ public class PlaylistActivity2 extends Activity{
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			// TODO Auto-generated method stub
 			if(position == 0){
 				startActivityForResult(new Intent(PlaylistActivity2.this, PlaylistAddActivity.class), ADDPLAYLIST);
 			}
+			//Update list of Playlist
+			else if(position == 1){
+				clearData();
+				setListPlaylist();
+				Toast.makeText(PlaylistActivity2.this, "list of Playlists updated!", Toast.LENGTH_SHORT).show();
+			}
+			//details
+			else if(position == 2){
+				PlayerController.playlist_details();
+				overridePendingTransition(R.anim.right_in, R.anim.left_out);
+			}
+			//Settings
+			else if(position == 3){
+				PlayerController.open_settings();
+				overridePendingTransition(R.anim.right_in, R.anim.left_out);
+			}
 			
 			//Remove Playlist
-			else if(position == 1){
+			/*else if(position == 1){
 				for(int i=0; i < isGroupSelected.size(); i++){
 					if(isGroupSelected.get(i)){					
 						String name = adapter.getPlaylistItem(i).getTitle_playlist();
@@ -337,18 +336,7 @@ public class PlaylistActivity2 extends Activity{
 				}
 				
 			
-			}
-			//Update list of Playlist
-			else if(position == 2){
-				clearData();
-				setListPlaylist();
-				Toast.makeText(PlaylistActivity2.this, "list of Playlists updated!", Toast.LENGTH_SHORT).show();
-			}
-			
-			//Settings
-			else if(position == 3){
-				
-			}
+			}*/
 			
 			
 			drawer.closeDrawer(drawer_list_view);
