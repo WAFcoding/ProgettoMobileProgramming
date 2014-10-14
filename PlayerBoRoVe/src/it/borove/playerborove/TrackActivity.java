@@ -115,7 +115,7 @@ public class TrackActivity extends Activity{
 			this.duration		= this.myBundle.getString("duration");
 			this.voteTrack		= Integer.parseInt(this.myBundle.getString("vote"));
 			
-			Log.e(TAG, "duration: -> " + duration);
+			//Log.e(TAG, "duration: -> " + duration);
 			
 			long sec 	= Long.parseLong(duration) / 1000;
 			long min 	= sec / 60;
@@ -182,7 +182,7 @@ public class TrackActivity extends Activity{
 					
 		}
 		else
-			Log.d(TAG, "myBundle è NULL");
+			Log.d(TAG, "myBundle ï¿½ NULL");
 		
 		
 		edtFileName.setInputType(EditorInfo.TYPE_CLASS_TEXT);

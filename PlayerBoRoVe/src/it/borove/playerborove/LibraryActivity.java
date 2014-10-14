@@ -2,12 +2,14 @@ package it.borove.playerborove;
 
 import it.borove.playerborove.PlayerController.updateDbOnTrack;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import playlistModules.SinglePlaylistItem;
+import PlayerManager.Duration;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,6 +26,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.provider.OpenableColumns;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -314,7 +317,7 @@ public class LibraryActivity extends Activity {
 			}
 			//details 
 			else if(position == 2){
-				
+				details();
 			}
 			//settings
 			else if(position == 3){
@@ -515,18 +518,8 @@ public class LibraryActivity extends Activity {
 						mapper.setIdTrackToContentTitle(mCursor.getString(0), contentTitle);
 					}
 				}
-				
-				
-				
-				
 				mCursor.moveToNext();
 			}
-			
-			
-			
-			
-	
-			// TODO Auto-generated constructor stub
 			 m_context = context;
 		}
 				
@@ -632,7 +625,7 @@ public class LibraryActivity extends Activity {
 		
 	}
 	
-	/*
+	/**
 	 * metodo utilizzato dal bottone Update
 	 */
 	public void updateTracksList(){
@@ -708,12 +701,51 @@ public class LibraryActivity extends Activity {
 	
 	private void details(){
 		
-		String number_of_all_track;
-		String duration_of_library;
-		String memory_occupation;//occupazione di memoria di tutta la libreria
+		int number_of_all_track=0;
+		Duration duration_of_library= new Duration(0, 0, 0);
+		double memory_occupation= 0.0;//occupazione di memoria di tutta la libreria
 		ArrayList<Integer> number_of_track_for_kind;//numero di brani per tipo
 		ArrayList<Integer> vote_of_track_for_kind;//voto medio dei brani per tipo
 		
+		Cursor newCursor = PlayerController.getCursorTracks();
+		if(newCursor != null){
+			newCursor.moveToFirst();
+			while(!newCursor.isAfterLast()){
+				
+				//incremento il numero di brani
+				number_of_all_track++;
+				
+				//incremento la durata totale della libreria
+				String duration= newCursor.getString(9);
+				int sec 	= Integer.parseInt(duration) / 1000;
+				int min 	= sec / 60;
+				sec = sec % 60;
+				int hour	= min / 60;
+				min = min % 60; 
+				Duration tmp_duration= new Duration(hour, min, sec);
+				duration_of_library.sum(tmp_duration);
+				
+				//incremento la memoria totale occupata dalla libreria
+				String pathTrack= newCursor.getString(7);
+				File file= new File(pathTrack);
+				double tmp_size= (file.length()/1048576.0);
+				memory_occupation+= tmp_size;
+				
+				newCursor.moveToNext();
+			}	
+			Log.d("stat library", "num of track: " + number_of_all_track + ", total duration: " + duration_of_library.getDuration()
+									+ ", memory: " + memory_occupation);
+		}
+		
+		Intent trackActivity 	= new Intent(LibraryActivity.this, TrackActivity.class);
+		Bundle details		= new Bundle();
+
+		details.putString("n_tracks", String.valueOf(number_of_all_track));
+		details.putString("total_duration", duration_of_library.getDuration());
+		details.putString("memory_size", String.valueOf(memory_occupation));
+
+		trackActivity.putExtras(details);
+		startActivity(trackActivity);
 	}
 	
 }

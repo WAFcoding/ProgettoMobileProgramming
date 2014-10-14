@@ -10,66 +10,63 @@
     <string name="library">Libreria</string>
     <string name="playlist">Playlist</string>
     <string name="settings">Impostazioni</string>
-     <string name="classification">Classificazione</string>
+    <string name="classification">Classificazione</string>
     <string name="player">Lettore</string>
     <string name="duration">500</string>
-    
     <string name="txtButton">Done</string>
-    
     <string name="artista">Artista</string>
     <string name="titolo">Titolo</string>
     <string name="voto">Voto</string>
     <string name="album">Album</string>
     <string name="genere">Genere</string>
     <string name="durata">Durata</string>
-    
     <string name="updateList">Update</string>
-    
+
     <!-- *****************menu_track.xml**************** -->
-     <string name="details">Dettagli </string>
-     <string name="selectTrack">Seleziona </string>
-     <string name="erase">Cancella </string>
+    <string name="details">Dettagli </string>
+    <string name="selectTrack">Seleziona </string>
+    <string name="erase">Cancella </string>
     <!-- *****************menu_track.xml**************** -->
-   
+
+
     <!-- *****************settings_activity.xml**************** -->
-     <string name="EraseDb">Erase Database</string>
-     <string name="SyncDb">Syncronize Database</string>
+    <string name="EraseDb">Erase Database</string>
+    <string name="SyncDb">Syncronize Database</string>
     <!-- *****************settings_activity.xml**************** -->
-   
-   <string name="detailsPlaylist">Open</string>
-   <string name="openPlayer">Play</string>
-    <string name="content"> </string>
-    
-   <!-- *****************navigation drawer**************** -->
+
+    <string name="detailsPlaylist">Open</string>
+    <string name="openPlayer">Play</string>
+    <string name="content"></string>
+
+    <!-- *****************navigation drawer**************** -->
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="description">Media Controls</string>
 
     <string-array name="drawer_choice_playlist">
-       <item >Add Playlist</item>
-       <item >Update Playlist</item>
-       <item >Details</item>
-       <item >Settings</item>
+        <item>Add Playlist</item>
+        <item>Update Playlist</item>
+        <item>Details</item>
+        <item>Settings</item>
     </string-array>
-    
     <string-array name="drawer_choice_library">
-       <item >Add Track</item>
-       <item >Update Library</item>
-       <item >Details</item>
-       <item >Settings</item>
+        <item>Add Track</item>
+        <item>Update Library</item>
+        <item>Details</item>
+        <item>Settings</item>
     </string-array>
-    
-	<!-- *****************add playlist**************** -->
+
+    <!-- *****************add playlist**************** -->
     <string name="title_activity_playlist_add">PlaylistAddActivity</string>
-    
     <string name="label_add_playlist">Inserisci il nome della playlist</string>
-    
     <string name="playlist_add_hint">Nuova Playlist</string>
-    
-	<!-- *****************popup add playlist**************** -->
+
+    <!-- *****************popup add playlist**************** -->
     <string name="playlist_popup_choice1">Elimina</string>
     <string name="playlist_popup_choice2">Dettagli</string>
     <string name="playlist_popup_choice3">Annulla</string>
     <string name="playlist_popup_choice4">Anteprima</string>
+    <string name="title_activity_details_library">DetailsLibraryActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
