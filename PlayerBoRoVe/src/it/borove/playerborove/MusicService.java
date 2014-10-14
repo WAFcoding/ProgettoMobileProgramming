@@ -20,7 +20,7 @@ import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, OnCompletionListener{
+public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, OnCompletionListener, AudioManager.OnAudioFocusChangeListener{
 	
 	private static final String SETTINGS = "SETTINGS";
 	private MediaPlayer player;
@@ -39,6 +39,10 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	
 	private Timer timerFade;
 	//private MyTask task;
+	
+	//================AUDIO FOCUS=====================
+	private static AudioManager audiomanager;
+	private static int focusResult;
 	
 	public void onCreate(){
 		super.onCreate();
@@ -67,6 +71,8 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		player.setOnCompletionListener(this);
 		player.setOnErrorListener(this);
 		mBinder = new MusicBinder();
+		audiomanager= (AudioManager) PlayerController.getContext().getSystemService(Context.AUDIO_SERVICE);
+		
 	}
 	
 	public void setPath(Uri u) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException{
@@ -84,16 +90,26 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	
 	@Override
 	public void onPrepared(MediaPlayer mp) {
-		// TODO Auto-generated method stub
-	     LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-	     Intent mIntent= new Intent();
-	     mIntent.setAction("Prepared");
-	     setVolume(volume);
-	     lbm.sendBroadcast(mIntent);
-	     //playPlayer();
-		//mediacontroller.show();
+		if(getFocusResult() != AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
+			PlayerController.printToast("Impossibile riprodurre, focus non concesso");
+			Log.d("audio focus", "focus negato");
+		}
+		else{
+			LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+			Intent mIntent= new Intent();
+			mIntent.setAction("Prepared");
+			setVolume(volume);
+			lbm.sendBroadcast(mIntent);
+			//playPlayer();
+			//mediacontroller.show();
+			Log.d("audio focus", "focus concesso");
+		}
 	}
 	
+	private int getFocusResult() {
+		return audiomanager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+	}
+
 	@Override
 	public void onCompletion(MediaPlayer mp) {
 	
@@ -336,6 +352,47 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		
 	
 			
+	}
+
+	@Override
+	public void onAudioFocusChange(int focusChange) {
+		try{
+			switch (focusChange){
+
+			case AudioManager.AUDIOFOCUS_GAIN:
+				//il focus è ritornato all'applicazione
+				if(player == null) 
+					initMusicPlayer();
+				else if(!player.isPlaying())
+					player.start();
+				setVolume(1.0f);
+				break;
+			case AudioManager.AUDIOFOCUS_LOSS:
+				//il focus è stato perso per parecchio tempo, liberare memoria e rilasciare risorse
+
+				if(player.isPlaying()) 
+					player.stop();
+				player.reset();
+				player.release();
+				player= null;
+				break;
+			case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+				//il focus è stato perso per un breve istante di tempo, si deve mettere almeno in pausa
+				if(player.isPlaying()) 
+					player.pause();
+				break;
+			case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+				//focus perso per poco tempo, si può continuare a riprodurre ma a basso volume
+				if(player.isPlaying())
+					setVolume(0.1f);
+				break;
+
+			}
+		}
+		catch(IllegalStateException e){
+			Log.d("onAudioFocusChange exception",e.toString());
+		}
+		
 	}
 
 	

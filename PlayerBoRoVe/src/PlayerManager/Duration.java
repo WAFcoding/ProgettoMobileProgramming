@@ -76,6 +76,9 @@ public class Duration {
 		if(sum_s >= 60) {
 			carry_s= 1;
 			seconds= sum_s - 60;
+		}else
+		{
+			seconds=sum_s;
 		}
 		
 		int sum_m= minute + carry_s;
@@ -89,6 +92,10 @@ public class Duration {
 			if(sum_m >= 60){
 				carry_m= 1;
 				minute= sum_m - 60;
+			}
+			else
+			{
+				minute=sum_m;
 			}
 		}
 		

@@ -303,8 +303,28 @@ public class LibraryActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			//add track
+			if(position == 0){
+				
+			}
+			//update library
+			else if(position == 1){
+				updateTracksList();
+				PlayerController.printToast("Library Updated");
+			}
+			//details 
+			else if(position == 2){
+				PlayerController.details();
+			}
+			//settings
+			else if(position == 3){
+				PlayerController.open_settings();
+				//animazione a comparsa da sinistra
+				overridePendingTransition(R.anim.right_in, R.anim.left_out); 
+			}
 			drawer.closeDrawer(drawer_list_view);
-			Toast.makeText(parent.getContext(), "selezionato elemento " + position, Toast.LENGTH_SHORT).show();
+			//Toast.makeText(parent.getContext(), "selezionato elemento " + position, Toast.LENGTH_SHORT).show();
+
 		}
 		
 	}

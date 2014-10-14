@@ -52,7 +52,8 @@ public class PlaylistActivity2 extends Activity{
 	
 	private final int ADDPLAYLIST			= 270;
 	private final int REQUEST_INFO_TRACK 	= 400;
-	protected static final int PREVIEW 		= 0;
+	private final int REQUEST_INFO_PLAYLIST= 250;
+	protected static final int PREVIEW 		= 401;
 	
 	private Button btnListTracks;
 	
@@ -70,6 +71,7 @@ public class PlaylistActivity2 extends Activity{
 	private ArrayList<PlaylistItem> listPlaylistItem;
 	private ArrayList<SinglePlaylistItem> tmp_songs;
 	private AlbumMapper mapperPlaylist;
+	private int selectedPlaylist;
 
 	private ArrayList<String> id_p;
 
@@ -120,8 +122,22 @@ public class PlaylistActivity2 extends Activity{
 					int position, long id) {
 				// TODO Auto-generated method stub
 				
-				PlayerController.previewPlaylist((PlaylistItem) parent.getItemAtPosition(position));
+			//	PlayerController.previewPlaylist((PlaylistItem) parent.getItemAtPosition(position));
 				
+				for( int i=0; i<isGroupSelected.size();i++)
+				{
+					if(i==position){
+						view.setBackgroundColor(Color.parseColor("#c0c0c0"));
+						isGroupSelected.set(position, true);
+					}
+					else
+					{
+						listview.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+						isGroupSelected.set(position, false);
+					}
+						
+					
+				}
 				/*
 				if(!isGroupSelected.get(position)){
 					view.setBackgroundColor(Color.parseColor("#c0c0c0"));
@@ -132,6 +148,23 @@ public class PlaylistActivity2 extends Activity{
 					isGroupSelected.set(position, false);
 				}	*/
 			}
+		});
+		
+		listview.setOnItemLongClickListener(new OnItemLongClickListener(){
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				
+				Intent j=new Intent(PlaylistActivity2.this, MenuPlaylist.class);
+				selectedPlaylist=position;
+				startActivityForResult(j, REQUEST_INFO_PLAYLIST);
+				return false;
+			}
+
+			
+		
+			
 		});
 
 	}
@@ -362,7 +395,26 @@ public class PlaylistActivity2 extends Activity{
 	        		Toast.makeText(this, "Track's Tags updated!", Toast.LENGTH_SHORT).show();
 				}		
 			}
+			
 
+		}
+		
+		//dettagli
+		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==400){
+			
+		}
+		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==PREVIEW){
+			PlayerController.previewPlaylist(listPlaylistItem.get(selectedPlaylist));
+			
+		}
+		//erase
+		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==402){
+			
+		}
+		//add track
+		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==403){
+			Intent i=new Intent(PlaylistActivity2.this, AddTracksToPlaylist.class);
+			startActivity(i);
 		}
 		
 		

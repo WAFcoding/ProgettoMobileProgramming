@@ -21,6 +21,7 @@ import playlistModules.PlaylistItem;
 import playlistModules.SinglePlaylistItem;
 import db.SQLiteConnect;
 import db.ServiceFileObserver;
+import PlayerManager.Duration;
 import PlayerManager.Queue;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -116,7 +117,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 
 
-	public void open_settings() {
+	public static void open_settings() {
 		Intent intent=new Intent( mainActivity, SettingsActivity.class);
 		mainActivity.startActivity(intent);
 	}
@@ -764,9 +765,9 @@ public class PlayerController extends SQLiteOpenHelper{
 				nLoopPlaylistDone++;
 				if(nLoopPlaylistDone==q_loop && q_loop!=1000 )
 				{
-					playingPlaylist=false;
+					//playingPlaylist=false;
 					
-					m_context.unbindService(musicConnection);
+					//m_context.unbindService(musicConnection);
 				}
 				else
 				queue.addPlaylist(currentPlayingPlaylist);
@@ -815,6 +816,11 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 	};
 	
+	public static Context getContext(){
+		return m_context;
+	}
+	
+	
 	private static BroadcastReceiver previewPreparedReceiver=new BroadcastReceiver(){//change
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -828,7 +834,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 	};
 	
-	private static void printToast(String s){
+	public static void printToast(String s){
 		Toast.makeText(m_context, s, Toast.LENGTH_SHORT).show();
 	}
 	
@@ -1091,6 +1097,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		
 	}
 	public static void playSingleItem(SinglePlaylistItem i){
+		player=true;
 		currentPlayingTrack=i;
 		uri=Uri.parse(currentPlayingTrack.getPath_track());
 		Intent intent=new Intent(mainActivity, PlayerActivity.class);
@@ -1189,5 +1196,55 @@ public class PlayerController extends SQLiteOpenHelper{
 		//playSingleItem(PlayerController.cursorTracks.getExatlyTrack()ì);
 		
 	}
+	
+public static void details(){
+		
+		int number_of_all_track=0;
+		Duration duration_of_library= new Duration(0, 0, 0);
+		double memory_occupation= 0.0;//occupazione di memoria di tutta la libreria
+		ArrayList<Integer> number_of_track_for_kind;//numero di brani per tipo
+		ArrayList<Integer> vote_of_track_for_kind;//voto medio dei brani per tipo
+		
+		Cursor newCursor = getCursorTracks();
+		if(newCursor != null){
+			newCursor.moveToFirst();
+			while(!newCursor.isAfterLast()){
+				
+				//incremento il numero di brani
+				number_of_all_track++;
+				
+				//incremento la durata totale della libreria
+				String duration= newCursor.getString(9);
+				int sec 	= Integer.parseInt(duration) / 1000;
+				int min 	= sec / 60;
+				sec = sec % 60;
+				int hour	= min / 60;
+				min = min % 60; 
+				Duration tmp_duration= new Duration(hour, min, sec);
+				duration_of_library.sum(tmp_duration);
+				
+				//incremento la memoria totale occupata dalla libreria
+				String pathTrack= newCursor.getString(7);
+				File file= new File(pathTrack);
+				double tmp_size= (file.length()/1048576.0);
+				memory_occupation+= tmp_size;
+				
+				newCursor.moveToNext();
+			}	
+			Log.d("stat library", "num of track: " + number_of_all_track + ", total duration: " + duration_of_library.getDuration()
+									+ ", memory: " + memory_occupation);
+		}
+		
+		/*Intent trackActivity 	= new Intent(m_context, TrackActivity.class);
+		Bundle details		= new Bundle();
+
+		details.putString("n_tracks", String.valueOf(number_of_all_track));
+		details.putString("total_duration", duration_of_library.getDuration());
+		details.putString("memory_size", String.valueOf(memory_occupation));
+
+		trackActivity.putExtras(details);*/
+		//m_context.startActivity(trackActivity);
+	}
+
 
 }

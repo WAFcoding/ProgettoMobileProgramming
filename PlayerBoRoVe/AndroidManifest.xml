@@ -49,6 +49,12 @@
             android:label="@string/title_activity_player" >
         </activity>
         <activity
+            android:name="it.borove.playerborove.MenuPlaylist"
+            android:label="@string/title_activity_player" 
+            android:theme="@android:style/Theme.Holo.Dialog" >
+        </activity>
+        
+        <activity
             android:name="it.borove.playerborove.PlayerActivity"
             android:label="@string/title_activity_player" >
         </activity>

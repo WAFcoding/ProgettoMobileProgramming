@@ -28,8 +28,15 @@
     <!-- *****************menu_track.xml**************** -->
      <string name="details">Dettagli </string>
      <string name="selectTrack">Seleziona </string>
-     <string name="erase">Cancella </string>
+     <string name="erase">Rimuovi</string>
     <!-- *****************menu_track.xml**************** -->
+    
+    <!-- *****************menu_Playlist.xml**************** -->
+     <string name="detailsPlay">Dettagli </string>
+     <string name="PreviewPlay">Anteprima </string>
+     <string name="AddTrackPlay">Aggiungi Brano</string>
+     <string name="erasePlay">Rimuovi</string>
+    <!-- *****************menu_Playlist.xml**************** -->
    
     <!-- *****************settings_activity.xml**************** -->
      <string name="EraseDb">Cancella Database</string>
