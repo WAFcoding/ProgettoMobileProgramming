@@ -61,11 +61,15 @@ public class MyMediaController extends FrameLayout{
             int pos;
             switch (msg.what) {
                 case SHOW_PROGRESS:
-                    pos = setProgress();
-                    if (mPlayer.isPlaying()) {
+                	pos = setProgress();
+                	if(mPlayer.isPlaying())
+                	{
+                		
                         msg = obtainMessage(SHOW_PROGRESS);
                         sendMessageDelayed(msg, 1000 - (pos % 1000));
                     }
+                	else
+                	{Log.d("NOT set progres","NOT PLAY");}
                     break;
             }
         }

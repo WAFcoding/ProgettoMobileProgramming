@@ -740,6 +740,8 @@ public class PlayerController extends SQLiteOpenHelper{
 
 		lbm.unregisterReceiver(previewCompleteReceiver);
 		lbm.unregisterReceiver(songPreparedReceiver);
+		lbm.unregisterReceiver(previewPreparedReceiver);
+		lbm.unregisterReceiver(songCompleteReceiver);
 		if(preview || playingPlaylist || player)
 			m_context.unbindService(musicConnection);
 		
@@ -756,6 +758,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			//lbm.unregisterReceiver(songPreparedReceiver);
+			Log.d("songCompleteReceiver","attivato");
 			lbm.unregisterReceiver(songCompleteReceiver);
 			//queue.printQueue();
 			Log.d("queue", "size= " + queue.getQueue().size());
@@ -777,8 +780,8 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 				if(!musicSrv.isLooping()&& (nLoopPlaylistDone!=q_loop || q_loop==1000))
 				{
-					m_context.unbindService(musicConnection);//FIXME controllare se necessario
-					m_context.stopService( new Intent(m_context, MusicService.class));
+					//m_context.unbindService(musicConnection);//FIXME controllare se necessario
+					//m_context.stopService( new Intent(m_context, MusicService.class));
 					Log.d("complete song","complete song");
 					if(!backPressed)
 						aux_queue.addSinglePlaylistItemOnTop(currentPlayingTrack);
@@ -794,7 +797,21 @@ public class PlayerController extends SQLiteOpenHelper{
 					}
 					
 					uri=Uri.parse(currentPlayingTrack.getPath_track());
-					set_player();
+					try {
+						set_player_playlist();
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalStateException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					};
 
 		
 
@@ -804,10 +821,11 @@ public class PlayerController extends SQLiteOpenHelper{
 	private static BroadcastReceiver songPreparedReceiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if(playingPlaylist)
-				lbm.registerReceiver(songCompleteReceiver, new IntentFilter("Complete"));
-			
 			lbm.unregisterReceiver(songPreparedReceiver);
+			if(playingPlaylist){
+				lbm.registerReceiver(songCompleteReceiver, new IntentFilter("Complete"));
+				Log.d("songComplete","Registrato");
+			}
 			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 			int pos=prefs.getInt("Pos", 0);
 			Log.d("activity","before seek");
@@ -895,6 +913,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			serviceConnected=true;
 			try {
 				musicSrv.setPath(uri);	
+
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -936,6 +955,23 @@ public class PlayerController extends SQLiteOpenHelper{
 				lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
 			Log.d("setPlayer","setPlayer");
 	}
+	
+	public static void set_player_playlist_init(){
+		playIntent = new Intent(m_context, MusicService.class);
+		m_context.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+		lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
+		Log.d("setPlayer","setPlayer");
+}
+	public static void set_player_playlist() throws IllegalArgumentException, SecurityException, IllegalStateException, IOException{
+		Log.d("setPlayer","setPlayer");
+	
+			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor=prefs.edit();
+			editor.putString("lastSongId", currentPlayingTrack.getId());
+			editor.commit();
+			lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
+			musicSrv.setPath(uri);
+}
 	
 	protected static final String SETTINGS = "SETTINGS";
 	
@@ -1039,6 +1075,12 @@ public class PlayerController extends SQLiteOpenHelper{
 	public static void playPlaylist(PlaylistItem playlist){
 		if(preview)
 			end_music_sevice();
+		
+		
+		
+
+		
+		
 		SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 		q_loop=prefs.getInt("NLoopPlaylist", 1);
 		random=prefs.getBoolean("Random Playback", false);
@@ -1060,8 +1102,17 @@ public class PlayerController extends SQLiteOpenHelper{
 		else{
 			currentPlayingTrack=queue.removeTop();
 		}
+		SharedPreferences.Editor editor=prefs.edit();
+		editor.putString("lastSongId", currentPlayingTrack.getId());
+		editor.commit();
 		//aux_queue.addSinglePlaylistItemOnTop(currentPlayingTrack);
-		playSingleItem(currentPlayingTrack);
+		lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
+		uri=Uri.parse(currentPlayingTrack.getPath_track());
+		playIntent = new Intent(m_context, MusicService.class);
+		m_context.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+		Intent intent=new Intent(mainActivity, PlayerActivity.class);
+		mainActivity.startActivity(intent);
+		
 	}
 	
 	public static void previewPlaylist(PlaylistItem playlist){//change

@@ -64,6 +64,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
 
 	public void initMusicPlayer(){
+		if(player!=null)
+		{
+			player.stop();
+	    	player.release();
+		}
 		player=new MediaPlayer();
 		player.setWakeMode(getApplicationContext(),PowerManager.PARTIAL_WAKE_LOCK);
 		player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -76,6 +81,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	}
 	
 	public void setPath(Uri u) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException{
+		initMusicPlayer();
 		uri=u;
 		player.setDataSource(getApplicationContext(), uri);
 		player.prepareAsync();
@@ -129,7 +135,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 			Intent mIntent= new Intent();
 			mIntent.setAction("Complete");
 			//stopFade();
-			Log.d("complete","complete");
 			lbm.sendBroadcast(mIntent);
 		}
 			
