@@ -75,5 +75,12 @@
     <string name="playlist_popup_choice4">Anteprima</string>
     <string name="title_activity_library_details">LibraryDetailsActivity</string>
     <string name="action_settings">Settings</string>
+    
+    <!-- *****************details library******************* -->
+    <string name="activity_details_n_tracks">Numero di brani</string>
+    <string name="activity_details_total_memory">Memoria occupata</string>
+    <string name="activity_details_total_duration">Durata totale libreria</string>
+    <string name="activity_details_longest_track">Brano più lungo</string>
+    <string name="activity_details_biggest_track">File più grande</string>
 
 </resources>

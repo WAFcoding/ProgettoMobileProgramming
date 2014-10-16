@@ -28,7 +28,13 @@
 		    android:layout_marginBottom="5dp"
 		    android:layout_marginLeft="5dp"
 		    android:layout_marginRight="5dp"
-		    android:orientation="horizontal">
+		    android:orientation="horizontal"
+	            android:singleLine="true" 
+		        android:ellipsize="marquee"
+		        android:marqueeRepeatLimit ="marquee_forever"
+		        android:focusable="true"
+		        android:focusableInTouchMode="true" 
+		        android:scrollHorizontally="true" >
 		     <TextView
 		        android:id="@+id/txt_total_tracks"
 		        android:layout_width="wrap_content"
@@ -38,8 +44,8 @@
 		        android:layout_gravity="center"
 		        android:textColor="#FFCC99"
 		        android:labelFor="@+id/etxt_n_total_tracks"
-		        android:text="@string/titolo" />
-		     <EditText
+		        android:text="@string/activity_details_n_tracks" />
+		     <TextView
 	            android:id="@+id/etxt_n_total_tracks"
 	            android:imeOptions="actionDone"
 	            android:layout_width="0dip"
@@ -51,10 +57,9 @@
 	            android:gravity="center"
 	            android:layout_gravity="center"
 	            android:layout_weight="1.0"
-	            android:inputType="text"
 	            android:textColor="#6666FF"
 	            android:textStyle="italic"
-	            android:text="TextView" />
+	            android:text="" />
 		 </LinearLayout>
         <!-- durata totale -->
 		 <LinearLayout  
@@ -74,9 +79,9 @@
 		        android:layout_gravity="center"
 		        android:labelFor="@+id/etxt_total_duration"
 		        android:textColor="#FFCC99"
-		        android:text="@string/artista" />
+		        android:text="@string/activity_details_total_duration" />
 		    
-		     <EditText
+		     <TextView
 	            android:id="@+id/etxt_total_duration"
 	            android:layout_width="0dip"
 	            android:layout_height="20dp"
@@ -84,20 +89,17 @@
 	            android:padding="1dp"
 	            android:textSize="15sp"
 	            android:gravity="center"
-	            android:inputType="text"
 	            android:layout_gravity="center"
 	            android:layout_weight="1.0"
 	            android:textColor="#6666FF"
 	            android:textStyle="italic"
-	            android:labelFor="@+id/edtSongArtist"
-	            android:text="TextView" />
-		     <!--   <EditText 
-		         android:id="@+id/edtSongArtist"
-		         android:layout_width="0dip"
-	             android:layout_height="0dip"
-	             android:inputType="text"
-		         />
-		      -->
+	            android:text=""
+	            android:singleLine="true" 
+		        android:ellipsize="marquee"
+		        android:marqueeRepeatLimit ="marquee_forever"
+		        android:focusable="true"
+		        android:focusableInTouchMode="true" 
+		        android:scrollHorizontally="true"  />
 		 </LinearLayout>
         <!-- memoria totale -->
 		 <LinearLayout  
@@ -107,7 +109,6 @@
 		    android:layout_marginLeft="5dp"
 		    android:layout_marginRight="5dp"
 		    android:orientation="horizontal">
-	
 		     <TextView
 		        android:id="@+id/txt_total_memory"
 		        android:layout_width="wrap_content"
@@ -117,9 +118,8 @@
 		        android:layout_gravity="center"      
 		        android:textColor="#FFCC99"
 		        android:labelFor="@+id/etxt_total_memory"
-		        android:text="@string/album" />
-		    
-		     <EditText
+		        android:text="@string/activity_details_total_memory" />
+		     <TextView
 	            android:id="@+id/etxt_total_memory"
 	            android:layout_width="0dip"
 	            android:layout_height="20dp"
@@ -127,13 +127,17 @@
 	            android:padding="1dp"
 	            android:textSize="15sp"
 	            android:gravity="center"
-	            android:inputType="text"
 	            android:layout_gravity="center"
 	            android:layout_weight="1.0"
 	            android:textColor="#6666FF"
 	            android:textStyle="italic"
-	            android:text="TextView" />
-		    
+	            android:text=""
+	            android:singleLine="true" 
+		        android:ellipsize="marquee"
+		        android:marqueeRepeatLimit ="marquee_forever"
+		        android:focusable="true"
+		        android:focusableInTouchMode="true" 
+		        android:scrollHorizontally="true"  />
 	    </LinearLayout>
         <!-- file più grande -->
 	    <LinearLayout  
@@ -142,7 +146,7 @@
 		    android:layout_marginBottom="5dp"
 		    android:layout_marginLeft="5dp"
 		    android:layout_marginRight="5dp"
-		    android:orientation="horizontal">
+		    android:orientation="horizontal" >
 		    <TextView
 		        android:id="@+id/txt_biggest_track"
 		        android:layout_width="wrap_content"
@@ -152,8 +156,8 @@
 		        android:layout_gravity="center"
 		        android:textColor="#FFCC99"
 		        android:labelFor="@+id/etxt_biggest_track"
-		        android:text="@string/genere" />
-	     	<EditText
+		        android:text="@string/activity_details_biggest_track" />
+	     	<TextView
 	            android:id="@+id/etxt_biggest_track"
 	            android:layout_width="0dip"
 	           	android:layout_height="20dp"
@@ -161,12 +165,17 @@
 	            android:padding="1dp"
 	            android:textSize="15sp"
 	            android:gravity="center"
-	            android:inputType="text"
 	            android:layout_gravity="center"
 	            android:layout_weight="1.0"
 	            android:textColor="#6666FF"
 	            android:textStyle="italic"
-	            android:text="TextView" />
+	            android:text=""
+	            android:singleLine="true" 
+		        android:ellipsize="marquee"
+		        android:marqueeRepeatLimit ="marquee_forever"
+		        android:focusable="true"
+		        android:focusableInTouchMode="true" 
+		        android:scrollHorizontally="true"  />
 	     </LinearLayout>
         <!-- file più lungo -->
 	    <LinearLayout  
@@ -175,7 +184,7 @@
 		    android:layout_marginBottom="5dp"
 		    android:layout_marginLeft="5dp"
 		    android:layout_marginRight="5dp"
-		    android:orientation="horizontal">
+		    android:orientation="horizontal" >
 		    <TextView
 		        android:id="@+id/txt_longest_track"
 		        android:layout_width="wrap_content"
@@ -185,25 +194,26 @@
 		        android:layout_gravity="center"
 		        android:textColor="#FFCC99"
 		        android:labelFor="@+id/duration1"
-		        android:text="@string/durata" />
+		        android:text="@string/activity_details_longest_track"/>
 	     	<TextView
 	            android:id="@+id/etxt_longest_track"
 	            android:layout_width="0dip"
-	            android:layout_height="20dp"
+	           	android:layout_height="20dp"
 	            android:layout_margin="4dp"
+	            android:padding="1dp"
 	            android:textSize="15sp"
 	            android:gravity="center"
 	            android:layout_gravity="center"
 	            android:layout_weight="1.0"
 	            android:textColor="#6666FF"
 	            android:textStyle="italic"
-	            android:text="TextView" />
-	     	<EditText 
-		         android:id="@+id/edtDuration1"
-		         android:layout_width="0dip"
-	             android:layout_height="0dip"
-	             android:inputType="text"
-		         /> 
+	            android:text=""
+	            android:singleLine="true" 
+		        android:ellipsize="marquee"
+		        android:marqueeRepeatLimit ="marquee_forever"
+		        android:focusable="true"
+		        android:focusableInTouchMode="true" 
+		        android:scrollHorizontally="true" />
 	     	
 	     </LinearLayout>
         

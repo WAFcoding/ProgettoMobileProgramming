@@ -50,7 +50,7 @@ public class Duration {
 		String tmp2= Integer.toString(getMinute());
 		String tmp3= Integer.toString(getSeconds());
 		
-		return tmp1+":"+tmp2+":"+tmp3;
+		return tmp1+"h "+tmp2+" m "+tmp3+" s";
 	}
 	
 	/**

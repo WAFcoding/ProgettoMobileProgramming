@@ -5,14 +5,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class LibraryDetailsActivity extends Activity {
 	
-	private EditText total_track, total_memory, total_duration,
+	private TextView total_track, total_memory, total_duration,
 					longest_track, biggest_track;
 	private AlertDialog.Builder builder;
 	private Intent MyCallerIntent;
@@ -23,11 +25,11 @@ public class LibraryDetailsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_library_details);
 		
-		total_track= (EditText)findViewById(R.id.etxt_n_total_tracks);
-		total_memory= (EditText)findViewById(R.id.etxt_total_memory);
-		total_duration= (EditText)findViewById(R.id.etxt_total_duration);
-		longest_track= (EditText)findViewById(R.id.etxt_longest_track);
-		biggest_track= (EditText)findViewById(R.id.etxt_biggest_track);
+		total_track= (TextView)findViewById(R.id.etxt_n_total_tracks);
+		total_memory= (TextView)findViewById(R.id.etxt_total_memory);
+		total_duration= (TextView)findViewById(R.id.etxt_total_duration);
+		longest_track= (TextView)findViewById(R.id.etxt_longest_track);
+		biggest_track= (TextView)findViewById(R.id.etxt_biggest_track);
 		 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		 
@@ -35,8 +37,18 @@ public class LibraryDetailsActivity extends Activity {
 
 		this.MyCallerIntent = getIntent();
 		this.myBundle 	= this.MyCallerIntent.getExtras();
+
+		total_track.setText(myBundle.getString("n_tracks"));
 		
-		//TODO i set text nelle edit, vedi trackActivity
+		total_memory.setText(myBundle.getString("memory_size"));
+		total_duration.setText(myBundle.getString("total_duration"));
+		total_duration.setSelected(true);
+		longest_track.setText(myBundle.getString("longest_file"));
+		longest_track.setSelected(true);
+		biggest_track.setText(myBundle.getString("bigger_file"));
+		biggest_track.setSelected(true);
+		
+		
 	}
 
 	@Override

@@ -1297,22 +1297,22 @@ public static void library_details(){
 				
 				newCursor.moveToNext();
 			}	
-			Log.d("stat library", "num of track: " + number_of_all_track + ", total duration: " + duration_of_library.getDuration()
+			/*Log.d("stat library", "num of track: " + number_of_all_track + ", total duration: " + duration_of_library.getDuration()
 									+ ", memory: " + memory_occupation+ ", bigger file: " + biggest_track_title + " - " + bigger_track_occupation 
-									+ ", longest track: " + longest_track_title + " - " + longest_track_duration.getDuration());
+									+ ", longest track: " + longest_track_title + " - " + longest_track_duration.getDuration());*/
 		}
 		
-		Intent trackActivity 	= new Intent(m_context, TrackActivity.class);
+		Intent library_details 	= new Intent(m_context, LibraryDetailsActivity.class);
 		Bundle details		= new Bundle();
 
 		details.putString("n_tracks", String.valueOf(number_of_all_track));
 		details.putString("total_duration", duration_of_library.getDuration());
-		details.putString("memory_size", String.valueOf(memory_occupation));
-		details.putString("bigger_file", biggest_track_title + " - " +String.valueOf(bigger_track_occupation));
+		details.putString("memory_size", String.valueOf(memory_occupation) + " MB");
+		details.putString("bigger_file", biggest_track_title + " - " +String.valueOf(bigger_track_occupation) + " MB");
 		details.putString("longest_file", longest_track_title + " - " +longest_track_duration.getDuration());
 
-		trackActivity.putExtras(details);
-		//m_context.startActivity(trackActivity);
+		library_details.putExtras(details);
+		m_context.startActivity(library_details);
 	}
 
 	public static void playlist_details(){
