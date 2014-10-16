@@ -1,4 +1,9 @@
-package it.borove.playerborove;
+package library_stuff;
+
+import it.borove.playerborove.R;
+import it.borove.playerborove.R.drawable;
+import it.borove.playerborove.R.id;
+import it.borove.playerborove.R.layout;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -115,7 +120,7 @@ public class TrackActivity extends Activity{
 			this.duration		= this.myBundle.getString("duration");
 			this.voteTrack		= Integer.parseInt(this.myBundle.getString("vote"));
 			
-			Log.e(TAG, "duration: -> " + duration);
+			Log.d(TAG, "duration: -> " + duration);
 			
 			long sec 	= Long.parseLong(duration) / 1000;
 			long min 	= sec / 60;
@@ -136,7 +141,7 @@ public class TrackActivity extends Activity{
 							
 			if(hour <= 0){
 				
-					length = "" + minutes + ":"+ seconds;
+				length = "" + minutes + ":"+ seconds;
 			}
 				
 			else
@@ -182,7 +187,7 @@ public class TrackActivity extends Activity{
 					
 		}
 		else
-			Log.d(TAG, "myBundle è NULL");
+			Log.d(TAG, "myBundle ï¿½ NULL");
 		
 		
 		edtFileName.setInputType(EditorInfo.TYPE_CLASS_TEXT);
@@ -194,7 +199,7 @@ public class TrackActivity extends Activity{
 	}
 	
 	public void starsListeners(){
-		Log.e(TAG, "starsListeners!");
+		Log.d(TAG, "starsListeners!");
 		
 		 edtFileName.setOnClickListener(new OnClickListener() {	
 			@Override
@@ -390,7 +395,7 @@ public class TrackActivity extends Activity{
 				// TODO Auto-generated method stub
 				
 				if(actionId == EditorInfo.IME_ACTION_DONE){
-					Log.e(TAG, "action done catturato!");
+					Log.d(TAG, "action done catturato!");
 					if(!edtFileName.getText().toString().equals(title))
 						exitTrack.setText("Save");	
 					return true;

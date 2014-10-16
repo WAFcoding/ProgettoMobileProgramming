@@ -7,21 +7,20 @@
     <uses-sdk
         android:minSdkVersion="17"
         android:targetSdkVersion="19" />
-    
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-     
-    <!--android:theme="@style/AppTheme"   -->
+
+    <!-- android:theme="@style/AppTheme" -->
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/CustomActionBarTheme"
-        >
+        android:theme="@style/CustomActionBarTheme" >
         <activity
-            android:name="it.borove.playerborove.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,67 +28,69 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--  <service android:name="MyService2"/>-->
-        <service android:name="MusicService"/>
-        
+        <!-- <service android:name="MyService2"/> -->
+        <service android:name=".MusicService" />
+
         <intent-filter>
-            <action android:name="it.borove.playerborove.SERVICE"/>
-        </intent-filter>
-         
-         <activity
-            android:name="it.borove.playerborove.menuTrack"
-            android:label="@string/title_activity_player"
-            android:theme="@android:style/Theme.Holo.Dialog" >
-           <!--   android:windowSoftInputMode="stateAlwaysVisible|adjustPan"-->
-        </activity>
-         <intent-filter>
-            <action android:name="android.intent.action.MEDIA_SCANNER_SCAN_FILE"/>
+            <action android:name="it.borove.playerborove.SERVICE" />
         </intent-filter>
 
         <activity
-            android:name="it.borove.playerborove.TrackActivity"
+            android:name=".menuTrack"
+            android:label="@string/title_activity_player"
+            android:theme="@android:style/Theme.Holo.Dialog" >
+
+            <!-- android:windowSoftInputMode="stateAlwaysVisible|adjustPan" -->
+        </activity>
+
+        <intent-filter>
+            <action android:name="android.intent.action.MEDIA_SCANNER_SCAN_FILE" />
+        </intent-filter>
+
+        <activity
+            android:name="library_stuff.TrackActivity"
             android:label="@string/title_activity_player" >
         </activity>
         <activity
-            android:name="it.borove.playerborove.MenuPlaylist"
-            android:label="@string/title_activity_player" 
+            android:name=".MenuPlaylist"
+            android:label="@string/title_activity_player"
             android:theme="@android:style/Theme.Holo.Dialog" >
         </activity>
-        
         <activity
-            android:name="it.borove.playerborove.PlayerActivity"
+            android:name=".PlayerActivity"
             android:label="@string/title_activity_player" >
         </activity>
         <activity
-            android:name="it.borove.playerborove.PlaylistActivity"
+            android:name=".PlaylistActivity"
             android:label="@string/title_activity_playlist" >
         </activity>
-        
         <activity
-            android:name="it.borove.playerborove.PlaylistActivity2"
-            android:label="@string/title_activity_player" >
-        </activity>
-        
-        <activity
-            android:name="it.borove.playerborove.PlaylistTracks"
+            android:name=".PlaylistActivity2"
             android:label="@string/title_activity_player" >
         </activity>
         <activity
-            android:name="it.borove.playerborove.AddTracksToPlaylist"
+            android:name=".PlaylistTracks"
             android:label="@string/title_activity_player" >
         </activity>
-        
         <activity
-            android:name="it.borove.playerborove.LibraryActivity"
+            android:name=".AddTracksToPlaylist"
+            android:label="@string/title_activity_player" >
+        </activity>
+        <activity
+            android:name=".LibraryActivity"
             android:label="@string/title_activity_library" >
         </activity>
         <activity
-            android:name="it.borove.playerborove.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name="it.borove.playerborove.PlaylistAddActivity"
+            android:name=".PlaylistAddActivity"
             android:label="@string/title_activity_playlist_add" >
+        </activity>
+        <activity
+            android:name=".LibraryDetailsActivity"
+            android:label="@string/title_activity_library_details" >
         </activity>
     </application>
 

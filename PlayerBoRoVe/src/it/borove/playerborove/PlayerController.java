@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import library_stuff.TrackActivity;
 import playlistModules.PlaylistItem;
 import playlistModules.SinglePlaylistItem;
 import db.SQLiteConnect;
@@ -1252,8 +1253,11 @@ public static void library_details(){
 		
 		int number_of_all_track=0;
 		Duration duration_of_library= new Duration(0, 0, 0);
-		Duration longest_track= new Duration(0,0,0);
+		Duration longest_track_duration= new Duration(0,0,0);
+		String longest_track_title= "";
 		double memory_occupation= 0.0;//occupazione di memoria di tutta la libreria
+		double bigger_track_occupation= 0.0;
+		String biggest_track_title= "";
 		ArrayList<Integer> number_of_track_for_kind;//numero di brani per tipo
 		ArrayList<Integer> vote_of_track_for_kind;//voto medio dei brani per tipo
 		
@@ -1274,10 +1278,10 @@ public static void library_details(){
 				int hour	= min / 60;
 				min = min % 60; 
 				Duration tmp_duration= new Duration(hour, min, sec);
-				Log.d("tmp duration", tmp_duration.getDuration());
 				duration_of_library.sum(tmp_duration);
-				if(longest_track.isSmallerOf(tmp_duration)){
-					longest_track.setDuration(tmp_duration);
+				if(longest_track_duration.isSmallerOf(tmp_duration)){
+					longest_track_duration.setDuration(tmp_duration);
+					longest_track_title= newCursor.getString(1);
 				}
 				
 				//incremento la memoria totale occupata dalla libreria
@@ -1285,22 +1289,29 @@ public static void library_details(){
 				String pathTrack= newCursor.getString(7);
 				File file= new File(pathTrack);
 				double tmp_size= (file.length()/1048576.0);
-				memory_occupation+= tmp_size;
+				memory_occupation+= Math.round(tmp_size);
+				if(bigger_track_occupation < tmp_size){
+					bigger_track_occupation= Math.round(tmp_size);
+					biggest_track_title= newCursor.getString(1);
+				}
 				
 				newCursor.moveToNext();
 			}	
 			Log.d("stat library", "num of track: " + number_of_all_track + ", total duration: " + duration_of_library.getDuration()
-									+ ", memory: " + memory_occupation + ", longest track: " + longest_track.getDuration());
+									+ ", memory: " + memory_occupation+ ", bigger file: " + biggest_track_title + " - " + bigger_track_occupation 
+									+ ", longest track: " + longest_track_title + " - " + longest_track_duration.getDuration());
 		}
 		
-		/*Intent trackActivity 	= new Intent(m_context, TrackActivity.class);
+		Intent trackActivity 	= new Intent(m_context, TrackActivity.class);
 		Bundle details		= new Bundle();
 
 		details.putString("n_tracks", String.valueOf(number_of_all_track));
 		details.putString("total_duration", duration_of_library.getDuration());
 		details.putString("memory_size", String.valueOf(memory_occupation));
+		details.putString("bigger_file", biggest_track_title + " - " +String.valueOf(bigger_track_occupation));
+		details.putString("longest_file", longest_track_title + " - " +longest_track_duration.getDuration());
 
-		trackActivity.putExtras(details);*/
+		trackActivity.putExtras(details);
 		//m_context.startActivity(trackActivity);
 	}
 

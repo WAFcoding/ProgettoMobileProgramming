@@ -80,10 +80,15 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 	}*/
 	
 	public void setText(String s){
-		TextView text=(TextView) findViewById(R.id.textView);
+		/*TextView text=(TextView) findViewById(R.id.textView);
+		text.setText(s);
+		text.setSelected(true);*/
+		//non funziona :(
+		ScrollingTextView text= (ScrollingTextView) findViewById(R.id.textView);
 		text.setText(s);
 		text.setSelected(true);
-		}
+		text.setFocusable(true);
+	}
 	
 	public void setImage(Bitmap p){
 		ImageView image=(ImageView) findViewById(R.id.imageView1);
