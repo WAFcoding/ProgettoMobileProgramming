@@ -219,7 +219,6 @@ public class LibraryActivity extends Activity {
 			popup.setTitle("Confirm delete");
 			popup.setMessage("Are you Sure?");
 			popup.show();
-				
 		}
 		
 		if(requestCode == MENU_TRACK && resultCode == 320){
@@ -228,7 +227,6 @@ public class LibraryActivity extends Activity {
 		}
 		
 		
-			
 		if(requestCode == REQUEST_VOTE_TRACK && resultCode == RESULT_OK){
 			Bundle bundle2 = data.getExtras();
 			
@@ -253,8 +251,7 @@ public class LibraryActivity extends Activity {
 						|| !vote.equals(String.valueOf(valueOfTrack)) || !oldAlbumName.equals(albumName)){
 							isChangedAnything = true;
 							
-				}
-							
+				}	
 			}
 			
 			if(isChangedAnything){
@@ -381,78 +378,8 @@ public class LibraryActivity extends Activity {
 			}
 			
 		});
-	/*
-		btnUpdate.setOnClickListener(new OnClickListener() {	
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				//Log.d(TAG, "Update bottone");
-				/*Cursor newCursor = PlayerController.getCursorTracks();
-				isChangedAnything = false;
-				if(newCursor != null){
-					newCursor.moveToFirst();
-					while(!newCursor.isAfterLast()){
-						boolean found = false;
-						//Log.d(TAG, "newCursor.getString(0): " + newCursor.getString(0));
-						cursor.moveToFirst();
-						while(!cursor.isAfterLast()){
-							if(cursor.getString(0).equals(newCursor.getString(0))){
-								found = true;		
-								break;
-							}
-	
-							cursor.moveToNext();
-						}
-						if(!found){
-							isChangedAnything = true;
-							break;
-						}
-					
-						newCursor.moveToNext();
-					}			
-					cursor.moveToFirst();
-					while(!cursor.isAfterLast()){
-						boolean found = false;
-						newCursor.moveToFirst();
-						while(!newCursor.isAfterLast()){
-							if(cursor.getString(0).equals(newCursor.getString(0))){						
-								found = true;
-								break;
-							}
-							
-							newCursor.moveToNext();
-						}
-						if(!found){
-							//map.remove(cursor.getString(0));
-							mapper.getIdTrackToIdAlbum().remove(cursor.getString(0));
-							mapper.getIdTrackToContentTitle().remove(cursor.getString(0));
-							isChangedAnything = true;
-							break;
-						}
-	
-						cursor.moveToNext();
-					}
-	
-					if(!isChangedAnything){
-						Log.d(TAG, "!isChangedAnything");
-						Toast.makeText(LibraryActivity.this, "Database is updated", Toast.LENGTH_SHORT).show();		
-					}
-					else{
-						LibraryActivity.adapter.swapCursor(newCursor);
-						setAdapter(newCursor);
-						adapter.notifyDataSetChanged();
-						isChangedAnything = false;
-					}
-				}
-				else
-					Toast.makeText(LibraryActivity.this, "Database is empty!", Toast.LENGTH_SHORT).show();
-					*/
-				
-				updateTracksList();
-				
-				
-		//	}
-		//});
+		
+		updateTracksList();
 		
 		
 	}

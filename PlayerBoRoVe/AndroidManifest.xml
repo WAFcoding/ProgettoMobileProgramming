@@ -89,7 +89,7 @@
             android:label="@string/title_activity_playlist_add" >
         </activity>
         <activity
-            android:name=".LibraryDetailsActivity"
+            android:name="library_stuff.LibraryDetailsActivity"
             android:label="@string/title_activity_library_details" >
         </activity>
     </application>

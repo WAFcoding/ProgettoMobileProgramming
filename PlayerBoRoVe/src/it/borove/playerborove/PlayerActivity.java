@@ -68,16 +68,16 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 		PlayerController.end_music_sevice();
 	}
 	
-	/*public boolean onKeyDown(int keyCode, KeyEvent event){
+	public boolean onKeyDown(int keyCode, KeyEvent event){
 		
 		if(keyCode == KeyEvent.KEYCODE_BACK){
 			
 			finish();
-			overridePendingTransition(R.anim.right_in, R.anim.left_out);
+			overridePendingTransition(R.anim.top_in, R.anim.bottom_out);
 			return true;
 		}	
 		return super.onKeyDown(keyCode, event); 
-	}*/
+	}
 	
 	public void setText(String s){
 		TextView text=(TextView) findViewById(R.id.textView);
@@ -117,13 +117,11 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 	}
 
 	public boolean isPlaying() {
-		// TODO Auto-generated method stub
 		return PlayerController.isPlaying();
 	}
 
 	@Override
 	public void setLoop() {
-		// TODO Auto-generated method stub
 		PlayerController.setLoop();
 	}
 
@@ -159,20 +157,17 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 
 	@Override
 	public boolean canBackForward() {
-		// TODO Auto-generated method stub
 		return PlayerController.canBackForward();
 	}
 
 	@Override
 	public void forward() {
-		// TODO Auto-generated method stub
-		Log.d("forward","forward");
+		//Log.d("forward","forward");
 		PlayerController.forward();
 	}
 
 	@Override
 	public void back() {
-		// TODO Auto-generated method stub
 		PlayerController.back();
 	}
 }

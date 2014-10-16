@@ -130,11 +130,9 @@ public class MyMediaController extends FrameLayout{
     	    }
     	});
     	
-	// TODO Auto-generated method stub
     	pause.setOnClickListener(new OnClickListener(){
     		@Override
     		public void onClick(View v) {
-    			// TODO Auto-generated method stub
     			if(mPlayer.isPlaying()){
     				pause.setBackgroundResource(R.drawable.ic_media_play);
     				mPlayer.pause();
@@ -150,14 +148,13 @@ public class MyMediaController extends FrameLayout{
 		});
     	stop.setOnClickListener(new OnClickListener(){
 
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			mPlayer.stop();
-			pause.setBackgroundResource(R.drawable.ic_media_play);
-			seekBar.setEnabled(false);
-			}
-		});
+    		@Override
+    		public void onClick(View v) {
+    			mPlayer.stop();
+    			pause.setBackgroundResource(R.drawable.ic_media_play);
+    			seekBar.setEnabled(false);
+    		}
+    	});
     	loop.setOnClickListener(new OnClickListener(){
     		@Override
     		public void onClick(View v) {
@@ -175,18 +172,17 @@ public class MyMediaController extends FrameLayout{
     	audio.setOnClickListener(new OnClickListener(){
     		@Override
     		public void onClick(View v) {
-    			// TODO Auto-generated method stub
     			if(mPlayer.isMute()){
-					mPlayer.audio();
-					audio.setBackgroundResource(R.drawable.ic_media_audio);
-				}
-				else
-				{
-					mPlayer.mute();
-					audio.setBackgroundResource(R.drawable.ic_media_mute);
-				}
+    				mPlayer.audio();
+    				audio.setBackgroundResource(R.drawable.ic_media_audio);
     			}
-    		});
+    			else
+    			{
+    				mPlayer.mute();
+    				audio.setBackgroundResource(R.drawable.ic_media_mute);
+    			}
+    		}
+    	});
     	forward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

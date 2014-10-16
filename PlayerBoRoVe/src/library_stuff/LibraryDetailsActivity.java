@@ -1,11 +1,16 @@
-package it.borove.playerborove;
+package library_stuff;
 
-import library_stuff.TrackActivity;
+import it.borove.playerborove.PlayerController;
+import it.borove.playerborove.R;
+import it.borove.playerborove.R.id;
+import it.borove.playerborove.R.layout;
+import it.borove.playerborove.R.menu;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -50,23 +55,15 @@ public class LibraryDetailsActivity extends Activity {
 		
 		
 	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event){
+		
+		if(keyCode == KeyEvent.KEYCODE_BACK){
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.library_details, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+			finish();
+			overridePendingTransition(R.anim.left_in, R.anim.right_out);
 			return true;
-		}
-		return super.onOptionsItemSelected(item);
+		}	
+		return super.onKeyDown(keyCode, event); 
 	}
 }

@@ -265,7 +265,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	
 	private class MyTaskFadeIn extends TimerTask{
 
-
 				@Override
 				public void run() {
 					Log.d("fadein","step");
@@ -273,11 +272,10 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 					if (volume>=1){
 						volume=1;
 						stopFade();
-						return;//FIXME 
+						return;
 					}
 					//Log.d("volume", Double.toString(volume));
 					setVolume(volume);
-				
 				}
 			};
 			
@@ -286,14 +284,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 				public void run() {
 					volume=(float) (volume-decrement);
 					if (volume<=0){
-						volume=0f;
+						volume=0.01f;
 						stopFade();
-						
 						return;
 					}
 					//Log.d("volume", Double.toString(volume));
 					setVolume(volume);
-					
 				}
 			};
 		
@@ -303,7 +299,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		Log.d("fadein","started");
 		fadeOutStarted=false;
 		if(fadeDuration>0){
-			setVolume(0f);
+			setVolume(0.01f);
 			increment=1/(double)(fadeDuration*10);
 			//if(timerFade==null)
 			String s=String.valueOf(System.nanoTime());
@@ -329,14 +325,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 			{
 				Log.d("fade out","timerfade!=null");
 				stopFade();
-				
-			
 			}
 			timerFade=new Timer("task_fadeout");
 			MyTaskFadeOut task=new MyTaskFadeOut();
 			timerFade.schedule(task, 100,100);
 			//mHandler.sendEmptyMessage(FADE_OUT);
-
 		}
 	
 	}
@@ -344,8 +337,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
 	
 	public void stopFade(){
-		//task.cancel();
-		//Log.d("task cancelled",task.toString());
 		if(timerFade!=null){
 			timerFade.purge();
 			timerFade.cancel();
@@ -354,9 +345,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 			if(task!=null)
 				task.cancel();
 			}	
-		
-	
-			
 	}
 
 	@Override
@@ -365,7 +353,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 			switch (focusChange){
 
 			case AudioManager.AUDIOFOCUS_GAIN:
-				//il focus è ritornato all'applicazione
+				//il focus ï¿½ ritornato all'applicazione
 				if(player == null) 
 					initMusicPlayer();
 				else if(!player.isPlaying())
@@ -373,7 +361,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 				setVolume(1.0f);
 				break;
 			case AudioManager.AUDIOFOCUS_LOSS:
-				//il focus è stato perso per parecchio tempo, liberare memoria e rilasciare risorse
+				//il focus ï¿½ stato perso per parecchio tempo, liberare memoria e rilasciare risorse
 
 				if(player.isPlaying()) 
 					player.stop();
@@ -382,12 +370,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 				player= null;
 				break;
 			case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-				//il focus è stato perso per un breve istante di tempo, si deve mettere almeno in pausa
+				//il focus ï¿½ stato perso per un breve istante di tempo, si deve mettere almeno in pausa
 				if(player.isPlaying()) 
 					player.pause();
 				break;
 			case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-				//focus perso per poco tempo, si può continuare a riprodurre ma a basso volume
+				//focus perso per poco tempo, si puï¿½ continuare a riprodurre ma a basso volume
 				if(player.isPlaying())
 					setVolume(0.1f);
 				break;

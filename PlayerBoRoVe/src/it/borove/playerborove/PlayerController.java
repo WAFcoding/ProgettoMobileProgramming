@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import library_stuff.LibraryDetailsActivity;
 import library_stuff.TrackActivity;
 import playlistModules.PlaylistItem;
 import playlistModules.SinglePlaylistItem;
@@ -1246,11 +1247,11 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 			
 		//playSingleItem(PlayerController.cursorTracks.getExatlyTrack()�);
-		
+
 	}
-	
-public static void library_details(){
-		
+
+	public static void library_details(){
+
 		int number_of_all_track=0;
 		Duration duration_of_library= new Duration(0, 0, 0);
 		Duration longest_track_duration= new Duration(0,0,0);
@@ -1260,15 +1261,15 @@ public static void library_details(){
 		String biggest_track_title= "";
 		ArrayList<Integer> number_of_track_for_kind;//numero di brani per tipo
 		ArrayList<Integer> vote_of_track_for_kind;//voto medio dei brani per tipo
-		
+
 		Cursor newCursor = getCursorTracks();
 		if(newCursor != null){
 			newCursor.moveToFirst();
 			while(!newCursor.isAfterLast()){
-				
+
 				//incremento il numero di brani
 				number_of_all_track++;
-				
+
 				//incremento la durata totale della libreria
 				//e cerco il brano di durata maggiore
 				String duration= newCursor.getString(9);
@@ -1283,7 +1284,7 @@ public static void library_details(){
 					longest_track_duration.setDuration(tmp_duration);
 					longest_track_title= newCursor.getString(1);
 				}
-				
+
 				//incremento la memoria totale occupata dalla libreria
 				//e certo il file con maggior occupazione
 				String pathTrack= newCursor.getString(7);
@@ -1294,14 +1295,14 @@ public static void library_details(){
 					bigger_track_occupation= Math.round(tmp_size);
 					biggest_track_title= newCursor.getString(1);
 				}
-				
+
 				newCursor.moveToNext();
 			}	
 			/*Log.d("stat library", "num of track: " + number_of_all_track + ", total duration: " + duration_of_library.getDuration()
 									+ ", memory: " + memory_occupation+ ", bigger file: " + biggest_track_title + " - " + bigger_track_occupation 
 									+ ", longest track: " + longest_track_title + " - " + longest_track_duration.getDuration());*/
 		}
-		
+
 		Intent library_details 	= new Intent(m_context, LibraryDetailsActivity.class);
 		Bundle details		= new Bundle();
 
@@ -1316,7 +1317,7 @@ public static void library_details(){
 	}
 
 	public static void playlist_details(){
-		
+
 	}
 
 
