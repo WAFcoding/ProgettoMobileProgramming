@@ -33,32 +33,33 @@ public final class R {
         public static final int button_clicked=0x7f020002;
         public static final int button_default=0x7f020003;
         public static final int ellipse_button=0x7f020004;
-        public static final int gradient_listview=0x7f020005;
-        public static final int ic_launcher=0x7f020006;
-        public static final int ic_media_audio=0x7f020007;
-        public static final int ic_media_back=0x7f020008;
-        public static final int ic_media_forward=0x7f020009;
-        public static final int ic_media_loop=0x7f02000a;
-        public static final int ic_media_loop2=0x7f02000b;
-        public static final int ic_media_mute=0x7f02000c;
-        public static final int ic_media_pause=0x7f02000d;
-        public static final int ic_media_play=0x7f02000e;
-        public static final int ic_media_stop=0x7f02000f;
-        public static final int icon=0x7f020010;
-        public static final int library_icon=0x7f020011;
-        public static final int nota=0x7f020012;
-        public static final int nota_original=0x7f020013;
-        public static final int nota_small=0x7f020014;
-        public static final int player_icon=0x7f020015;
-        public static final int player_icon2=0x7f020016;
-        public static final int playlist_icon2=0x7f020017;
-        public static final int playlist_icon3=0x7f020018;
-        public static final int plus_add=0x7f020019;
-        public static final int plus_add2=0x7f02001a;
-        public static final int settings_icon=0x7f02001b;
-        public static final int star=0x7f02001c;
-        public static final int star_gold=0x7f02001d;
-        public static final int star_silver=0x7f02001e;
+        public static final int gradient_action_bar=0x7f020005;
+        public static final int gradient_listview=0x7f020006;
+        public static final int ic_launcher=0x7f020007;
+        public static final int ic_media_audio=0x7f020008;
+        public static final int ic_media_back=0x7f020009;
+        public static final int ic_media_forward=0x7f02000a;
+        public static final int ic_media_loop=0x7f02000b;
+        public static final int ic_media_loop2=0x7f02000c;
+        public static final int ic_media_mute=0x7f02000d;
+        public static final int ic_media_pause=0x7f02000e;
+        public static final int ic_media_play=0x7f02000f;
+        public static final int ic_media_stop=0x7f020010;
+        public static final int icon=0x7f020011;
+        public static final int library_icon=0x7f020012;
+        public static final int nota=0x7f020013;
+        public static final int nota_original=0x7f020014;
+        public static final int nota_small=0x7f020015;
+        public static final int player_icon=0x7f020016;
+        public static final int player_icon2=0x7f020017;
+        public static final int playlist_icon2=0x7f020018;
+        public static final int playlist_icon3=0x7f020019;
+        public static final int plus_add=0x7f02001a;
+        public static final int plus_add2=0x7f02001b;
+        public static final int settings_icon=0x7f02001c;
+        public static final int star=0x7f02001d;
+        public static final int star_gold=0x7f02001e;
+        public static final int star_silver=0x7f02001f;
     }
     public static final class id {
         public static final int addTrackPlaylist=0x7f0a0055;
@@ -389,5 +390,11 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f080001;
+        /**  the theme applied to the application or activity 
+         */
+        public static final int CustomActionBarTheme=0x7f080002;
+        /**  ActionBar styles 
+         */
+        public static final int MyActionBar=0x7f080003;
     }
 }
