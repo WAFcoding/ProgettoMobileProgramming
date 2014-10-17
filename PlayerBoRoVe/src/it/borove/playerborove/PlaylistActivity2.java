@@ -114,8 +114,6 @@ public class PlaylistActivity2 extends Activity{
 	
 		setListPlaylist();
 		
-
-		
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -304,7 +302,7 @@ public class PlaylistActivity2 extends Activity{
 			}
 			//details
 			else if(position == 2){
-				PlayerController.playlist_details();
+				PlayerController.playlistDetails();
 				overridePendingTransition(R.anim.right_in, R.anim.left_out);
 			}
 			//Settings

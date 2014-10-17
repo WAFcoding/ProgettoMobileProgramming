@@ -308,7 +308,7 @@ public class LibraryActivity extends Activity {
 			}
 			//details 
 			else if(position == 1){
-				PlayerController.library_details();
+				PlayerController.libraryDetails();
 				overridePendingTransition(R.anim.right_in, R.anim.left_out);
 			}
 			//settings
