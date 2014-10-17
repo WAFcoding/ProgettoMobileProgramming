@@ -92,6 +92,10 @@
             android:name="library_stuff.LibraryDetailsActivity"
             android:label="@string/title_activity_library_details" >
         </activity>
+        <activity
+            android:name=".PlaylistDetailsActivity"
+            android:label="@string/title_activity_playlist_details" >
+        </activity>
     </application>
 
 </manifest>

@@ -1265,21 +1265,22 @@ public class PlayerController extends SQLiteOpenHelper{
 			/*Log.d("stat library", "num of track: " + number_of_all_track + ", total duration: " + duration_of_library.getDuration()
 									+ ", memory: " + memory_occupation+ ", bigger file: " + biggest_track_title + " - " + bigger_track_occupation 
 									+ ", longest track: " + longest_track_title + " - " + longest_track_duration.getDuration());*/
+
+
+			Intent library_details 	= new Intent(m_context, LibraryDetailsActivity.class);
+			Bundle details		= new Bundle();
+			
+			details.putString("n_tracks", String.valueOf(number_of_all_track));
+			details.putString("total_duration", duration_of_library.getDuration());
+			details.putString("memory_size", String.valueOf(memory_occupation) + " MB");
+			details.putString("bigger_file", biggest_track_title + " - " +String.valueOf(bigger_track_occupation) + " MB");
+			details.putString("longest_file", longest_track_title + " - " +longest_track_duration.getDuration());
+
+			library_details.putExtras(details);
+			m_context.startActivity(library_details);
 		}
-
-		Intent library_details 	= new Intent(m_context, LibraryDetailsActivity.class);
-		Bundle details		= new Bundle();
-		
-		details.putString("n_tracks", String.valueOf(number_of_all_track));
-		details.putString("total_duration", duration_of_library.getDuration());
-		details.putString("memory_size", String.valueOf(memory_occupation) + " MB");
-		details.putString("bigger_file", biggest_track_title + " - " +String.valueOf(bigger_track_occupation) + " MB");
-		details.putString("longest_file", longest_track_title + " - " +longest_track_duration.getDuration());
-
-		library_details.putExtras(details);
-		m_context.startActivity(library_details);
 	}
-	
+
 	/**
 	 * calcola le statistiche per le playlist presenti 
 	 */
@@ -1292,66 +1293,79 @@ public class PlayerController extends SQLiteOpenHelper{
 		String biggest_playlist= "";//nome della playlist con più brani
 		int number_of_track_for_biggest_playlist= 0;
 		int number_of_track_in_playlist=0;
-		
+
 		ArrayList<String> playlists= new ArrayList<String>();
-		
+
 		Cursor cursor= getCursorPlaylist();
-		//popolo l'array di tutte le playlist
-		while(!cursor.isAfterLast()){
-			//Log.d("cursor", cursor.getString(0) + ", " + cursor.getString(1) + ", " + cursor.getString(2) + ", " + cursor.getString(7));
-			
-			if(!playlists.contains(cursor.getString(1))){
-				playlists.add(cursor.getString(1));
-			}
-			
-			cursor.moveToNext();
-		}
-		cursor.moveToFirst();
-		//imposto il numero di playlist
-		number_of_playlist= playlists.size();
-		
-		//calcolo la durata totale, la playlist piu' lunga e quella con piu' elementi
-		for(String playlist : playlists){
-			
-			
+		if(cursor != null){
+			//popolo l'array di tutte le playlist
 			while(!cursor.isAfterLast()){
-				
-				if(playlist.equals(cursor.getString(1))){
-					
-					String tmp_duration_track= cursor.getString(11);
-					int sec 	= Integer.parseInt(tmp_duration_track) / 1000;
-					int min 	= sec / 60;
-					sec = sec % 60;
-					int hour	= min / 60;
-					min = min % 60; 
-					Duration tmp_duration= new Duration(hour, min, sec);
-					
-					duration_of_playlist.sum(tmp_duration);
-					number_of_track_in_playlist++;
+				//Log.d("cursor", cursor.getString(0) + ", " + cursor.getString(1) + ", " + cursor.getString(2) + ", " + cursor.getString(7));
+
+				if(!playlists.contains(cursor.getString(1))){
+					playlists.add(cursor.getString(1));
 				}
-				
+
 				cursor.moveToNext();
 			}
-			
-			//calcolo la durata totale
-			total_duration_of_playlists.sum(duration_of_playlist);
-			//calcolo la playlist piu' lunga
-			if(duration_of_longest_playlist.isSmallerOf(duration_of_playlist)){
-				duration_of_longest_playlist.setDuration(duration_of_playlist);
-				longest_playlist= playlist;
-			}
-			//calcolo la playlist con piu' elementi
-			if(number_of_track_for_biggest_playlist < number_of_track_in_playlist){
-				number_of_track_for_biggest_playlist= number_of_track_in_playlist;
-				biggest_playlist= playlist;
-			}
-			
 			cursor.moveToFirst();
-			duration_of_playlist.setDuration(0, 0, 0);
+			//imposto il numero di playlist
+			number_of_playlist= playlists.size();
+
+			//calcolo la durata totale, la playlist piu' lunga e quella con piu' elementi
+			for(String playlist : playlists){
+
+
+				while(!cursor.isAfterLast()){
+
+					if(playlist.equals(cursor.getString(1))){
+
+						String tmp_duration_track= cursor.getString(11);
+						int sec 	= Integer.parseInt(tmp_duration_track) / 1000;
+						int min 	= sec / 60;
+						sec = sec % 60;
+						int hour	= min / 60;
+						min = min % 60; 
+						Duration tmp_duration= new Duration(hour, min, sec);
+
+						duration_of_playlist.sum(tmp_duration);
+						number_of_track_in_playlist++;
+					}
+
+					cursor.moveToNext();
+				}
+
+				//calcolo la durata totale
+				total_duration_of_playlists.sum(duration_of_playlist);
+				//calcolo la playlist piu' lunga
+				if(duration_of_longest_playlist.isSmallerOf(duration_of_playlist)){
+					duration_of_longest_playlist.setDuration(duration_of_playlist);
+					longest_playlist= playlist;
+				}
+				//calcolo la playlist con piu' elementi
+				if(number_of_track_for_biggest_playlist < number_of_track_in_playlist){
+					number_of_track_for_biggest_playlist= number_of_track_in_playlist;
+					biggest_playlist= playlist;
+				}
+
+				cursor.moveToFirst();
+				duration_of_playlist.setDuration(0, 0, 0);
+			}
+
+			Log.d("details playlist","numero playlist: " + number_of_playlist + ", durata totale: " + total_duration_of_playlists.getDuration() + ", longest: " + longest_playlist + " - " + duration_of_longest_playlist.getDuration()
+					+ ", biggest: " + biggest_playlist + " - " + number_of_track_for_biggest_playlist);
+
+			Intent playlist_details= new Intent(m_context, PlaylistDetailsActivity.class);
+			Bundle details= new Bundle();
+
+			details.putString("n_playlist", String.valueOf(number_of_playlist));
+			details.putString("total_duration", total_duration_of_playlists.getDuration());
+			details.putString("bigger_file", biggest_playlist + " - " +String.valueOf(number_of_track_for_biggest_playlist));
+			details.putString("longest_playlist", longest_playlist + " - " +duration_of_longest_playlist.getDuration());
+
+			playlist_details.putExtras(details);
+			m_context.startActivity(playlist_details);
 		}
-		
-		Log.d("details playlist","numero playlist: " + number_of_playlist + ", durata totale: " + total_duration_of_playlists.getDuration() + ", longest: " + longest_playlist + " - " + duration_of_longest_playlist.getDuration()
-				+ ", biggest: " + biggest_playlist + " - " + number_of_track_for_biggest_playlist);
 	}
 	
 	/**
