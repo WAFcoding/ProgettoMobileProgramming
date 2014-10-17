@@ -917,16 +917,12 @@ public class PlayerController extends SQLiteOpenHelper{
 				musicSrv.setPath(uri);	
 
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
 		}
@@ -963,7 +959,8 @@ public class PlayerController extends SQLiteOpenHelper{
 		m_context.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
 		lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
 		Log.d("setPlayer","setPlayer");
-}
+	}
+	
 	public static void set_player_playlist() throws IllegalArgumentException, SecurityException, IllegalStateException, IOException{
 		Log.d("setPlayer","setPlayer");
 	
@@ -1005,13 +1002,12 @@ public class PlayerController extends SQLiteOpenHelper{
 
 	public static void seekTo(int pos) {
 		if(musicSrv!=null && serviceConnected)
-		musicSrv.seek(pos);
+			musicSrv.seek(pos);
 	}
 	
 	public static boolean isPlaying() {
-		// TODO Auto-generated method stub
 		if (musicSrv!=null && serviceConnected)
-		return musicSrv.isPng();
+			return musicSrv.isPng();
 		return false;
 	}
 
@@ -1037,31 +1033,34 @@ public class PlayerController extends SQLiteOpenHelper{
 
 	
 	public static void mute() {
-		// TODO Auto-generated method stub
-		if(musicSrv!=null && serviceConnected)
-		if (musicSrv!=null)
-				musicSrv.stopFade();
-				musicSrv.setVolume(0f);
+		if(musicSrv!=null && serviceConnected){
+			musicSrv.stopFade();
+			musicSrv.setVolume(0f);
 		}
+	}
 
 	public static void audio() {/*
-		// TODO Auto-generated method stub
 		SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+		
 		int fadeIn=prefs.getInt("FadeIn",0);
 		if(musicSrv!=null && serviceConnected)
 			if(fadeIn>0)
 			musicSrv.fadeIn(fadeIn);
 			else
 			musicSrv.setVolume(1f);*/
-			}
+		if(musicSrv!=null && serviceConnected){
+			
+			musicSrv.setVolume(1f);
+		}
+	}
 
 	
 	public static boolean isMute() {
-		// TODO Auto-generated method stub
 		if(musicSrv!=null && serviceConnected)
-		return musicSrv.isMute();
+			return musicSrv.isMute();
+
 		return false;
-		}
+	}
 
 
 	public static void stop() {//change
@@ -1077,11 +1076,6 @@ public class PlayerController extends SQLiteOpenHelper{
 	public static void playPlaylist(PlaylistItem playlist){
 		if(preview)
 			end_music_sevice();
-		
-		
-		
-
-		
 		
 		SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 		q_loop=prefs.getInt("NLoopPlaylist", 1);

@@ -62,9 +62,7 @@ public class MyMediaController extends FrameLayout{
             switch (msg.what) {
                 case SHOW_PROGRESS:
                 	pos = setProgress();
-                	if(mPlayer.isPlaying())
-                	{
-                		
+                	if(mPlayer.isPlaying()) {
                         msg = obtainMessage(SHOW_PROGRESS);
                         sendMessageDelayed(msg, 1000 - (pos % 1000));
                     }
@@ -92,14 +90,17 @@ public class MyMediaController extends FrameLayout{
     		pause.setBackgroundResource(R.drawable.ic_media_pause);
     	else
     		pause.setBackgroundResource(R.drawable.ic_media_play);
+    	
     	if(mPlayer.isMute())
     		audio.setBackgroundResource(R.drawable.ic_media_mute);
     	else
     		audio.setBackgroundResource(R.drawable.ic_media_audio);
+    	
     	if(mPlayer.isLooping())
     		loop.setBackgroundResource(R.drawable.ic_media_loop);
     	else
     		loop.setBackgroundResource(R.drawable.ic_media_loop2);
+    	
     	return 0;
     }
 
@@ -173,13 +174,13 @@ public class MyMediaController extends FrameLayout{
     		@Override
     		public void onClick(View v) {
     			if(mPlayer.isMute()){
-    				mPlayer.audio();
     				audio.setBackgroundResource(R.drawable.ic_media_audio);
+    				mPlayer.audio();
     			}
     			else
     			{
-    				mPlayer.mute();
     				audio.setBackgroundResource(R.drawable.ic_media_mute);
+    				mPlayer.mute();
     			}
     		}
     	});
@@ -195,7 +196,6 @@ public class MyMediaController extends FrameLayout{
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				mPlayer.back();
 			}
 		});

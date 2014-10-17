@@ -177,7 +177,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 		int fadeIn=prefs.getInt("FadeIn",0);
 		//Log.d("FADe",Integer.toString(fadeIn));
 		if(!stopped){
-			fadeIn(fadeIn);
+			//fadeIn(fadeIn);
 			player.start();
 		}
 		else{

@@ -133,26 +133,26 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 	@Override
 	public boolean isLooping() {
 		return PlayerController.isLooping();
-		}
+	}
 
 	@Override
 	public void mute() {
 		PlayerController.mute();
-		}
+	}
 
 	@Override
 	public void audio() {
 		PlayerController.audio();
-		}
+	}
 
 	@Override
 	public boolean isMute() {
 		return PlayerController.isMute();
-		}
+	}
 
 	@Override
 	public void stop() {
-			PlayerController.stop();
+		PlayerController.stop();
 	}
 
 	@Override
