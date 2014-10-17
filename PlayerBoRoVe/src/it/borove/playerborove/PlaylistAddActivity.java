@@ -66,7 +66,7 @@ public class PlaylistAddActivity extends Activity {
 		m_edit_text.setTextColor(Color.parseColor("#ff0000"));
 		
 		/*
-		 * TODO implementare la gestione del doppio nome
+		 * TODO PlayerBoRoVe implementare la gestione del doppio nome
 		 */
 		
 		cursorTracks	= PlayerController.getCursorTracks();
@@ -105,7 +105,6 @@ public class PlaylistAddActivity extends Activity {
 		btnCreatePlaylist.setOnClickListener(new OnClickListener() {		
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				String namePlaylist = m_edit_text.getText().toString();
 				ArrayList<String> idTracksSelected = new ArrayList<String>();
 				

@@ -28,7 +28,7 @@ public class ServiceFileObserver extends Service{
 	
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 	
@@ -59,7 +59,7 @@ public class ServiceFileObserver extends Service{
 
 		public MyFileObserver(String path) {
 			super(path);
-			// TODO Auto-generated constructor stub
+			
 			this.absolutePath 	= path;
 			this.cachedPath		= "";
 		}
@@ -67,14 +67,14 @@ public class ServiceFileObserver extends Service{
 
 		@Override
 		public void onEvent(int event, String path) {
-			// TODO Auto-generated method stub
+			
 			if(path == null)
 				return;
 			
 			//a new file or subdirectory was created under the monitored directory
 			if((FileObserver.CREATE & event) != 0){	
 				String createdFilePath = this.absolutePath + "/" + path;
-				Log.d(OBSERVER, "un nuovo file è stato aggiunto!! ---> " + this.absolutePath + "/" + path + " created!!");
+				Log.d(OBSERVER, "un nuovo file ï¿½ stato aggiunto!! ---> " + this.absolutePath + "/" + path + " created!!");
 				Intent fr = new Intent("it.borove.playerborove.SERVICE");
 				//Intent fr = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 		        Bundle bundle = new Bundle();
@@ -95,14 +95,14 @@ public class ServiceFileObserver extends Service{
 					bundle.putString(ServiceFileObserver.MODIFYFROM,  originalFilePath);
 	        		fr.putExtras(bundle);
 	        		getContext().sendBroadcast(fr);
-					Log.d(OBSERVER, "un file è stato modificato(ORIGINALE)!! ---> " + originalFilePath);
+					Log.d(OBSERVER, "un file ï¿½ stato modificato(ORIGINALE)!! ---> " + originalFilePath);
 				}catch(Exception e){e.printStackTrace();}
 				
 			}
 			
 			if((FileObserver.MOVED_TO & event)!=0) {
 				String modifiedFilePath = this.absolutePath + "/" + path;
-				Log.d(OBSERVER, "un file è stato modificato(NUOVO)!! ---> " + modifiedFilePath);
+				Log.d(OBSERVER, "un file ï¿½ stato modificato(NUOVO)!! ---> " + modifiedFilePath);
 					Intent fr = new Intent("it.borove.playerborove.SERVICE");
 					Bundle bundle = new Bundle();
 					try{					
@@ -114,7 +114,7 @@ public class ServiceFileObserver extends Service{
 
 	        //a file was deleted from the monitored directory
 	        if ((FileObserver.DELETE & event)!=0) {
-	        	Log.d(OBSERVER, "un file è stato cancellato!! ---> " + this.absolutePath + "/" + path +  " is deleted");
+	        	Log.d(OBSERVER, "un file ï¿½ stato cancellato!! ---> " + this.absolutePath + "/" + path +  " is deleted");
 	        	Intent fr = new Intent("it.borove.playerborove.SERVICE");
 	        	String deletedFilePath = this.absolutePath + "/" + path;
 	        	Bundle bundle = new Bundle();

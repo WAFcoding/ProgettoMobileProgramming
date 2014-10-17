@@ -47,9 +47,6 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 	private String author_name;
 	private HorizontalScrollView tmp_h_scroll;
 
-	//TODO per il menu di modifica delle playlist scorrere il dito sulla copertina
-	//e far comparire i pulsanti 
-
 	/**
 	 * @param context
 	 * @param resource
@@ -175,45 +172,6 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				if(author_name.length() > 12)
 					author_name = author_name.substring(0, 12);	
 				author.setText(author_name);
-				
-				/*ImageView song_cover= new ImageView(parent.getContext());
-				LinearLayout.LayoutParams song_cover_params= new LinearLayout.LayoutParams(200, 200);
-				song_cover_params.leftMargin= 10;
-				song_cover_params.topMargin= 10;
-				song_cover_params.rightMargin= 10;
-				song_cover_params.bottomMargin= 10;
-				song_cover.setLayoutParams(song_cover_params);
-				song_cover.setScaleType(ScaleType.FIT_XY);
-				song_cover.setLayoutParams(song_cover_params);
-				
-
-				Bitmap bit2 = it.getBitmapCover();
-				//m_vv.setVisibility(View.VISIBLE);
-				//tmp_h_scroll.setVisibility(View.VISIBLE);
-
-				if(bit2 != null){
-					song_cover.setImageBitmap(bit2);
-				}
-				else{
-					song_cover.setImageResource(R.drawable.icon);
-				}
-				
-				
-				song_cover.setOnLongClickListener(new OnLongClickListener() {
-					
-					@Override
-					public boolean onLongClick(View v) {
-						
-						//TODO inserire qui la chiamata al controllore per attivare la riproduzione del brano
-						
-						Toast.makeText(getContext(), "anteprima brano: " + song_name, Toast.LENGTH_SHORT).show();
-						
-						return false;
-					}
-				});
-				
-				layout_item.addView(song_cover);
-				*/
 				layout_item.addView(song_title);
 				layout_item.addView(author);
 

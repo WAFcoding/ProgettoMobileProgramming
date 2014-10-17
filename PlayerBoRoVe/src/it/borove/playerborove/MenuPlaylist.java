@@ -39,12 +39,10 @@ public class MenuPlaylist extends Activity{
 	}
 
 	private void listener() {
-		// TODO Auto-generated method stub
 		
 		textViewAddTrack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				
 				setResult(RESULT_CODE_ADD_TRACK, myCallerIntent);
 				finish();
@@ -55,7 +53,6 @@ public class MenuPlaylist extends Activity{
 		textViewDetails.setOnClickListener(new OnClickListener() {		
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				
 				setResult(RESULT_CODE_DETAILS, myCallerIntent);
 				finish();
@@ -66,7 +63,6 @@ public class MenuPlaylist extends Activity{
 		textViewErase.setOnClickListener(new OnClickListener() {		
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				
 				setResult(RESULT_CODE_ERASE, myCallerIntent);
 				finish();
@@ -77,7 +73,6 @@ public class MenuPlaylist extends Activity{
 		textViewPreview.setOnClickListener(new OnClickListener() {		
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				
 				setResult(RESULT_CODE_PREVIEW, myCallerIntent);
 				finish();

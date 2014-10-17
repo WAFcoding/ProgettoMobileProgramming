@@ -70,7 +70,6 @@ public class PlaylistItem {
 	}
 	
 	private void setIdSongs(ArrayList<SinglePlaylistItem> p_songs) {
-		// TODO Auto-generated method stub
 		for(int i=0; i< p_songs.size(); i++){
 			if(!id_tracks.contains(p_songs.get(i).getId()))
 				this.id_tracks.add(p_songs.get(i).getId());
@@ -181,7 +180,7 @@ public class PlaylistItem {
 	            }
 	        }
 	        else 
-	        	Log.e("PlayListItem: ----> ", " dentro getArtworkQuick: Uri è NULL");
+	        	Log.e("PlayListItem: ----> ", " dentro getArtworkQuick: Uri ï¿½ NULL");
 	        return null;
 	    }
 

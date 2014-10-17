@@ -61,7 +61,7 @@ public class AddTracksToPlaylist extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
+			
 				if(!isGroupSelected.get(position)){
 					view.setBackgroundColor(Color.parseColor("#c0c0c0"));
 					isGroupSelected.set(position, true);
@@ -79,7 +79,6 @@ public class AddTracksToPlaylist extends Activity {
 		exit.setOnClickListener(new OnClickListener() {		
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				
 				for(int i=0; i < isGroupSelected.size(); i++){
 					if(isGroupSelected.get(i)){
@@ -118,7 +117,6 @@ public class AddTracksToPlaylist extends Activity {
 
 		public TracksAdapter(Context context, int resource, ArrayList<SinglePlaylistItem> tracks) {
 			super(context, resource, tracks);
-			// TODO Auto-generated constructor stub
 			 arrayTracks = tracks;
 		}
 		

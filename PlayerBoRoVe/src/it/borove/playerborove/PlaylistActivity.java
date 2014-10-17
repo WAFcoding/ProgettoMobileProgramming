@@ -132,17 +132,13 @@ public class PlaylistActivity extends Activity  {
 				Log.d("uri", uri.toString());
 				musicSrv.setPath(uri);
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
 			catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
 		}
@@ -169,121 +165,6 @@ public class PlaylistActivity extends Activity  {
 		mapper 			= new AlbumMapper();
 	
 		setListPlaylist();
-		
-		//mediaController=new MyMediaController(this);
-		//mediaController.setMediaPlayer(this);
-		//lbm= LocalBroadcastManager.getInstance(this);
-		//Log.d("Activity","Created");
-		//receiver=new BroadcastReceiver(){
-			//@Override
-			//public void onReceive(Context context, Intent intent) {
-				// TODO Auto-generated method stub
-				//lbm.unregisterReceiver(receiver);
-				
-				/*String artist= getIntent().getExtras().getString("singer");
-				String title= getIntent().getExtras().getString("title");
-				String kind= getIntent().getExtras().getString("kind");
-				setText(artist+" "+title+" "+kind);*/
-				//image
-				//SharedPreferences prefs=context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
-				//int pos=prefs.getInt("Pos", 0);
-				//Log.d("activity","before seek");
-				//seekTo(pos*1000);
-				/*if(!preview){
-					start();
-					mediaController.show((LinearLayout)findViewById(R.id.anchor));
-					}
-				else{
-					preview();
-				}
-				}
-			};
-			*/
-
-
-		
-		
-		/*if(playlistCursor != null){
-			id_p = new ArrayList<String>();
-			playlistCursor.moveToFirst();
-			while(!playlistCursor.isAfterLast()){
-				
-				if(!id_p.contains(playlistCursor.getString(0))){
-					id_p.add(playlistCursor.getString(0));
-				}
-				
-				mapper.setIdTrackToContentTitle(playlistCursor.getString(2), playlistCursor.getString(7));
-				mapper.setIdTrackToIdAlbum(playlistCursor.getString(2), playlistCursor.getString(8));
-
-				playlistCursor.moveToNext();
-			}
-		}
-		*/
-		/*else{
-			
-			cursorTracks = PlayerController.getCursorTracks();
-			if(cursorTracks != null){
-				cursorTracks.moveToFirst();
-				while(!cursorTracks.isAfterLast()){
-									
-					cursorTracks.moveToNext();
-				}				
-			}
-
-		}
-		*/
-		/*
-
-			if(id_p != null){
-				ArrayList<SinglePlaylistItem> tmp_songs;
-				for(int i = 1; i <= id_p.size(); i++){
-					Log.d(TAG, "id_p.size()" + id_p.size());
-					playlistCursor.moveToFirst();
-					boolean coverUsed = false;
-					String name_playlist 		= "";
-					tmp_songs = new ArrayList<SinglePlaylistItem>();
-					while(!playlistCursor.isAfterLast()){
-						if(playlistCursor.getString(0).equals(String.valueOf(i))){
-							String title		= playlistCursor.getString(7);
-							String name_singer 	= playlistCursor.getString(4);
-							String kind			= playlistCursor.getString(5);
-							String path_track	= playlistCursor.getString(9);
-							String _id			= playlistCursor.getString(2);
-							String vote			= playlistCursor.getString(6);
-							String nameFile		= playlistCursor.getString(3);
-							String duration		= playlistCursor.getString(11);
-							String albumName	= playlistCursor.getString(10);
-							if(!coverUsed){
-								name_playlist = playlistCursor.getString(1);								
-								coverUsed = true;
-							}			
-							//la scrollview
-							String album_id = mapper.getIdAlbumFromIdTrack(playlistCursor.getString(2));
-							SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem(_id, title, name_singer, kind, vote,
-									nameFile, album_id, path_track, albumName, duration, this);
-							tmp_songs.add(tmp_pl_item);		
-						}			
-						playlistCursor.moveToNext();
-					}
-					PlaylistItem tmp_play= new PlaylistItem(name_playlist, tmp_songs);
-					items.add(tmp_play);
-					this.playlistMap.put(name_playlist, tmp_songs);			
-				}
-				
-				this.expAdapter = new PlaylistExpAdapter(this, items, playlistMap);
-				//m_adapter= new PlaylistAdapter(this, R.layout.playlist_layout, items);
-				//m_listview= (ListView)findViewById(R.id.listview_playlist);
-				//m_listview.setAdapter(m_adapter);
-				expListView.setAdapter(expAdapter);
-				registerForContextMenu(expListView);
-		        //registerForContextMenu(m_listview);
-				
-				for(int i=0; i < expAdapter.getGroupCount(); i++){
-		        	isGroupSelected.add(false);
-		        }
-		        
-		}
-		*/	
 		
 		//il navigation drawer
 		title= drawer_title = getTitle();
@@ -317,7 +198,6 @@ public class PlaylistActivity extends Activity  {
 			@Override
 			public boolean onGroupClick(ExpandableListView parent, View v,
 					int groupPosition, long id) {
-				// TODO Auto-generated method stub
 				
 				if(!isGroupSelected.get(groupPosition)){
 					v.setBackgroundColor(Color.parseColor("#c0c0c0"));
@@ -650,7 +530,6 @@ public class PlaylistActivity extends Activity  {
 	}
 	
 	private void clearData() {
-		// TODO Auto-generated method stub
 		if(playlistCursor != null)
 			playlistCursor.close();
 		if(items != null)
@@ -800,7 +679,6 @@ public class PlaylistActivity extends Activity  {
 
 
 	public boolean isPlaying() {
-		// TODO Auto-generated method stub
 		if (musicSrv!=null && serviceConnected)
 		return musicSrv.isPng();
 		return false;
@@ -808,46 +686,39 @@ public class PlaylistActivity extends Activity  {
 
 	@Override
 	public void setLoop() {
-		// TODO Auto-generated method stub
 		if(musicSrv!=null)
 			musicSrv.Loop(true);
 	}
 
 	@Override
 	public void disableLoop() {
-		// TODO Auto-generated method stub
 		if (musicSrv.isLooping())
 			musicSrv.Loop(false);		
 	}
 
 	@Override
 	public boolean isLooping() {
-		// TODO Auto-generated method stub
 		return musicSrv.isLooping();
 		}
 
 	@Override
 	public void mute() {
-		// TODO Auto-generated method stub
 		if (musicSrv!=null)
 				musicSrv.setVolume(0f);
 		}
 
 	@Override
 	public void audio() {
-		// TODO Auto-generated method stub
 			musicSrv.setVolume(1f);
 			}
 
 	@Override
 	public boolean isMute() {
-		// TODO Auto-generated method stub
 		return musicSrv.isMute();
 		}
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
 		if(musicSrv!=null){
 			lbm.registerReceiver(receiver, new IntentFilter("Prepared"));
 			musicSrv.seek(0);

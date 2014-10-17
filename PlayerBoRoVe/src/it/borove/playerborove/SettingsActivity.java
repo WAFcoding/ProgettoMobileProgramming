@@ -111,20 +111,20 @@ public class SettingsActivity extends Activity{
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				// TODO Auto-generated method stub
+			
 				valueFadeIn=progress;
 				
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
+				
 				
 			}
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
+				
 				textViewFadeIn.setText(" "+valueFadeIn+"/"+seekBarFadeIn.getMax());
 			}
 			
@@ -135,20 +135,20 @@ public class SettingsActivity extends Activity{
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				// TODO Auto-generated method stub
+				
 				valueFadeOut=progress;
 				
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
+				
 				
 			}
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
+				
 				textViewFadeOut.setText(" "+valueFadeOut+"/"+seekBarFadeIn.getMax());
 			}
 			
@@ -163,19 +163,19 @@ public class SettingsActivity extends Activity{
 			 progress=((int)Math.round(progress/step ))*step;
 			 seekBar.setProgress(progress);
 			 textViewPreview.setText(" "+(progress+15)+"/"+(seekBarPreview.getMax()+14));
-				// TODO Auto-generated method stub
+				
 				durationPreview=progress;
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
+				
 				
 			}
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
+				
 				
 			}
 			
@@ -186,7 +186,7 @@ public class SettingsActivity extends Activity{
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
-				// TODO Auto-generated method stub
+				
 				if (isChecked){
 					if(!editTextNLoopPlaylist.getText().toString().equals(""))
 						nLoopPlaylist=Integer.parseInt(editTextNLoopPlaylist.getText().toString());
@@ -225,14 +225,14 @@ public class SettingsActivity extends Activity{
 		eraseDatabase.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				
 				
 				popup = new AlertDialog.Builder(SettingsActivity.this);
 				
 				popup.setPositiveButton("Erase", new DialogInterface.OnClickListener() {			
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
+						
 						
 						PlayerController.eraseDatabase();
 						Log.d(SETTINGS, "popup.setPositiveButton: ->Erase");
@@ -246,7 +246,7 @@ public class SettingsActivity extends Activity{
 				popup.setNegativeButton("Undo", new DialogInterface.OnClickListener() {				
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub		
+								
 					}
 				});
 				
@@ -261,7 +261,6 @@ public class SettingsActivity extends Activity{
 		synchronizeDatabase.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 					PlayerController.createDb();
 					new PlayerController.SynchronizeDb().execute();
 					Toast.makeText(SettingsActivity.this, "database created", Toast.LENGTH_LONG).show();

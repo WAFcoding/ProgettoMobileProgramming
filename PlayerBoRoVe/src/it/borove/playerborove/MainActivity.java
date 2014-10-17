@@ -60,7 +60,6 @@ public class MainActivity extends Activity {
 		rec = new BroadcastReceiver(){
 				@Override
 				public void onReceive(Context context, Intent intent) {
-					// TODO Auto-generated method stub
 					
 					if(intent.getExtras().containsKey(MainActivity.CREATE)){
 						

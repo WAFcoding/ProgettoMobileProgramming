@@ -192,7 +192,7 @@ public class LibraryActivity extends Activity {
 			popup.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
+					
 					Cursor tracks 		= adapter.getCursor();
 					boolean reachable 	= tracks.moveToPosition(itemPosition);
 					if(reachable){
@@ -211,7 +211,7 @@ public class LibraryActivity extends Activity {
 			popup.setNegativeButton("No", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
+					
 				
 				}
 				
@@ -329,7 +329,7 @@ public class LibraryActivity extends Activity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
+				
 				Intent menuTrackActivity 	= new Intent(LibraryActivity.this, menuTrack.class);
 				Cursor tracks = adapter.getCursor();
 				boolean reachable = tracks.moveToPosition(position);
@@ -345,16 +345,13 @@ public class LibraryActivity extends Activity {
 		listView.setOnItemClickListener(new OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-				// TODO Auto-generated method stub
+				
 				//count++;
 				//if (count % 2 == 0){
 					Cursor tracks = adapter.getCursor();
 					boolean reachable = tracks.moveToPosition(position);
 					if(reachable){
 						idTrack				= tracks.getInt(0);
-						
-						
-	
 						
 						String _id= tracks.getString(0);
 						String p_title= tracks.getString(1);
@@ -449,12 +446,6 @@ public class LibraryActivity extends Activity {
 				
 				mCursor.moveToNext();
 			}
-			
-			
-			
-			
-	
-			// TODO Auto-generated constructor stub
 			 m_context = context;
 		}
 				

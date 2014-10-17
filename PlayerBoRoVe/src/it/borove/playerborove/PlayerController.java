@@ -110,11 +110,6 @@ public class PlayerController extends SQLiteOpenHelper{
 		
 		//PlayerController.sqlDatabaseHelper = new SQLiteConnect(context, db_path, DB_NAME, DATABASE_VERSION);
 		PlayerController.sqlDatabaseHelper = SQLiteConnect.getInstance(context, db_path, DB_NAME, DATABASE_VERSION);
-		
-		//TODO inizializzazione della libreria da db
-		//TODO inizializzazione del media player
-		
-		
 	}
 	
 
@@ -170,14 +165,6 @@ public class PlayerController extends SQLiteOpenHelper{
 	public void addPlaylistToQueue(PlaylistItem p){
 		queue.addPlaylist(p);
 	}
-
-	public int getQ_loop() {
-		return q_loop;
-	}
-
-	public void setQ_loop(int q_loop) {
-		this.q_loop = q_loop;
-	}
 	
 	/*public void loop(){
 		if(q_loop > 1){
@@ -220,7 +207,6 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
 	}
 	
 	/**
@@ -290,7 +276,6 @@ public class PlayerController extends SQLiteOpenHelper{
 
 		@Override
 		protected Void doInBackground(String... params) {
-			// TODO Auto-generated method stub
 			
 			String[] paths = {params[0]};
 			completeString = params[0];
@@ -323,7 +308,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			callback = new OnScanCompletedListener() {
 				@Override
 				public void onScanCompleted(String path, Uri uri) {
-					// TODO Auto-generated method stub
+					
 					if(uri != null && path != null){
 						String uri2 = uri.toString();
 						String percorso = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString() + "/";
@@ -405,7 +390,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		private Cursor getTracksFromDb;
 		@Override
 		protected Cursor doInBackground(Void... params) {
-			// TODO Auto-generated method stub
+			
 			try{
 				Cursor getMp3FromStorage = getInfoMetaMp3(m_context, null);
 				sqlDatabaseHelper.SynchronizeDb(getMp3FromStorage);
@@ -645,7 +630,7 @@ public class PlayerController extends SQLiteOpenHelper{
 
 		@Override
 		protected Cursor doInBackground(Void... params) {
-			// TODO Auto-generated method stub
+			
 			try{
 				//String[] columnSelect = {"*"};
 				this.cursorPlaylist = sqlDatabaseHelper.getQueryResult("", SQLiteConnect.COLUMN_NAME, SQLiteConnect.TABLE_NAME_PLAYLIST,
@@ -782,8 +767,6 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 				if(!musicSrv.isLooping()&& (nLoopPlaylistDone!=q_loop || q_loop==1000))
 				{
-					//m_context.unbindService(musicConnection);//FIXME controllare se necessario
-					//m_context.stopService( new Intent(m_context, MusicService.class));
 					Log.d("complete song","complete song");
 					if(!backPressed)
 						aux_queue.addSinglePlaylistItemOnTop(currentPlayingTrack);
@@ -802,16 +785,12 @@ public class PlayerController extends SQLiteOpenHelper{
 					try {
 						set_player_playlist();
 					} catch (IllegalArgumentException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (SecurityException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IllegalStateException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					};
 
@@ -849,7 +828,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			//lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
 			printToast("Preview of: "+currentPreviewTrack.getTitle());
 			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
-			int durationPreview=(prefs.getInt("Duration Preview", 0)+15)*1000;
+			int durationPreview=(prefs.getInt("Duration Preview", 0)+15)*1000;//TODO PlayerBoRoVe ora lo prende statico, lo deve leggere dalle prefences
 			musicSrv.preview(5000);
 		}
 	};
@@ -867,13 +846,8 @@ public class PlayerController extends SQLiteOpenHelper{
 			if(!queue.isEmpty()){
 				
 				lbm.registerReceiver(waitForDestroyService, new IntentFilter("Service destroy"));
-				//lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared"));
-				//lbm.unregisterReceiver(previewCompleteReceiver);
 				currentPreviewTrack=queue.removeTop();
 				uri=Uri.parse(currentPreviewTrack.getPath_track());
-				
-			
-				//set_player();	
 			}
 			else{
 				lbm.unregisterReceiver(previewCompleteReceiver);
@@ -1012,20 +986,18 @@ public class PlayerController extends SQLiteOpenHelper{
 	}
 
 	public static void setLoop() {
-		// TODO Auto-generated method stub
+		
 		if(musicSrv!=null && serviceConnected)
 			musicSrv.Loop(true);
 	}
 
 	public static void disableLoop() {
-		// TODO Auto-generated method stub
 		if(musicSrv!=null && serviceConnected)
 		if (musicSrv.isLooping())
 			musicSrv.Loop(false);		
 	}
 
 	public static boolean isLooping() {
-		// TODO Auto-generated method stub
 		if(musicSrv!=null && serviceConnected)
 		return musicSrv.isLooping();
 		return false;
@@ -1049,7 +1021,6 @@ public class PlayerController extends SQLiteOpenHelper{
 			else
 			musicSrv.setVolume(1f);*/
 		if(musicSrv!=null && serviceConnected){
-			
 			musicSrv.setVolume(1f);
 		}
 	}
@@ -1064,7 +1035,6 @@ public class PlayerController extends SQLiteOpenHelper{
 
 
 	public static void stop() {//change
-		// TODO Auto-generated method stub
 		if(musicSrv!=null && serviceConnected)
 		{	lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
 			//musicSrv.seek(0);
@@ -1204,8 +1174,6 @@ public class PlayerController extends SQLiteOpenHelper{
 		Cursor tracks=sqlDatabaseHelper.getExactlyTrack(prefs.getString("lastSongId", "0"),SQLiteConnect.COLUMN_ID);
 		Log.d(prefs.getString("lastSongId", "0"),"null");
 		
-
-		
 		if(tracks!=null){		
 			String _id=null;
 			String p_title=null;
@@ -1243,7 +1211,9 @@ public class PlayerController extends SQLiteOpenHelper{
 		//playSingleItem(PlayerController.cursorTracks.getExatlyTrack()�);
 
 	}
-
+	/**
+	 * calcola le statistiche sulla libreria, es: numero di brani totali, durata totale, brano più lungo, file più grande
+	 */
 	public static void library_details(){
 
 		int number_of_all_track=0;

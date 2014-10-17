@@ -41,8 +41,7 @@ public class menuTrack extends Activity{
 	public void starsListeners(){
 		textViewDetails.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub			
+			public void onClick(View v) {		
 				setResult(RESULT_CODE_DETAILS, MyCallerIntent);
 				finish();
 			}
@@ -50,8 +49,7 @@ public class menuTrack extends Activity{
 		
 		textViewErase.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub						
+			public void onClick(View v) {					
 				setResult(RESULT_CODE_ERASE, MyCallerIntent);
 				finish();
 				

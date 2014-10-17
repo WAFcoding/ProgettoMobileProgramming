@@ -240,7 +240,6 @@ public class PlaylistActivity2 extends Activity{
 			btn2.setOnClickListener(new OnClickListener() {			
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					
 					listOfTracks = playlistSelected.getSongs();
 					Intent i = new Intent(m_context, PlaylistTracks.class);
@@ -481,7 +480,6 @@ public class PlaylistActivity2 extends Activity{
     
     
     private void clearData() {
-		// TODO Auto-generated method stub
 		if(playlistCursor != null){
 			playlistCursor.close();
 			PlayerController.closeConnectionDB();
