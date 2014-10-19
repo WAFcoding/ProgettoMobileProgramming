@@ -50,51 +50,43 @@ public class PlaylistExpAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public int getGroupCount() {
-		// TODO Auto-generated method stub
 		return this.items.size();
 	}
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		// TODO Auto-generated method stub
 		
 		return this.listDataItems.get((this.items.get(groupPosition)).getTitle_playlist()).size();
 	}
 
 	@Override
 	public Object getGroup(int groupPosition) {
-		// TODO Auto-generated method stub
 			return this.items.get(groupPosition);
 	}
 
 	@Override
 	public Object getChild(int groupPosition, int childPosition) {
-		// TODO Auto-generated method stub
 		return this.listDataItems.get((this.items.get(groupPosition)).getTitle_playlist()).get(childPosition);
 	}
 
 	@Override
 	public long getGroupId(int groupPosition) {
-		// TODO Auto-generated method stub
 		return groupPosition;
 	}
 
 	@Override
 	public long getChildId(int groupPosition, int childPosition) {
-		// TODO Auto-generated method stub
 		return childPosition;
 	}
 
 	@Override
 	public boolean hasStableIds() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		String namePlaylist = "";
 		PlaylistItem item = items.get(groupPosition);
 		if(item != null){
@@ -103,7 +95,7 @@ public class PlaylistExpAdapter extends BaseExpandableListAdapter {
 		}
 		
 		else
-			Log.d(TAG, "item è NULL: ");
+			Log.d(TAG, "item is NULL: ");
 		
 		if(convertView == null){
 			LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -117,7 +109,6 @@ public class PlaylistExpAdapter extends BaseExpandableListAdapter {
 		btn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				Toast.makeText(context, "button!!!!!!", Toast.LENGTH_SHORT).show();
 				Intent i = new Intent(context, LibraryActivity.class);
 				Bundle container = new Bundle();
@@ -136,7 +127,6 @@ public class PlaylistExpAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		
 		final SinglePlaylistItem track = (SinglePlaylistItem)getChild(groupPosition, childPosition);
 		String txtTrack			= track.getTitle();
@@ -215,13 +205,11 @@ public class PlaylistExpAdapter extends BaseExpandableListAdapter {
 		textNameTrack.setText(txtTrack);
 		textAuthor.setText(txtAuthorTrack);
 		
-
 		return convertView;
 	}
 
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 

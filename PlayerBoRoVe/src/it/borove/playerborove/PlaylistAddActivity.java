@@ -20,7 +20,6 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,8 +48,6 @@ public class PlaylistAddActivity extends Activity {
 	private static MySimpleCursorAdapter adapter;
 	private Cursor cursorTracks, cursorPlaylist;
 	
-	private final int RESULT_ABORT= 666;
-	
 	private final static String TAG= "PlaylistAddActivity";
 
 	@Override
@@ -69,7 +66,7 @@ public class PlaylistAddActivity extends Activity {
 		m_edit_text.setTextColor(Color.parseColor("#ff0000"));
 		
 		/*
-		 * TODO implementare la gestione del doppio nome
+		 * TODO PlayerBoRoVe implementare la gestione del doppio nome
 		 */
 		
 		cursorTracks	= PlayerController.getCursorTracks();
@@ -108,7 +105,6 @@ public class PlaylistAddActivity extends Activity {
 		btnCreatePlaylist.setOnClickListener(new OnClickListener() {		
 			@Override
 			public void onClick(View v) {
-				
 				String namePlaylist = m_edit_text.getText().toString();
 				ArrayList<String> idTracksSelected = new ArrayList<String>();
 				
@@ -120,7 +116,7 @@ public class PlaylistAddActivity extends Activity {
 						String idTrack	= cursorTracks.getString(0);
 						if(!idTracksSelected.contains(idTrack))
 							idTracksSelected.add(idTrack);
-						//Log.d(TAG, "idTrack: " + idTrack);
+						Log.d(TAG, "idTrack: " + idTrack);
 					}
 				}
 				
@@ -142,12 +138,12 @@ public class PlaylistAddActivity extends Activity {
 							cursorPlaylist.moveToNext();
 						}
 						if(!duplicatedNamePlaylist){
-							//Log.d(TAG, "!duplicatedNamePlaylist--> " + namePlaylist);
+							Log.d(TAG, "!duplicatedNamePlaylist--> " + namePlaylist);
 							PlayerController.addPlaylistToDb(namePlaylist, idTracksSelected);
 							setResult(Activity.RESULT_OK);
 						}
 						else{
-							setResult(RESULT_ABORT);
+							setResult(Activity.RESULT_CANCELED);
 						}
 	
 					}
@@ -234,6 +230,18 @@ public class PlaylistAddActivity extends Activity {
 		}
 		
 	}
+	/*
+	public boolean onKeyDown(int keyCode, KeyEvent event){
+		
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+
+			finish();
+			overridePendingTransition(R.anim.left_in, R.anim.right_out);
+			return true;
+		}
+		
+		return super.onKeyDown(keyCode, event); 
+	}*/
 	
 	public void setAdapter(Cursor cursor){
 		if(cursor != null){
@@ -277,16 +285,5 @@ public class PlaylistAddActivity extends Activity {
 	        default:
 	            return super.onContextItemSelected(item);
 	    }
-	}
-	
-	public boolean onKeyDown(int keyCode, KeyEvent event){
-		
-		if(keyCode == KeyEvent.KEYCODE_BACK){
-
-			finish();
-			overridePendingTransition(R.anim.right_in, R.anim.left_out);
-			return true;
-		}	
-		return super.onKeyDown(keyCode, event); 
 	}
 }

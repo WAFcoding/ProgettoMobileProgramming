@@ -17,10 +17,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import library_stuff.LibraryDetailsActivity;
+import library_stuff.TrackActivity;
 import playlistModules.PlaylistItem;
 import playlistModules.SinglePlaylistItem;
 import db.SQLiteConnect;
 import db.ServiceFileObserver;
+import PlayerManager.Duration;
 import PlayerManager.Queue;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -36,7 +39,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
-import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaScannerConnection;
@@ -54,26 +56,22 @@ import android.widget.Toast;
 
 public class PlayerController extends SQLiteOpenHelper{
 	
-	private static Activity mainActivity;
-	private static Context m_context;
-	private final static String TAG = "PLAYERCONTROLLER";
-	
-	//================PLAYLIST/PREVIEW================
-	private static Cursor cursorTracks;
-	private static Cursor cursorPlaylist;
+
+
 	private static SinglePlaylistItem currentPlayingTrack;
 	private static PlaylistItem currentPlayingPlaylist;
 	private static Queue queue;
 	private static Queue aux_queue;
 	private static int q_loop;
+	private static Activity mainActivity;
 	private static boolean backPressed=false;
-	private static int nLoopPlaylistDone;
-	private static Random gen= new Random();
-	private static boolean playingPlaylist;
-	private static SinglePlaylistItem currentPreviewTrack;
-	private static PlaylistItem currentPreviewPlayingPlaylist;
-	private static boolean preview=false;
-	//================DB==============================
+	private static boolean player=false;
+	
+	
+	private static Context m_context;
+	private static Cursor cursorTracks;
+	private static Cursor cursorPlaylist;
+	private final static String TAG = "PLAYERCONTROLLER";
 	//private SQLiteDatabase myDatabase;
 	private static SQLiteConnect sqlDatabaseHelper;
 	private static String db_path;
@@ -81,15 +79,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	String DB_NAME ="musicDb.db";
 	private static final
 	int DATABASE_VERSION = 1;
-	//================PLAYER/SERVICE=================
-	private static MusicService musicSrv;
-	private static boolean serviceConnected=false;
-	private static Intent playIntent;
-	private static Uri uri;
-	private static LocalBroadcastManager lbm;
-	private static ServiceConnection musicConnection;
 	
-	protected static final String SETTINGS = "SETTINGS";
 	
 	public PlayerController(Context context, Activity v){
 		super(context, DB_NAME, null, DATABASE_VERSION);
@@ -97,13 +87,9 @@ public class PlayerController extends SQLiteOpenHelper{
 		playingPlaylist=false;
 		queue=new Queue();
 		aux_queue= new Queue();
-		m_context 	= context;
 		lbm= LocalBroadcastManager.getInstance(context);
-		
-		/**
-		 * impostazione percorso del DB
-		 */
 		//db_path 	= context.getFilesDir().getPath();
+		
 		String externalStorageState= Environment.getExternalStorageState();
 		if(Environment.MEDIA_MOUNTED.equals(externalStorageState)){
 			//possiamo scrivere sulla memoria esterna
@@ -116,23 +102,61 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 		else
 			db_path 	= context.getFilesDir().getPath();
-		//Log.d(TAG, "path of db " + db_path);
 		
+		//Log.d(TAG, "path of db " + db_path);
+		m_context 	= context;
+		//this.queue= new Queue();
+		//this.setQ_loop(1);
+		
+		//PlayerController.sqlDatabaseHelper = new SQLiteConnect(context, db_path, DB_NAME, DATABASE_VERSION);
 		PlayerController.sqlDatabaseHelper = SQLiteConnect.getInstance(context, db_path, DB_NAME, DATABASE_VERSION);
 	}
 	
-	public static Context getContext(){
-		return m_context;
-	}
+
 
 	public static void open_settings() {
 		Intent intent=new Intent( mainActivity, SettingsActivity.class);
 		mainActivity.startActivity(intent);
 	}
 	
+	//Crea il database per la prima volta
+	public static void createDb(){
+		sqlDatabaseHelper.createDatabase();
+	}
+	
+	/*public void addTrackToPlaylist(Track t, Playlist p){
+		
+	}
+	
+	public void addPlaylist(Playlist p){
+		//this.library.addPlaylist(p);
+	}*/
+
+
+	
+	//====================================================================================
+	//=====================GESTIONE DEL PLAYER============================================
+	
+	
+	public void next(){
+		
+	}
+	
+	public void previous(){
+		
+	}
+	
+
+	
+	public void rewind(){
+		
+	}
+	
 	public SinglePlaylistItem getCurrentPlayingTrack(){
 		return this.currentPlayingTrack;
 	}
+	
+	//====================================================================================
 	//==================GESTIONE DELLA CODA DI RIPRODUZIONE===============================
 	public void addTrackToQueue(SinglePlaylistItem t){
 		queue.addSinglePlaylistItem(t);
@@ -141,21 +165,19 @@ public class PlayerController extends SQLiteOpenHelper{
 	public void addPlaylistToQueue(PlaylistItem p){
 		queue.addPlaylist(p);
 	}
-
-	public int getQ_loop() {
-		return q_loop;
-	}
-
-	public void setQ_loop(int q_loop) {
-		this.q_loop = q_loop;
-	}
 	
-	//==================GESTIONE DB=====================================
-
-	//Crea il database per la prima volta
-	public static void createDb(){
-		sqlDatabaseHelper.createDatabase();
+	/*public void loop(){
+		if(q_loop > 1){
+			this.aux_queue= new Queue(queue);
+			queue.clear();//ALERT occhio che qua succedono casini;
+			for(int i=0; i<q_loop;i++){
+				queue.addSinglePlaylistItemList(aux_queue.getQueue());
+			}
+		}
 	}
+	*/
+	//====================================================================================
+	//==================GESTIONE DATABASE=================================================
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
@@ -170,6 +192,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			sqlDatabaseHelper.eraseDatabase();
 		cursorPlaylist 	= null;
 		cursorTracks	= null;
+	
 	}
 
 	public static boolean isDatabaseExist(){
@@ -184,7 +207,6 @@ public class PlayerController extends SQLiteOpenHelper{
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		
 	}
 	
 	/**
@@ -254,6 +276,7 @@ public class PlayerController extends SQLiteOpenHelper{
 
 		@Override
 		protected Void doInBackground(String... params) {
+			
 			String[] paths = {params[0]};
 			completeString = params[0];
 			
@@ -607,7 +630,7 @@ public class PlayerController extends SQLiteOpenHelper{
 
 		@Override
 		protected Cursor doInBackground(Void... params) {
-
+			
 			try{
 				//String[] columnSelect = {"*"};
 				this.cursorPlaylist = sqlDatabaseHelper.getQueryResult("", SQLiteConnect.COLUMN_NAME, SQLiteConnect.TABLE_NAME_PLAYLIST,
@@ -675,9 +698,6 @@ public class PlayerController extends SQLiteOpenHelper{
 		if(sqlDatabaseHelper != null)
 			sqlDatabaseHelper.closeDatabase();	
 	}
-	//=====================END GESTIONE DB==========================================
-	
-	//====================GESTIONE PLAYER===========================================
 	
 	public static String getArtistCurrentPlayingTrack(){
 		if(currentPlayingTrack!=null)
@@ -702,14 +722,91 @@ public class PlayerController extends SQLiteOpenHelper{
 		return currentPlayingTrack.getBitmapCover();
 		else return null;
 	}
+	public static void end_music_sevice(){//change
+		Log.d("MusicService","end_music_service");
+
+		lbm.unregisterReceiver(previewCompleteReceiver);
+		lbm.unregisterReceiver(songPreparedReceiver);
+		lbm.unregisterReceiver(previewPreparedReceiver);
+		lbm.unregisterReceiver(songCompleteReceiver);
+		if(preview || playingPlaylist || player)
+			m_context.unbindService(musicConnection);
+		
+		if(musicSrv!=null)
+			musicSrv.stopFade();
+			
+		playingPlaylist=false;
+		serviceConnected=false;
+		preview=false;
+		player=false;
+	}
 	
+	private static BroadcastReceiver songCompleteReceiver=new BroadcastReceiver(){
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			//lbm.unregisterReceiver(songPreparedReceiver);
+			Log.d("songCompleteReceiver","attivato");
+			lbm.unregisterReceiver(songCompleteReceiver);
+			//queue.printQueue();
+			Log.d("queue", "size= " + queue.getQueue().size());
+			Log.d("queue", "aux_queue size= " + aux_queue.getQueue().size());
+			if(queue.isEmpty())
+			{
+				nLoopPlaylistDone++;
+				if(nLoopPlaylistDone==q_loop && q_loop!=1000 )
+				{
+					//playingPlaylist=false;
+					
+					//m_context.unbindService(musicConnection);
+				}
+				else
+				queue.addPlaylist(currentPlayingPlaylist);
+				//Intent intent2=new Intent(mainActivity, PlaylistActivity.class);						
+				//mainActivity.startActivity(intent2);
+			}
+	
+				if(!musicSrv.isLooping()&& (nLoopPlaylistDone!=q_loop || q_loop==1000))
+				{
+					Log.d("complete song","complete song");
+					if(!backPressed)
+						aux_queue.addSinglePlaylistItemOnTop(currentPlayingTrack);
+					backPressed=false;
+					
+					if(random){
+						
+						int pos= gen.nextInt(queue.getNumberOfSinglePlaylistItems());
+						currentPlayingTrack= queue.getQueue().remove(pos);
+					}
+					else{
+						currentPlayingTrack=queue.removeTop();
+					}
+					
+					uri=Uri.parse(currentPlayingTrack.getPath_track());
+					try {
+						set_player_playlist();
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						e.printStackTrace();
+					} catch (IllegalStateException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					};
+
+		
+
+				}
+		}
+	};
 	private static BroadcastReceiver songPreparedReceiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if(playingPlaylist)
-				lbm.registerReceiver(songCompleteReceiver, new IntentFilter("Complete"));
-			
 			lbm.unregisterReceiver(songPreparedReceiver);
+			if(playingPlaylist){
+				lbm.registerReceiver(songCompleteReceiver, new IntentFilter("Complete"));
+				Log.d("songComplete","Registrato");
+			}
 			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 			int pos=prefs.getInt("Pos", 0);
 			Log.d("activity","before seek");
@@ -718,101 +815,46 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 	};
 	
-	private static BroadcastReceiver songCompleteReceiver=new BroadcastReceiver(){
+	public static Context getContext(){
+		return m_context;
+	}
+	
+	
+	private static BroadcastReceiver previewPreparedReceiver=new BroadcastReceiver(){//change
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			lbm.unregisterReceiver(songCompleteReceiver);
-			//queue.printQueue();
-			//Log.d("queue", "size= " + queue.getQueue().size());
-			//Log.d("queue", "aux_queue size= " + aux_queue.getQueue().size());
-			if(queue.isEmpty())
-			{
-				nLoopPlaylistDone++;
-				if(nLoopPlaylistDone==q_loop && q_loop!=1000 )
-				{
-					playingPlaylist=false;
-					
-					//m_context.unbindService(musicConnection);
-				}
-				else
-					queue.addPlaylist(currentPlayingPlaylist);
-			}
-	
-			if(!musicSrv.isLooping()&& (nLoopPlaylistDone!=q_loop || q_loop==1000))
-			{
-				Log.d("complete song","complete song");
-				m_context.unbindService(musicConnection);
-				m_context.stopService( new Intent(m_context, MusicService.class));
-				if(!backPressed)
-					aux_queue.addSinglePlaylistItemOnTop(currentPlayingTrack);
-				backPressed=false;
-				
-				if(random){
-					
-					int pos= gen.nextInt(queue.getNumberOfSinglePlaylistItems());
-					currentPlayingTrack= queue.getQueue().remove(pos);
-				}
-				else{
-					currentPlayingTrack=queue.removeTop();
-				}
-				
-				uri=Uri.parse(currentPlayingTrack.getPath_track());
-				set_player();
-			}
-		}
-	};
-	
-	private static BroadcastReceiver previewPreparedReceiver=new BroadcastReceiver(){
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			//Log.d("prepared","preview");
-			
+			Log.d("On receive prepared","preview");
 			lbm.unregisterReceiver(previewPreparedReceiver);
-			
-			//if(preview)
-			lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
-			
 			//lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
 			printToast("Preview of: "+currentPreviewTrack.getTitle());
 			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
-			int durationPreview=(prefs.getInt("Duration Preview", 0)+15)*1000;
-			//musicSrv.preview(2000);
-			preview(2000);
+			int durationPreview=(prefs.getInt("Duration Preview", 0)+15)*1000;//TODO PlayerBoRoVe ora lo prende statico, lo deve leggere dalle prefences
+			musicSrv.preview(5000);
 		}
 	};
 	
-	private static BroadcastReceiver previewCompleteReceiver=new BroadcastReceiver(){
+	public static void printToast(String s){
+		Toast.makeText(m_context, s, Toast.LENGTH_SHORT).show();
+	}
+	
+	private static BroadcastReceiver previewCompleteReceiver=new BroadcastReceiver(){//change
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			//Log.d("on complete preview","on complete preview");
-			lbm.unregisterReceiver(previewCompleteReceiver);
-			
+			Log.d("on complete preview","on complete preview");
+			//FIXME controllare se necessario
+			m_context.unbindService(musicConnection);
 			if(!queue.isEmpty()){
 				
-				//queue.printQueue();//stampa la coda
-
+				lbm.registerReceiver(waitForDestroyService, new IntentFilter("Service destroy"));
 				currentPreviewTrack=queue.removeTop();
 				uri=Uri.parse(currentPreviewTrack.getPath_track());
-				//set_player();
-				
-				
-				//Log.d("on preview complete ", "chiamato wait for destroy");
-				//lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared"));
 			}
 			else{
-				//lbm.unregisterReceiver(previewPreparedReceiver);
+				lbm.unregisterReceiver(previewCompleteReceiver);
+				lbm.unregisterReceiver(previewPreparedReceiver);
 				preview=false;
-				Log.d("preview", "impostato false in onComplete");
+				Log.d("end","preview");
 			}
-			
-			lbm.registerReceiver(waitForDestroyService, new IntentFilter("Service destroy"));
-			
-			try{
-				m_context.unbindService(musicConnection);
-			}catch(IllegalArgumentException e){
-				Log.d("Exception", e.toString());
-			}
-			m_context.stopService( new Intent(m_context, MusicService.class));
 		}
 	};
 	
@@ -821,115 +863,95 @@ public class PlayerController extends SQLiteOpenHelper{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			lbm.unregisterReceiver(waitForDestroyService);
+			set_player();
+			
+		}
+		
+	};
+	
+	private static MusicService musicSrv;
+	private static boolean serviceConnected=false;
+	private static Intent playIntent;
+	private static Uri uri;
+	private static LocalBroadcastManager lbm;
+	private static int nLoopPlaylistDone;
+	private static Random gen= new Random();
+	private static boolean playingPlaylist;
+	private static SinglePlaylistItem currentPreviewTrack;
+	private static boolean preview=false;
+	private static ServiceConnection musicConnection = new ServiceConnection(){
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			it.borove.playerborove.MusicService.MusicBinder binder = (it.borove.playerborove.MusicService.MusicBinder)service;
+			//get service
+			Log.d("service","onConnected");
+			musicSrv = binder.getService();
+			serviceConnected=true;
+			try {
+				musicSrv.setPath(uri);	
 
-			if(preview){
-				Log.d("wait for destroy", "eseguo set player");
-				set_player();
-			}
-			else{
-				Log.d("preview", "end");
-			}	
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			serviceConnected=false;
+			Log.d("Disc","onServiceDisconnetcted");
 		}
 	};
 	
-	public static void printToast(String s){
-		Toast.makeText(m_context, s, Toast.LENGTH_SHORT).show();
-	}
-	
-	private static void initMusicConnection(){
-		
-		musicConnection = new ServiceConnection(){
-			@Override
-			public void onServiceConnected(ComponentName name, IBinder service) {
-				it.borove.playerborove.MusicService.MusicBinder binder = (it.borove.playerborove.MusicService.MusicBinder)service;
-				//get service
-				Log.d("service","onConnected");
-				musicSrv = binder.getService();
-				serviceConnected=true;
-				try {
-					musicSrv.setPath(uri);	
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					e.printStackTrace();
-				} catch (IllegalStateException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} 
-			}
 
-			@Override
-			public void onServiceDisconnected(ComponentName name) {
-				serviceConnected=false;
-				Log.d("Disc","onServiceDisconnetcted");
-			}
-		};
-	}
 
 	public static void set_player(){
-			//TODO qua fa macelli 
-			/*if(!preview){
+		
+			if(!preview){
 				SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 				SharedPreferences.Editor editor=prefs.edit();
 				editor.putString("lastSongId", currentPlayingTrack.getId());
 				editor.commit();
-			}*/
-			playIntent = new Intent(m_context, MusicService.class);
-			
-			if(musicConnection == null){
-				initMusicConnection();
 			}
+			playIntent = new Intent(m_context, MusicService.class);
 			m_context.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
 			
-			if(preview){
+			if(preview)
 				lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared"));
-			}
 			else
 				lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
-
 			Log.d("setPlayer","setPlayer");
-			//Log.d("currentPreviewTrack",currentPreviewTrack.getTitle());
 	}
 	
-	public static void end_music_sevice(){
-		Log.d("MusicService","end_music_service");
-		musicSrv.stopFade();
-		lbm.unregisterReceiver(songPreparedReceiver);
-		m_context.unbindService(musicConnection);
-		m_context.stopService( new Intent(m_context, MusicService.class));
-		//musicSrv.stop();
-		playingPlaylist=false;
-		serviceConnected=false;
+	public static void set_player_playlist_init(){
+		playIntent = new Intent(m_context, MusicService.class);
+		m_context.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+		lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
+		Log.d("setPlayer","setPlayer");
 	}
 	
-	public static void end_music_service_preview(){
-		Log.d("MusicService","end_music_service_preview");
-		musicSrv.stopFade();
-		lbm.unregisterReceiver(previewPreparedReceiver);
-		lbm.unregisterReceiver(previewCompleteReceiver);
-		lbm.unregisterReceiver(waitForDestroyService);
-		m_context.unbindService(musicConnection);
-		m_context.stopService( new Intent(m_context, MusicService.class));
-		//musicSrv.stop();
-		if(preview){
-			preview=false;
-			Log.d("end_music_service_preview", "impostato preview a false");
-		}
-		serviceConnected=false;
-	}
+	public static void set_player_playlist() throws IllegalArgumentException, SecurityException, IllegalStateException, IOException{
+		Log.d("setPlayer","setPlayer");
+	
+			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor=prefs.edit();
+			editor.putString("lastSongId", currentPlayingTrack.getId());
+			editor.commit();
+			lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
+			musicSrv.setPath(uri);
+}
+	
+	protected static final String SETTINGS = "SETTINGS";
 	
 	public static void play(){
 		if(musicSrv!=null && serviceConnected){
 			Log.d(TAG,"play");
 			musicSrv.playPlayer();
-		}
-	}
-	
-	public static void preview(int duration){
-		if(musicSrv!=null && serviceConnected){
-			Log.d("preview","play preview");
-			musicSrv.preview(duration);
 		}
 	}
 	
@@ -954,31 +976,28 @@ public class PlayerController extends SQLiteOpenHelper{
 
 	public static void seekTo(int pos) {
 		if(musicSrv!=null && serviceConnected)
-		musicSrv.seek(pos);
+			musicSrv.seek(pos);
 	}
 	
 	public static boolean isPlaying() {
-
 		if (musicSrv!=null && serviceConnected)
-		return musicSrv.isPng();
+			return musicSrv.isPng();
 		return false;
 	}
 
 	public static void setLoop() {
-
+		
 		if(musicSrv!=null && serviceConnected)
 			musicSrv.Loop(true);
 	}
 
 	public static void disableLoop() {
-
 		if(musicSrv!=null && serviceConnected)
 		if (musicSrv.isLooping())
 			musicSrv.Loop(false);		
 	}
 
 	public static boolean isLooping() {
-
 		if(musicSrv!=null && serviceConnected)
 		return musicSrv.isLooping();
 		return false;
@@ -986,115 +1005,121 @@ public class PlayerController extends SQLiteOpenHelper{
 
 	
 	public static void mute() {
-
-		if(musicSrv!=null && serviceConnected)
-		if (musicSrv!=null)
-				musicSrv.stopFade();
-				musicSrv.setVolume(0f);
+		if(musicSrv!=null && serviceConnected){
+			musicSrv.stopFade();
+			musicSrv.setVolume(0f);
 		}
+	}
 
 	public static void audio() {/*
-
 		SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+		
 		int fadeIn=prefs.getInt("FadeIn",0);
 		if(musicSrv!=null && serviceConnected)
 			if(fadeIn>0)
 			musicSrv.fadeIn(fadeIn);
 			else
 			musicSrv.setVolume(1f);*/
-			}
+		if(musicSrv!=null && serviceConnected){
+			musicSrv.setVolume(1f);
+		}
+	}
 
 	
 	public static boolean isMute() {
-
 		if(musicSrv!=null && serviceConnected)
-		return musicSrv.isMute();
+			return musicSrv.isMute();
+
 		return false;
-		}
+	}
 
 
-	public static void stop() {
-
+	public static void stop() {//change
 		if(musicSrv!=null && serviceConnected)
 		{	lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
-			musicSrv.seek(0);
+			//musicSrv.seek(0);
 			musicSrv.stop();
 		}
 	}
 	private static boolean random;
 	
 	public static void playPlaylist(PlaylistItem playlist){
+		if(preview)
+			end_music_sevice();
+		
 		SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 		q_loop=prefs.getInt("NLoopPlaylist", 1);
 		random=prefs.getBoolean("Random Playback", false);
+		//if(q_loop>1 && random)
+			//trackLoop=new ArrayList<Integer>(playlist.getSongs().size());
+	
+		playingPlaylist=true;
+		nLoopPlaylistDone=0;
+		queue.clear();
+		aux_queue.clear();
+		queue.addPlaylist(playlist);
+		currentPlayingPlaylist=playlist;
 		
-		if(!preview){
-			playingPlaylist=true;
-			nLoopPlaylistDone=0;
-			queue.clear();
-			aux_queue.clear();
-			queue.addPlaylist(playlist);
-			currentPlayingPlaylist=playlist;
-
-			if(random){
-
-				int pos= gen.nextInt(queue.getNumberOfSinglePlaylistItems());
-				currentPlayingTrack= queue.getQueue().remove(pos);
-			}
-			else{
-				currentPlayingTrack=queue.removeTop();
-			}
-			//aux_queue.addSinglePlaylistItemOnTop(currentPlayingTrack);
-			playSingleItem(currentPlayingTrack);
+		if(random){
+			
+			int pos= gen.nextInt(queue.getNumberOfSinglePlaylistItems());
+			currentPlayingTrack= queue.getQueue().remove(pos);
 		}
 		else{
-			printToast("Anteprima fermata, premere di nuovo per riprodurre");
-			end_music_service_preview();
-			Log.d("playPlaylist", "playlist in riproduzione");
+			currentPlayingTrack=queue.removeTop();
 		}
-	}
-	public static void playSingleItem(SinglePlaylistItem i){
-		currentPlayingTrack=i;
+		SharedPreferences.Editor editor=prefs.edit();
+		editor.putString("lastSongId", currentPlayingTrack.getId());
+		editor.commit();
+		//aux_queue.addSinglePlaylistItemOnTop(currentPlayingTrack);
+		lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
 		uri=Uri.parse(currentPlayingTrack.getPath_track());
+		playIntent = new Intent(m_context, MusicService.class);
+		m_context.bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
 		Intent intent=new Intent(mainActivity, PlayerActivity.class);
 		mainActivity.startActivity(intent);
-		PlayerController.set_player();
 		
 	}
 	
-	public static void previewPlaylist(PlaylistItem playlist){
-		//Log.d(TAG," preview playlist");
-
+	public static void previewPlaylist(PlaylistItem playlist){//change
+		Log.d(TAG," preview playlist");
+		queue.clear();
+		queue.addPlaylist(playlist);
+		
 		if(preview)
-		{
+		{  Log.d(TAG, "stop previus preview");
+			
+			musicSrv.stopFade();
+			//lbm.unregisterReceiver(songPreviewReceiver);
 			//m_context.unbindService(musicConnection);
 			//lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
-			//lbm.sendBroadcast(new Intent("Complete Preview"));
-			//lbm.registerReceiver(previewPreparedReceiver, new IntentFilter("Prepared") );
-			//lbm.sendBroadcast(new Intent("Prepared"));
-			printToast("Anteprima fermata");
-			end_music_service_preview();
-			//set_player();
-			preview= false;
-			queue.clear();
+			lbm.sendBroadcast(new Intent("Complete Preview"));
+			Log.d(TAG, "Intent complete preview lanced");
+			
 		}
 		else
 		{
-			preview=true;
-			queue.clear();
-			queue.addPlaylist(playlist);
-			currentPreviewPlayingPlaylist = playlist;
-			previewSingleItem(queue.removeTop());
+		preview=true;
+		lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
+		currentPreviewTrack=queue.removeTop();
+		previewSingleItem(currentPreviewTrack);//preview single item
 		}
-		
-
 	}
 	
 	public static void previewSingleItem(SinglePlaylistItem i){
 		
 		currentPreviewTrack=i;
 		uri=Uri.parse(currentPreviewTrack.getPath_track());
-		set_player();
+		PlayerController.set_player();
+		
+	}
+	public static void playSingleItem(SinglePlaylistItem i){
+		player=true;
+		currentPlayingTrack=i;
+		uri=Uri.parse(currentPlayingTrack.getPath_track());
+		Intent intent=new Intent(mainActivity, PlayerActivity.class);
+		mainActivity.startActivity(intent);
+		PlayerController.set_player();
 		
 	}
 	
@@ -1143,6 +1168,7 @@ public class PlayerController extends SQLiteOpenHelper{
 	public void open_player(){
 		
 		Log.d("open player","open player");
+		player=true;
 		SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 		sqlDatabaseHelper.openDatabaseReadOnly();
 		Cursor tracks=sqlDatabaseHelper.getExactlyTrack(prefs.getString("lastSongId", "0"),SQLiteConnect.COLUMN_ID);
@@ -1183,7 +1209,203 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 			
 		//playSingleItem(PlayerController.cursorTracks.getExatlyTrack()�);
-		
+
 	}
+	/**
+	 * calcola le statistiche sulla libreria, es: numero di brani totali, durata totale, brano più lungo, file più grande
+	 */
+	public static void libraryDetails(){
+
+		int number_of_all_track=0;
+		Duration duration_of_library= new Duration(0, 0, 0);
+		Duration longest_track_duration= new Duration(0,0,0);
+		String longest_track_title= "";
+		double memory_occupation= 0.0;//occupazione di memoria di tutta la libreria
+		double bigger_track_occupation= 0.0;
+		String biggest_track_title= "";
+		ArrayList<Integer> number_of_track_for_kind;//numero di brani per tipo
+		ArrayList<Integer> vote_of_track_for_kind;//voto medio dei brani per tipo
+
+		Cursor newCursor = getCursorTracks();
+		if(newCursor != null){
+			newCursor.moveToFirst();
+			while(!newCursor.isAfterLast()){
+
+				//incremento il numero di brani
+				number_of_all_track++;
+
+				//incremento la durata totale della libreria
+				//e cerco il brano di durata maggiore
+				String duration= newCursor.getString(9);
+				int sec 	= Integer.parseInt(duration) / 1000;
+				int min 	= sec / 60;
+				sec = sec % 60;
+				int hour	= min / 60;
+				min = min % 60; 
+				Duration tmp_duration= new Duration(hour, min, sec);
+				duration_of_library.sum(tmp_duration);
+				if(longest_track_duration.isSmallerOf(tmp_duration)){
+					longest_track_duration.setDuration(tmp_duration);
+					longest_track_title= newCursor.getString(1);
+				}
+
+				//incremento la memoria totale occupata dalla libreria
+				//e certo il file con maggior occupazione
+				String pathTrack= newCursor.getString(7);
+				File file= new File(pathTrack);
+				double tmp_size= (file.length()/1048576.0);
+				memory_occupation+= Math.round(tmp_size);
+				if(bigger_track_occupation < tmp_size){
+					bigger_track_occupation= Math.round(tmp_size);
+					biggest_track_title= newCursor.getString(1);
+				}
+
+				newCursor.moveToNext();
+			}	
+			/*Log.d("stat library", "num of track: " + number_of_all_track + ", total duration: " + duration_of_library.getDuration()
+									+ ", memory: " + memory_occupation+ ", bigger file: " + biggest_track_title + " - " + bigger_track_occupation 
+									+ ", longest track: " + longest_track_title + " - " + longest_track_duration.getDuration());*/
+
+
+			Intent library_details 	= new Intent(m_context, LibraryDetailsActivity.class);
+			Bundle details		= new Bundle();
+			
+			details.putString("n_tracks", String.valueOf(number_of_all_track));
+			details.putString("total_duration", duration_of_library.getDuration());
+			details.putString("memory_size", String.valueOf(memory_occupation) + " MB");
+			details.putString("bigger_file", biggest_track_title + " - " +String.valueOf(bigger_track_occupation) + " MB");
+			details.putString("longest_file", longest_track_title + " - " +longest_track_duration.getDuration());
+
+			library_details.putExtras(details);
+			m_context.startActivity(library_details);
+		}
+	}
+
+	/**
+	 * calcola le statistiche per le playlist presenti 
+	 */
+	public static void playlistDetails(){
+		int number_of_playlist= 0;//numero totale di playlist
+		Duration total_duration_of_playlists= new Duration(0,0,0);//durata totale di tutte le playlist
+		Duration duration_of_playlist= new Duration(0,0,0);
+		String longest_playlist= "";//nome della playlist più lunga
+		Duration duration_of_longest_playlist= new Duration(0,0,0);//durata della playlist più lunga
+		String biggest_playlist= "";//nome della playlist con più brani
+		int number_of_track_for_biggest_playlist= 0;
+		int number_of_track_in_playlist=0;
+
+		ArrayList<String> playlists= new ArrayList<String>();
+
+		Cursor cursor= getCursorPlaylist();
+		if(cursor != null){
+			//popolo l'array di tutte le playlist
+			while(!cursor.isAfterLast()){
+				//Log.d("cursor", cursor.getString(0) + ", " + cursor.getString(1) + ", " + cursor.getString(2) + ", " + cursor.getString(7));
+
+				if(!playlists.contains(cursor.getString(1))){
+					playlists.add(cursor.getString(1));
+				}
+
+				cursor.moveToNext();
+			}
+			cursor.moveToFirst();
+			//imposto il numero di playlist
+			number_of_playlist= playlists.size();
+
+			//calcolo la durata totale, la playlist piu' lunga e quella con piu' elementi
+			for(String playlist : playlists){
+
+
+				while(!cursor.isAfterLast()){
+
+					if(playlist.equals(cursor.getString(1))){
+
+						String tmp_duration_track= cursor.getString(11);
+						int sec 	= Integer.parseInt(tmp_duration_track) / 1000;
+						int min 	= sec / 60;
+						sec = sec % 60;
+						int hour	= min / 60;
+						min = min % 60; 
+						Duration tmp_duration= new Duration(hour, min, sec);
+
+						duration_of_playlist.sum(tmp_duration);
+						number_of_track_in_playlist++;
+					}
+
+					cursor.moveToNext();
+				}
+
+				//calcolo la durata totale
+				total_duration_of_playlists.sum(duration_of_playlist);
+				//calcolo la playlist piu' lunga
+				if(duration_of_longest_playlist.isSmallerOf(duration_of_playlist)){
+					duration_of_longest_playlist.setDuration(duration_of_playlist);
+					longest_playlist= playlist;
+				}
+				//calcolo la playlist con piu' elementi
+				if(number_of_track_for_biggest_playlist < number_of_track_in_playlist){
+					number_of_track_for_biggest_playlist= number_of_track_in_playlist;
+					biggest_playlist= playlist;
+				}
+
+				cursor.moveToFirst();
+				duration_of_playlist.setDuration(0, 0, 0);
+			}
+
+			//Log.d("details playlist","numero playlist: " + number_of_playlist + ", durata totale: " + total_duration_of_playlists.getDuration() + ", longest: " + longest_playlist + " - " + duration_of_longest_playlist.getDuration()
+				//	+ ", biggest: " + biggest_playlist + " - " + number_of_track_for_biggest_playlist);
+
+			Intent playlist_details= new Intent(m_context, PlaylistDetailsActivity.class);
+			Bundle details= new Bundle();
+
+			details.putString("n_playlist", String.valueOf(number_of_playlist));
+			details.putString("total_duration", total_duration_of_playlists.getDuration());
+			details.putString("bigger_file", biggest_playlist + " - " +String.valueOf(number_of_track_for_biggest_playlist));
+			details.putString("longest_playlist", longest_playlist + " - " +duration_of_longest_playlist.getDuration());
+
+			playlist_details.putExtras(details);
+			m_context.startActivity(playlist_details);
+		}
+	}
+	
+	/**
+	 * calcola le statistiche per la singola playlist selezionata
+	 */
+	public static void playlistSingleDetails(PlaylistItem playlist){
+		
+		int n_track_in_playlist= playlist.getSongs().size();
+		Duration total_duration_playlist= new Duration(0,0,0);
+		Duration longest_track= new Duration(0,0,0);
+		String longest_track_name= "";
+		
+		for(SinglePlaylistItem track : playlist.getSongs()){
+			//prendo la durata totale
+			int sec 	= Integer.parseInt(track.getDuration()) / 1000;
+			int min 	= sec / 60;
+			sec = sec % 60;
+			int hour	= min / 60;
+			min = min % 60; 
+			Duration tmp_duration= new Duration(hour, min, sec);
+			total_duration_playlist.sum(tmp_duration);
+			
+			//prendo il brano piu' lungo
+			if(longest_track.isSmallerOf(tmp_duration)){
+				longest_track.setDuration(tmp_duration);
+				longest_track_name= track.getTitle();
+			}
+		}
+		
+
+		Intent playlist_single_details= new Intent(m_context, PlaylistSingleDetails.class);
+		Bundle details= new Bundle();
+
+		details.putString("n_track_in_playlist", String.valueOf(n_track_in_playlist));
+		details.putString("total_duration", total_duration_playlist.getDuration());
+		details.putString("longest_track_in_playlist", longest_track_name + " - " +longest_track.getDuration());
+
+		playlist_single_details.putExtras(details);
+		m_context.startActivity(playlist_single_details);
+	}
+
 
 }

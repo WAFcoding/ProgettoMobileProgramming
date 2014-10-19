@@ -25,6 +25,7 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 	private BroadcastReceiver receiver=new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			Log.d("Prepared", "player activity");
 			lbm.unregisterReceiver(receiver);
 			lbm.registerReceiver(receiverComplete, new IntentFilter("Complete"));
 			String artist= PlayerController.getArtistCurrentPlayingTrack();
@@ -39,6 +40,7 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 		private BroadcastReceiver receiverComplete=new BroadcastReceiver(){
 			@Override
 			public void onReceive(Context context, Intent intent) {
+				Log.d("Complete", "player activity");
 				mediaController.stopSeek();;
 				lbm.unregisterReceiver(receiverComplete);
 				lbm.registerReceiver(receiver, new IntentFilter("Prepared"));
@@ -66,22 +68,22 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 		PlayerController.end_music_sevice();
 	}
 	
-	/*public boolean onKeyDown(int keyCode, KeyEvent event){
+	public boolean onKeyDown(int keyCode, KeyEvent event){
 		
 		if(keyCode == KeyEvent.KEYCODE_BACK){
 			
 			finish();
-			overridePendingTransition(R.anim.right_in, R.anim.left_out);
+			overridePendingTransition(R.anim.top_in, R.anim.bottom_out);
 			return true;
 		}	
 		return super.onKeyDown(keyCode, event); 
-	}*/
+	}
 	
 	public void setText(String s){
 		TextView text=(TextView) findViewById(R.id.textView);
 		text.setText(s);
 		text.setSelected(true);
-		}
+	}
 	
 	public void setImage(Bitmap p){
 		ImageView image=(ImageView) findViewById(R.id.imageView1);
@@ -115,13 +117,11 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 	}
 
 	public boolean isPlaying() {
-		// TODO Auto-generated method stub
 		return PlayerController.isPlaying();
 	}
 
 	@Override
 	public void setLoop() {
-		// TODO Auto-generated method stub
 		PlayerController.setLoop();
 	}
 
@@ -133,44 +133,41 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 	@Override
 	public boolean isLooping() {
 		return PlayerController.isLooping();
-		}
+	}
 
 	@Override
 	public void mute() {
 		PlayerController.mute();
-		}
+	}
 
 	@Override
 	public void audio() {
 		PlayerController.audio();
-		}
+	}
 
 	@Override
 	public boolean isMute() {
 		return PlayerController.isMute();
-		}
+	}
 
 	@Override
 	public void stop() {
-			PlayerController.stop();
+		PlayerController.stop();
 	}
 
 	@Override
 	public boolean canBackForward() {
-		// TODO Auto-generated method stub
 		return PlayerController.canBackForward();
 	}
 
 	@Override
 	public void forward() {
-		// TODO Auto-generated method stub
-		Log.d("forward","forward");
+		//Log.d("forward","forward");
 		PlayerController.forward();
 	}
 
 	@Override
 	public void back() {
-		// TODO Auto-generated method stub
 		PlayerController.back();
 	}
 }

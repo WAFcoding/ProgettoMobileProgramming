@@ -1,0 +1,146 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollview_library_details"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_listview"
+    android:fillViewport="true" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/albumArt_library_details"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="5"
+            android:contentDescription="@string/content"
+            android:src="@drawable/icon" />
+        <!-- numero totale playlist -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:orientation="horizontal"
+            android:scrollHorizontally="true"
+            android:singleLine="true" >
+
+            <TextView
+                android:id="@+id/txt_total_track_in_playlist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="4dp"
+                android:gravity="center"
+                android:labelFor="@+id/etxt_total_track_in_playlist"
+                android:text="@string/activity_details_n_track_in_playlist"
+                android:textColor="#FFCC99" />
+
+            <TextView
+                android:id="@+id/etxt_total_track_in_playlist"
+                android:layout_width="0dip"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_margin="4dp"
+                android:layout_weight="1.0"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:padding="1dp"
+                android:text=""
+                android:textColor="#6666FF"
+                android:textSize="15sp"
+                android:textStyle="italic" />
+        </LinearLayout>
+        <!-- durata totale playlist -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/txt_total_single_playlist_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="4dp"
+                android:gravity="center"
+                android:labelFor="@+id/etxt_total_duration"
+                android:text="@string/activity_details_total_duration_single_playlist"
+                android:textColor="#FFCC99" />
+
+            <TextView
+                android:id="@+id/etxt_total_single_playlist_duration"
+                android:layout_width="0dip"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_margin="4dp"
+                android:layout_weight="1.0"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="1dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="#6666FF"
+                android:textSize="15sp"
+                android:textStyle="italic" />
+        </LinearLayout>
+        <!-- brano piu' lungo -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/txt_longest_track_in_playlist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="4dp"
+                android:gravity="center"
+                android:labelFor="@+id/etxt_longest_track_in_playlist"
+                android:text="@string/activity_details_longest_track_in_playlist"
+                android:textColor="#FFCC99" />
+
+            <TextView
+                android:id="@+id/etxt_longest_track_in_playlist"
+                android:layout_width="0dip"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_margin="4dp"
+                android:layout_weight="1.0"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="1dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="#6666FF"
+                android:textSize="15sp"
+                android:textStyle="italic" />
+        </LinearLayout>
+	</LinearLayout>
+</ScrollView>

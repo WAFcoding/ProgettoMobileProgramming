@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">PlayerBoRoVe</string>
+    <string name="app_name">Player BoRoVe</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_player">PlayerActivity</string>
-    <string name="title_activity_playlist">PlaylistActivity</string>
-    <string name="title_activity_library">LibraryActivity</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <!-- ****************activity title**************************** -->
+    <string name="title_activity_player">Player BoRoVe</string>
+    <string name="title_activity_playlist">Playlist</string>
+    <string name="title_activity_library">Libreria</string>
+    <string name="title_activity_settings">Impostazioni</string>
+    <string name="title_activity_track">Dettagli Brano</string>
+    <string name="title_options">Opzioni</string>
+    <string name="title_activity_playlist_add">Aggiungi Playlist</string>
+    <string name="title_activity_playlist_details">Dettagli delle Playlist</string>
+    <string name="title_activity_library_details">Dettagli Libreria</string>
+    <string name="title_activity_playlist_single_details">Dettagli Playlist</string>
+    
     <string name="library">Libreria</string>
     <string name="playlist">Playlist</string>
     <string name="settings">Impostazioni</string>
     <string name="classification">Classificazione</string>
     <string name="player">Lettore</string>
     <string name="duration">500</string>
-    <string name="txtButton">Done</string>
+    <string name="txtButton">Exit</string>
     <string name="artista">Artista</string>
     <string name="titolo">Titolo</string>
     <string name="voto">Voto</string>
@@ -25,39 +33,46 @@
     <!-- *****************menu_track.xml**************** -->
     <string name="details">Dettagli </string>
     <string name="selectTrack">Seleziona </string>
-    <string name="erase">Cancella </string>
-    <!-- *****************menu_track.xml**************** -->
+    <string name="erase">Rimuovi</string>
 
+    <!-- *****************menu_Playlist.xml**************** -->
+    <string name="detailsPlay">Dettagli </string>
+    <string name="PreviewPlay">Anteprima </string>
+    <string name="AddTrackPlay">Aggiungi Brano</string>
+    <string name="erasePlay">Rimuovi</string>
 
     <!-- *****************settings_activity.xml**************** -->
-    <string name="EraseDb">Erase Database</string>
-    <string name="SyncDb">Syncronize Database</string>
-    <!-- *****************settings_activity.xml**************** -->
+    <string name="EraseDb">Cancella Database</string>
+    <string name="SyncDb">Sincronizza Database</string>
 
-    <string name="detailsPlaylist">Open</string>
+    <!-- *****************settings_activity.xml**************** -->
+    <string name="detailsPlaylist">Apri</string>
     <string name="openPlayer">Play</string>
     <string name="content"></string>
 
     <!-- *****************navigation drawer**************** -->
-    <string name="drawer_open">Open</string>
-    <string name="drawer_close">Close</string>
-    <string name="description">Media Controls</string>
+    <string name="drawer_open">Apri</string>
+    <string name="drawer_close">Chiudi</string>
+    <string name="description">Controlli Media</string>
 
     <string-array name="drawer_choice_playlist">
-        <item>Add Playlist</item>
-        <item>Update Playlist</item>
-        <item>Details</item>
-        <item>Settings</item>
+        <item>Aggiungi Playlist</item>
+        <item>Aggiorna</item>
+        <item>Dettagli</item>
+        <item>Impostazioni</item>
     </string-array>
     <string-array name="drawer_choice_library">
-        <item>Add Track</item>
-        <item>Update Library</item>
-        <item>Details</item>
-        <item>Settings</item>
+        <item>Aggiorna Libreria</item>
+        <item>Dettagli</item>
+        <item>Impostazioni</item>
+    </string-array>
+    <string-array name="drawer_choice_single_playlist">
+        <item>Aggiungi brano</item>
+        <item>Dettagli</item>
+        <item>Impostazioni</item>
     </string-array>
 
     <!-- *****************add playlist**************** -->
-    <string name="title_activity_playlist_add">PlaylistAddActivity</string>
     <string name="label_add_playlist">Inserisci il nome della playlist</string>
     <string name="playlist_add_hint">Nuova Playlist</string>
 
@@ -66,7 +81,23 @@
     <string name="playlist_popup_choice2">Dettagli</string>
     <string name="playlist_popup_choice3">Annulla</string>
     <string name="playlist_popup_choice4">Anteprima</string>
-    <string name="title_activity_details_library">DetailsLibraryActivity</string>
     <string name="action_settings">Settings</string>
 
+    <!-- *****************details library******************* -->
+    <string name="activity_details_n_tracks">Numero di brani</string>
+    <string name="activity_details_total_memory">Memoria occupata</string>
+    <string name="activity_details_total_duration">Durata totale libreria</string>
+    <string name="activity_details_longest_track">Brano più lungo</string>
+    <string name="activity_details_biggest_track">File più grande</string>
+
+    <!-- *****************details playlist******************* -->
+    <string name="activity_details_n_playlist">Numero di playlist</string>
+    <string name="activity_details_total_duration_playlist">Durata totale di tutte le playlist</string>
+    <string name="activity_details_longest_playlist">Playlist più lungo</string>
+    <string name="activity_details_biggest_playlist">Playlist con più brani</string>
+
+    <!-- *****************details single playlist******************* -->
+    <string name="activity_details_n_track_in_playlist">Numero di brani</string>
+    <string name="activity_details_total_duration_single_playlist">Durata totale della playlist</string>
+    <string name="activity_details_longest_track_in_playlist">Brano più lungo</string>
 </resources>

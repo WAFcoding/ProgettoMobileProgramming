@@ -392,7 +392,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
+		
 		//eraseDatabase();
 		//createDatabase();
 		//if(SynchronizeDb()){
@@ -516,7 +516,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
+		
 	}
 	
 	/**

@@ -2,14 +2,12 @@ package it.borove.playerborove;
 
 import it.borove.playerborove.PlayerController.updateDbOnTrack;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
+import library_stuff.TrackActivity;
 import playlistModules.SinglePlaylistItem;
-import PlayerManager.Duration;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,7 +24,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.provider.OpenableColumns;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -195,7 +192,7 @@ public class LibraryActivity extends Activity {
 			popup.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
+					
 					Cursor tracks 		= adapter.getCursor();
 					boolean reachable 	= tracks.moveToPosition(itemPosition);
 					if(reachable){
@@ -214,7 +211,7 @@ public class LibraryActivity extends Activity {
 			popup.setNegativeButton("No", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
+					
 				
 				}
 				
@@ -222,7 +219,6 @@ public class LibraryActivity extends Activity {
 			popup.setTitle("Confirm delete");
 			popup.setMessage("Are you Sure?");
 			popup.show();
-				
 		}
 		
 		if(requestCode == MENU_TRACK && resultCode == 320){
@@ -231,7 +227,6 @@ public class LibraryActivity extends Activity {
 		}
 		
 		
-			
 		if(requestCode == REQUEST_VOTE_TRACK && resultCode == RESULT_OK){
 			Bundle bundle2 = data.getExtras();
 			
@@ -256,8 +251,7 @@ public class LibraryActivity extends Activity {
 						|| !vote.equals(String.valueOf(valueOfTrack)) || !oldAlbumName.equals(albumName)){
 							isChangedAnything = true;
 							
-				}
-							
+				}	
 			}
 			
 			if(isChangedAnything){
@@ -305,28 +299,25 @@ public class LibraryActivity extends Activity {
 	private class DrawerItemClickListener implements ListView.OnItemClickListener{
 
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			//add track
-			if(position == 0){
-				
-			}
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
 			//update library
-			else if(position == 1){
+			if(position == 0){
 				updateTracksList();
 				PlayerController.printToast("Library Updated");
 			}
 			//details 
-			else if(position == 2){
-				details();
+			else if(position == 1){
+				PlayerController.libraryDetails();
+				overridePendingTransition(R.anim.right_in, R.anim.left_out);
 			}
 			//settings
-			else if(position == 3){
+			else if(position == 2){
 				PlayerController.open_settings();
-				//animazione a comparsa da sinistra
-				overridePendingTransition(R.anim.right_in, R.anim.left_out); 
+				//animazione a comparsa da sinistra 
+				overridePendingTransition(R.anim.right_in, R.anim.left_out);
 			}
 			drawer.closeDrawer(drawer_list_view);
-			//Toast.makeText(parent.getContext(), "selezionato elemento " + position, Toast.LENGTH_SHORT).show();
 		}
 		
 	}
@@ -338,7 +329,7 @@ public class LibraryActivity extends Activity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
+				
 				Intent menuTrackActivity 	= new Intent(LibraryActivity.this, menuTrack.class);
 				Cursor tracks = adapter.getCursor();
 				boolean reachable = tracks.moveToPosition(position);
@@ -354,13 +345,14 @@ public class LibraryActivity extends Activity {
 		listView.setOnItemClickListener(new OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-				// TODO Auto-generated method stub
+				
 				//count++;
 				//if (count % 2 == 0){
 					Cursor tracks = adapter.getCursor();
 					boolean reachable = tracks.moveToPosition(position);
 					if(reachable){
 						idTrack				= tracks.getInt(0);
+						
 						String _id= tracks.getString(0);
 						String p_title= tracks.getString(1);
 						String singerName= tracks.getString(2);
@@ -383,78 +375,8 @@ public class LibraryActivity extends Activity {
 			}
 			
 		});
-	/*
-		btnUpdate.setOnClickListener(new OnClickListener() {	
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				//Log.d(TAG, "Update bottone");
-				/*Cursor newCursor = PlayerController.getCursorTracks();
-				isChangedAnything = false;
-				if(newCursor != null){
-					newCursor.moveToFirst();
-					while(!newCursor.isAfterLast()){
-						boolean found = false;
-						//Log.d(TAG, "newCursor.getString(0): " + newCursor.getString(0));
-						cursor.moveToFirst();
-						while(!cursor.isAfterLast()){
-							if(cursor.getString(0).equals(newCursor.getString(0))){
-								found = true;		
-								break;
-							}
-	
-							cursor.moveToNext();
-						}
-						if(!found){
-							isChangedAnything = true;
-							break;
-						}
-					
-						newCursor.moveToNext();
-					}			
-					cursor.moveToFirst();
-					while(!cursor.isAfterLast()){
-						boolean found = false;
-						newCursor.moveToFirst();
-						while(!newCursor.isAfterLast()){
-							if(cursor.getString(0).equals(newCursor.getString(0))){						
-								found = true;
-								break;
-							}
-							
-							newCursor.moveToNext();
-						}
-						if(!found){
-							//map.remove(cursor.getString(0));
-							mapper.getIdTrackToIdAlbum().remove(cursor.getString(0));
-							mapper.getIdTrackToContentTitle().remove(cursor.getString(0));
-							isChangedAnything = true;
-							break;
-						}
-	
-						cursor.moveToNext();
-					}
-	
-					if(!isChangedAnything){
-						Log.d(TAG, "!isChangedAnything");
-						Toast.makeText(LibraryActivity.this, "Database is updated", Toast.LENGTH_SHORT).show();		
-					}
-					else{
-						LibraryActivity.adapter.swapCursor(newCursor);
-						setAdapter(newCursor);
-						adapter.notifyDataSetChanged();
-						isChangedAnything = false;
-					}
-				}
-				else
-					Toast.makeText(LibraryActivity.this, "Database is empty!", Toast.LENGTH_SHORT).show();
-					*/
-				
-				updateTracksList();
-				
-				
-		//	}
-		//});
+		
+		updateTracksList();
 		
 		
 	}
@@ -518,6 +440,10 @@ public class LibraryActivity extends Activity {
 						mapper.setIdTrackToContentTitle(mCursor.getString(0), contentTitle);
 					}
 				}
+				
+				
+				
+				
 				mCursor.moveToNext();
 			}
 			 m_context = context;
@@ -625,7 +551,7 @@ public class LibraryActivity extends Activity {
 		
 	}
 	
-	/**
+	/*
 	 * metodo utilizzato dal bottone Update
 	 */
 	public void updateTracksList(){
@@ -697,55 +623,6 @@ public class LibraryActivity extends Activity {
 		else
 			Toast.makeText(LibraryActivity.this, "Database is empty!", Toast.LENGTH_SHORT).show();
 	
-	}
-	
-	private void details(){
-		
-		int number_of_all_track=0;
-		Duration duration_of_library= new Duration(0, 0, 0);
-		double memory_occupation= 0.0;//occupazione di memoria di tutta la libreria
-		ArrayList<Integer> number_of_track_for_kind;//numero di brani per tipo
-		ArrayList<Integer> vote_of_track_for_kind;//voto medio dei brani per tipo
-		
-		Cursor newCursor = PlayerController.getCursorTracks();
-		if(newCursor != null){
-			newCursor.moveToFirst();
-			while(!newCursor.isAfterLast()){
-				
-				//incremento il numero di brani
-				number_of_all_track++;
-				
-				//incremento la durata totale della libreria
-				String duration= newCursor.getString(9);
-				int sec 	= Integer.parseInt(duration) / 1000;
-				int min 	= sec / 60;
-				sec = sec % 60;
-				int hour	= min / 60;
-				min = min % 60; 
-				Duration tmp_duration= new Duration(hour, min, sec);
-				duration_of_library.sum(tmp_duration);
-				
-				//incremento la memoria totale occupata dalla libreria
-				String pathTrack= newCursor.getString(7);
-				File file= new File(pathTrack);
-				double tmp_size= (file.length()/1048576.0);
-				memory_occupation+= tmp_size;
-				
-				newCursor.moveToNext();
-			}	
-			Log.d("stat library", "num of track: " + number_of_all_track + ", total duration: " + duration_of_library.getDuration()
-									+ ", memory: " + memory_occupation);
-		}
-		
-		Intent trackActivity 	= new Intent(LibraryActivity.this, TrackActivity.class);
-		Bundle details		= new Bundle();
-
-		details.putString("n_tracks", String.valueOf(number_of_all_track));
-		details.putString("total_duration", duration_of_library.getDuration());
-		details.putString("memory_size", String.valueOf(memory_occupation));
-
-		trackActivity.putExtras(details);
-		startActivity(trackActivity);
 	}
 	
 }

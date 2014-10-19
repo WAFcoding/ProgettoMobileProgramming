@@ -177,7 +177,7 @@ public class SinglePlaylistItem implements Parcelable{
 	            }
 	        }
 	        else 
-	        	Log.e("PlayListItem: ----> ", " dentro getArtworkQuick: Uri è NULL");
+	        	Log.e("PlayListItem: ----> ", " dentro getArtworkQuick: Uri ï¿½ NULL");
 	        return null;
 	    }
 
@@ -223,13 +223,11 @@ public class SinglePlaylistItem implements Parcelable{
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
 		dest.writeString(this.id);
 		dest.writeString(this.singer_name);
 		dest.writeString(this.kind);
@@ -278,13 +276,11 @@ public class SinglePlaylistItem implements Parcelable{
 
 		@Override
 		public SinglePlaylistItem createFromParcel(Parcel source) {
-			// TODO Auto-generated method stub
 			return new SinglePlaylistItem(source);
 		}
 
 		@Override
 		public SinglePlaylistItem[] newArray(int size) {
-			// TODO Auto-generated method stub
 			return new SinglePlaylistItem[size];
 		}
 		

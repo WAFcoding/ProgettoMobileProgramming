@@ -38,7 +38,13 @@
 		        android:layout_gravity="center"
 		        android:textColor="#FFCC99"
 		        android:labelFor="@+id/fileNameTrack"
-		        android:text="@string/titolo" />
+		        android:text="@string/titolo"
+	            android:singleLine="true" 
+		        android:ellipsize="marquee"
+		        android:marqueeRepeatLimit ="marquee_forever"
+		        android:focusable="true"
+		        android:focusableInTouchMode="true" 
+		        android:scrollHorizontally="true"/>
 		     <EditText
 	            android:id="@+id/fileNameTrack"
 	            android:imeOptions="actionDone"
@@ -54,14 +60,7 @@
 	            android:inputType="text"
 	            android:textColor="#6666FF"
 	            android:textStyle="italic"
-	            android:text="TextView" />
-		     <!--  <EditText 
-		         android:id="@+id/edtFileNameTitle"
-		         android:layout_width="0dip"
-	             android:layout_height="0dip"
-	             android:inputType="text"
-		         />
-		     -->
+	            android:text=""/>
 		 </LinearLayout>
 		 <LinearLayout  
 	        android:layout_width="match_parent"

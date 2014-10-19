@@ -1,64 +1,150 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="${packageName}.${activityClass}"
-    android:orientation="vertical" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_listview" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.35"
-        android:orientation="vertical" >
+        android:baselineAligned="false"
+        android:layout_weight="0.5"
+        android:orientation="horizontal" >
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.5"
+	        android:orientation="vertical" >        
+	        <ImageButton
+	            android:id="@+id/button1"
+	            android:layout_width="match_parent"
+	            android:layout_height="0dip"
+	            android:src="@drawable/playlist_icon3"
+	            android:scaleType="centerInside"
+	            android:adjustViewBounds="true"
+	            android:padding="5dp"
+	            android:background="@drawable/background_button"
+	            android:layout_marginTop="5dp"
+	            android:layout_marginStart="5dp"
+	            android:layout_marginEnd="5dp"
+	            
+	            android:layout_weight="1"
+	             />
 
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:text="@string/playlist" />
+	        <TextView
+	            android:id="@+id/textView1"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center|top"
+	            android:textColor="@android:color/white"
+	            android:textStyle="bold|italic"
+	            android:text="@string/playlist" />
+    	</LinearLayout>
+    	
+        <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.5"
+	        android:orientation="vertical" >        
+	        <ImageButton
+	            android:id="@+id/button2"
+	            android:layout_width="match_parent"
+	            android:layout_height="0dip"
+	            android:layout_marginTop="5dp"
+	            android:layout_marginStart="5dp"
+	            android:layout_marginEnd="5dp"
+	            android:scaleType="centerInside"
+	            android:adjustViewBounds="true"
+	            android:padding="5dp"
+	            android:src="@drawable/library_icon"
+	            android:background="@drawable/background_button"
+	            android:layout_weight="1"
+	            android:text="Button" />
 
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:text="@string/library" />
-
-        </LinearLayout>
-
+	        <TextView
+	            android:id="@+id/textView2"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center|top"
+	            android:textColor="@android:color/white"
+	            android:textStyle="bold|italic"
+	            android:text="@string/library" />
+    	</LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
+    
+     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.35"
-        android:orientation="vertical" >
-
+        android:baselineAligned="false"
+        android:layout_weight="0.5"
+        android:orientation="horizontal" >
+        
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.5"
+	        android:orientation="vertical" >        
+	        <ImageButton
+	            android:id="@+id/button3"
+	            android:layout_width="match_parent"
+	            android:layout_height="0dip"            
+	            android:src="@drawable/settings_icon"
+	            android:scaleType="centerInside"
+	            android:adjustViewBounds="true"
+	            android:layout_marginTop="5dp"
+	            android:layout_marginStart="5dp"
+	            android:layout_marginEnd="5dp"
+	            android:background="@drawable/background_button"
+	            android:layout_margin="5dp"
+	            android:layout_weight="1"
+	             />
 
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:text="@string/settings" />
+	        <TextView
+	            android:id="@+id/textView3"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center|top"
+	            android:textColor="@android:color/white"
+	            android:textStyle="bold|italic"
+	            android:layout_marginBottom="5dp"
+	            android:text="@string/settings" />
+    	</LinearLayout>
+    	
+        <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.5"
+	        android:orientation="vertical" >        
+	        <ImageButton
+	            android:id="@+id/button4"
+	            android:layout_width="match_parent"
+	            android:layout_height="0dip"
+	            android:layout_marginTop="5dp"
+	            android:layout_marginStart="5dp"
+	            android:layout_marginEnd="5dp"
+	            android:src="@drawable/player_icon"
+	            android:scaleType="centerInside"
+	            android:adjustViewBounds="true"
+	            android:padding="5dp"
+	            android:background="@drawable/background_button"
+	            android:layout_weight="1"
+	             />
 
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:text="@string/player" />
-
-        </LinearLayout>
-
-    </LinearLayout>
+	        <TextView
+	            android:id="@+id/textView4"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center|top"
+	            android:textColor="@android:color/white"
+	            android:textStyle="bold|italic"
+	            android:text="@string/player"
+	            android:layout_marginBottom="5dp" />
+    	</LinearLayout>
+         
+         
+         
+        
+     </LinearLayout>
 
 </LinearLayout>

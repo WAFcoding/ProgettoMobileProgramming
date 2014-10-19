@@ -50,7 +50,7 @@ public class Duration {
 		String tmp2= Integer.toString(getMinute());
 		String tmp3= Integer.toString(getSeconds());
 		
-		return tmp1+":"+tmp2+":"+tmp3;
+		return tmp1+" h "+tmp2+" m "+tmp3+" s";
 	}
 	
 	/**
@@ -66,6 +66,16 @@ public class Duration {
 		setSeconds(s);
 	}
 	
+	public void setDuration(Duration d){
+		setHour(d.getHour());
+		setMinute(d.getMinute());
+		setSeconds(d.getSeconds());
+	}
+	
+	/***
+	 * somma la durata passata alla durata locale
+	 * @param d
+	 */
 	public void sum(Duration d) {
 		int tmp_h= d.getHour();
 		int tmp_m= d.getMinute();
@@ -76,9 +86,9 @@ public class Duration {
 		if(sum_s >= 60) {
 			carry_s= 1;
 			seconds= sum_s - 60;
-		}
-		else{
-			seconds= sum_s;
+		}else
+		{
+			seconds=sum_s;
 		}
 		
 		int sum_m= minute + carry_s;
@@ -93,12 +103,39 @@ public class Duration {
 				carry_m= 1;
 				minute= sum_m - 60;
 			}
-			else{
-				minute= sum_m;
+			else
+			{
+				minute=sum_m;
 			}
 		}
 		
 		int sum_h= hour + carry_m + tmp_h;
 		hour= sum_h;
+	}
+	
+	/**
+	 * confronta la durata passata con la locale
+	 * @param d
+	 * @return true se quella passata è più grande
+	 */
+	public boolean isSmallerOf(Duration d){
+		
+		//controllo se ha l'ora piu' grande
+		if(d.getHour() < this.getHour()){
+			return false;
+		}
+		else if(d.getHour()== this.getHour()){
+			if(d.getMinute() < this.getMinute()){
+				return false;
+			}
+			else if(d.getMinute() == this.getMinute()){
+				if(d.getSeconds() < this.getSeconds()){
+					return false;
+				}
+			}
+		}
+		
+		
+		return true;
 	}
 }

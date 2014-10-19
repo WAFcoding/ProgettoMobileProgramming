@@ -3,6 +3,7 @@ package it.borove.playerborove;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import library_stuff.TrackActivity;
 import db.SQLiteConnect;
 import playlistModules.PlaylistItem;
 import playlistModules.SinglePlaylistItem;
@@ -40,6 +41,7 @@ public class PlaylistTracks extends Activity{
 	private String id_playlist;
 	private String name_playlist = "";
 	private Cursor playlist, cursorTracks, cursorTrack;
+	private PlaylistItem actual_playlist;
 	
 	private final int REQUEST_DETAILS_TRACK = 500;
 	private final int ADD_TRACKS = 510;
@@ -82,7 +84,7 @@ public class PlaylistTracks extends Activity{
 	
 		//il navigation drawer
 		title			= drawer_title = getTitle();
-		choices			= getResources().getStringArray(R.array.drawer_choice_library);
+		choices			= getResources().getStringArray(R.array.drawer_choice_single_playlist);
 		drawer			= (DrawerLayout)findViewById(R.id.drawer_tracks_playlist);
 		drawer_toggle	= new ActionBarDrawerToggle(this, drawer, R.drawable.ic_launcher, R.string.drawer_open, R.string.drawer_close){
 		//richiamata quando il drawer è completamente chiuso
@@ -113,8 +115,8 @@ public class PlaylistTracks extends Activity{
 				while(!playlist.isAfterLast()){
 					if(playlist.getString(0).equals(id_playlist)){
 						if(!name){
-						name_playlist = playlist.getString(1);
-						name = true;
+							name_playlist = playlist.getString(1);
+							name = true;
 						}					
 						String title		= playlist.getString(7);
 						String name_singer 	= playlist.getString(4);
@@ -135,6 +137,8 @@ public class PlaylistTracks extends Activity{
 		
 					playlist.moveToNext();
 				}
+				
+				actual_playlist= new PlaylistItem(name_playlist, listOfTracks);
 			}
 
 		for(int i=0; i < listOfTracks.size(); i++){
@@ -147,9 +151,7 @@ public class PlaylistTracks extends Activity{
 		this.listTracks.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				
+					int position, long id) {				
 				
 				if(!isGroupSelected.get(position)){
 					view.setBackgroundColor(Color.parseColor("#c0c0c0"));
@@ -367,26 +369,25 @@ public class PlaylistTracks extends Activity{
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			// TODO Auto-generated method stub
+			
 			//Add Track
 			if(position == 0){
 				startActivityForResult(new Intent(PlaylistTracks.this, AddTracksToPlaylist.class), ADD_TRACKS);
 			}
-			
-			//Remove Track
+			//Details
 			else if(position == 1){
-				if(selectedTrack >= 0){
+				PlayerController.playlistSingleDetails(actual_playlist);
+				/*if(selectedTrack >= 0){
 					SinglePlaylistItem trackDeleted = listOfTracks.remove(selectedTrack);
 					PlayerController.setPlaylistOnDb(name_playlist, trackDeleted.getId(), true);
 				}				
-				setListTracks(listOfTracks);
-
-		
+				setListTracks(listOfTracks);*/
 			}
 			
-			//Details Track
+			//Impostazioni
 			else if(position == 2){
-				if(selectedTrack >= 0){
+				PlayerController.open_settings();
+				/*if(selectedTrack >= 0){
 					SinglePlaylistItem track = listOfTracks.get(selectedTrack);
 					Intent trackActivity	= new Intent(PlaylistTracks.this, TrackActivity.class);
 					Bundle infoTrack 		= new Bundle();
@@ -413,7 +414,7 @@ public class PlaylistTracks extends Activity{
 				
 					
 					startActivityForResult(trackActivity, REQUEST_DETAILS_TRACK);
-				}
+				}*/
 			}
 			drawer.closeDrawer(drawer_list_view);
 		}

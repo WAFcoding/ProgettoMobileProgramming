@@ -16,11 +16,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 
 public class MainActivity extends Activity {
 	
-	private Button playlist, library, settings, player;
+	private ImageButton playlist, library, settings, player;
 	private SQLiteDatabase db;
 	private final static String TAG = "MainActivity";
 	private Intent i;
@@ -40,10 +41,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		playlist= (Button)findViewById(R.id.button1);
-		library= (Button)findViewById(R.id.button2);
-		settings= (Button)findViewById(R.id.button3);
-		player= (Button)findViewById(R.id.button4);
+		playlist= (ImageButton)findViewById(R.id.button1);
+		library= (ImageButton)findViewById(R.id.button2);
+		settings= (ImageButton)findViewById(R.id.button3);
+		player= (ImageButton)findViewById(R.id.button4);
 		
 		controller = new PlayerController(this,this);
 		controller.onCreate(db);
@@ -59,7 +60,6 @@ public class MainActivity extends Activity {
 		rec = new BroadcastReceiver(){
 				@Override
 				public void onReceive(Context context, Intent intent) {
-					// TODO Auto-generated method stub
 					
 					if(intent.getExtras().containsKey(MainActivity.CREATE)){
 						
@@ -92,7 +92,9 @@ public class MainActivity extends Activity {
 			};
 		registerReceiver(rec,inf);
 		
-		this.addButtonListener();	
+		
+		this.addButtonListener();			
+			
 	}
 	
 	@Override

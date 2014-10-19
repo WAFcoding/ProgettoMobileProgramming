@@ -52,7 +52,8 @@ public class PlaylistActivity2 extends Activity{
 	
 	private final int ADDPLAYLIST			= 270;
 	private final int REQUEST_INFO_TRACK 	= 400;
-	protected static final int PREVIEW 		= 0;
+	private final int REQUEST_INFO_PLAYLIST= 250;
+	protected static final int PREVIEW 		= 401;
 	
 	private Button btnListTracks;
 	
@@ -70,6 +71,7 @@ public class PlaylistActivity2 extends Activity{
 	private ArrayList<PlaylistItem> listPlaylistItem;
 	private ArrayList<SinglePlaylistItem> tmp_songs;
 	private AlbumMapper mapperPlaylist;
+	private int selectedPlaylist;
 
 	private ArrayList<String> id_p;
 
@@ -111,25 +113,40 @@ public class PlaylistActivity2 extends Activity{
 		drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
 	
 		setListPlaylist();
-
+		
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				
-				PlayerController.previewPlaylist((PlaylistItem) parent.getItemAtPosition(position));
-				
-				for(int i=0;i<isGroupSelected.size();i++){
+
+				for( int i=0; i<isGroupSelected.size();i++)
+				{
 					if(i==position){
 						view.setBackgroundColor(Color.parseColor("#c0c0c0"));
 						isGroupSelected.set(position, true);
 					}
-					else{
+					else
+					{
 						listview.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
-						isGroupSelected.set(i, false);
+						isGroupSelected.set(position, false);
 					}
-				}	
+
+
+				}
 			}
+		});
+		
+		listview.setOnItemLongClickListener(new OnItemLongClickListener(){
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				
+				Intent j=new Intent(PlaylistActivity2.this, MenuPlaylist.class);
+				selectedPlaylist=position;
+				startActivityForResult(j, REQUEST_INFO_PLAYLIST);
+				return false;
+			}			
 		});
 
 	}
@@ -137,6 +154,7 @@ public class PlaylistActivity2 extends Activity{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		PlayerController.end_music_sevice();
 		if(playlistCursor != null){
 			playlistCursor.close();
 			PlayerController.closeConnectionDB();
@@ -220,7 +238,6 @@ public class PlaylistActivity2 extends Activity{
 			btn2.setOnClickListener(new OnClickListener() {			
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					
 					listOfTracks = playlistSelected.getSongs();
 					Intent i = new Intent(m_context, PlaylistTracks.class);
@@ -231,15 +248,13 @@ public class PlaylistActivity2 extends Activity{
 					
 					i.putExtras(b);
 					
-					m_context.startActivity(i);		
-					//animazione a comparsa da sinistra
-					overridePendingTransition(R.anim.right_in, R.anim.left_out); 
+					m_context.startActivity(i);
+								
 				}
 			});
 
 			return myView;
 		}
-		
 		public PlaylistItem getPlaylistItem(int position){
 			if(namePlaylists == null)
 				return null;	
@@ -274,13 +289,28 @@ public class PlaylistActivity2 extends Activity{
 		private ArrayList<String> delNameP = new ArrayList<String>();
 
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
 			if(position == 0){
 				startActivityForResult(new Intent(PlaylistActivity2.this, PlaylistAddActivity.class), ADDPLAYLIST);
-				//animazione a comparsa da sinistra
-				overridePendingTransition(R.anim.left_in, R.anim.right_out);  
 			}
+			//Update list of Playlist
+			else if(position == 1){
+				clearData();
+				setListPlaylist();
+				Toast.makeText(PlaylistActivity2.this, "list of Playlists updated!", Toast.LENGTH_SHORT).show();
+			}
+			//details
+			else if(position == 2){
+				PlayerController.playlistDetails();
+				overridePendingTransition(R.anim.right_in, R.anim.left_out);
+			}
+			//Settings
+			else if(position == 3){
+				PlayerController.open_settings();
+				overridePendingTransition(R.anim.right_in, R.anim.left_out);
+			}
+			
 			//Remove Playlist
 			/*else if(position == 1){
 				for(int i=0; i < isGroupSelected.size(); i++){
@@ -301,23 +331,9 @@ public class PlaylistActivity2 extends Activity{
 				else{
 					Toast.makeText(PlaylistActivity2.this, "Not any playlist selected!", Toast.LENGTH_SHORT).show();
 				}
-			}*/
-			//Update list of Playlist
-			else if(position == 1){
-				clearData();
-				setListPlaylist();
-				Toast.makeText(PlaylistActivity2.this, "list of Playlists updated!", Toast.LENGTH_SHORT).show();
-			}
-			//Show details
-			else if(position == 2 ){
 				
-			}
-			//Settings
-			else if(position == 3){
-				PlayerController.open_settings();
-				//animazione a comparsa da sinistra
-				overridePendingTransition(R.anim.right_in, R.anim.left_out); 
-			}
+			
+			}*/
 			
 			
 			drawer.closeDrawer(drawer_list_view);
@@ -333,7 +349,7 @@ public class PlaylistActivity2 extends Activity{
 			Toast.makeText(this, "new playlist added!", Toast.LENGTH_SHORT).show();
 		}
 		
-		if(requestCode == ADDPLAYLIST && resultCode == 666){
+		if(requestCode == ADDPLAYLIST && resultCode == RESULT_CANCELED){
 			Toast.makeText(this, "Name playlist duplicated! Please change name of new playlist", Toast.LENGTH_SHORT).show();
 		}
 		
@@ -345,6 +361,7 @@ public class PlaylistActivity2 extends Activity{
 				String albumName		= bundle2.getString("albumName");
 				String kind				= bundle2.getString("kind");
 				int valueOfTrack 		= bundle2.getInt("valueTrack");
+				
 				
 				int idTrack				= Integer.parseInt(track.getId());
 				String nameTrack		= track.getnameFile();
@@ -363,7 +380,26 @@ public class PlaylistActivity2 extends Activity{
 	        		Toast.makeText(this, "Track's Tags updated!", Toast.LENGTH_SHORT).show();
 				}		
 			}
+			
 
+		}
+		
+		//dettagli
+		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==400){
+			
+		}
+		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==PREVIEW){
+			PlayerController.previewPlaylist(listPlaylistItem.get(selectedPlaylist));
+			
+		}
+		//erase
+		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==402){
+			
+		}
+		//add track
+		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==403){
+			Intent i=new Intent(PlaylistActivity2.this, AddTracksToPlaylist.class);
+			startActivity(i);
 		}
 		
 		
@@ -442,7 +478,6 @@ public class PlaylistActivity2 extends Activity{
     
     
     private void clearData() {
-		// TODO Auto-generated method stub
 		if(playlistCursor != null){
 			playlistCursor.close();
 			PlayerController.closeConnectionDB();
