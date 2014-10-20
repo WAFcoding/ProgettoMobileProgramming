@@ -112,7 +112,7 @@ public class LibraryActivity extends Activity {
 		}
 		
 		setAdapter(cursor);
-        updateListTracks();
+        updateListTracks(false);
 		listener();
 		
 		//il navigation drawer
@@ -213,7 +213,7 @@ public class LibraryActivity extends Activity {
 					isChangedAnything = true;
 					//Toast.makeText(LibraryActivity.this, "Please update Library", Toast.LENGTH_SHORT).show();
 					clearData();
-					updateListTracks();
+					updateListTracks(false);
 					Toast.makeText(LibraryActivity.this,  "List updated!", Toast.LENGTH_LONG).show();
 				}
 			});
@@ -259,14 +259,13 @@ public class LibraryActivity extends Activity {
 				if(!nameTrack.equals(fileNameTrack) || !singerName.equals(authorName) || !oldkind.equals(kind) 
 						|| !vote.equals(String.valueOf(valueOfTrack)) || !oldAlbumName.equals(albumName)){
 							isChangedAnything = true;
-							
 				}	
 			}
 			
 			if(isChangedAnything){
 				PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);
 				clearData();
-				updateListTracks();
+				updateListTracks(true);
 				Toast.makeText(LibraryActivity.this,  "List updated!", Toast.LENGTH_LONG).show();
 			}
 		}
@@ -314,7 +313,9 @@ public class LibraryActivity extends Activity {
 			//update library
 			if(position == 0){
 				clearData();
-				updateListTracks();
+				finish();
+				PlayerController.open_library();
+				updateListTracks(true);
 				PlayerController.printToast("Library Updated");
 			}
 			//details 
@@ -565,8 +566,9 @@ public class LibraryActivity extends Activity {
 	/*
 	 * metodo utilizzato dal bottone Update
 	 */	
-	public void updateListTracks(){
-		new PlayerController.SynchronizeDb().execute();
+	public void updateListTracks(boolean sync){
+		if(sync)
+			new PlayerController.SynchronizeDb().execute();
 		cursor = PlayerController.getCursorTracks();
 		if(cursor != null){
 			cursor.moveToFirst();
