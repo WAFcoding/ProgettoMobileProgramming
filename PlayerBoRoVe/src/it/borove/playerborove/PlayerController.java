@@ -1404,6 +1404,17 @@ public class PlayerController extends SQLiteOpenHelper{
 		playlist_single_details.putExtras(details);
 		m_context.startActivity(playlist_single_details);
 	}
+	
+	public static void open_edit_playlist(){
 
+		m_context.startActivity(new Intent(m_context, PlaylistEditActivity.class));
+	}
 
+	public static void open_add_track_to_playlist(){
+		m_context.startActivity(new Intent(m_context, AddTracksToPlaylist.class));
+	}
+	
+	public static void open_playlist_tracks(){
+		//m_context.startActivity(new Intent(m_context, PlaylistTracks.class));
+	}
 }

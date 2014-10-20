@@ -38,7 +38,7 @@
         <activity
             android:name=".menuTrack"
             android:label="@string/title_activity_player"
-            android:theme="@android:style/Theme.Holo.Dialog" >
+            android:theme="@style/CustomPopup" >
 
             <!-- android:windowSoftInputMode="stateAlwaysVisible|adjustPan" -->
         </activity>
@@ -48,13 +48,13 @@
         </intent-filter>
 
         <activity
-            android:name="library_stuff.TrackActivity"
-            android:label="@string/title_activity_player" >
+            android:name=".TrackActivity"
+            android:label="@string/title_activity_track" >
         </activity>
         <activity
             android:name=".MenuPlaylist"
-            android:label="@string/title_activity_player"
-            android:theme="@android:style/Theme.Holo.Dialog" >
+            android:label="@string/title_options"
+            android:theme="@style/CustomPopup" >
         </activity>
         <activity
             android:name=".PlayerActivity"
@@ -66,15 +66,15 @@
         </activity>
         <activity
             android:name=".PlaylistActivity2"
-            android:label="@string/title_activity_player" >
+            android:label="@string/title_activity_playlist" >
         </activity>
         <activity
             android:name=".PlaylistTracks"
-            android:label="@string/title_activity_player" >
+            android:label="@string/title_activity_playlist" >
         </activity>
         <activity
             android:name=".AddTracksToPlaylist"
-            android:label="@string/title_activity_player" >
+            android:label="@string/title_activity_playlist_edit" >
         </activity>
         <activity
             android:name=".LibraryActivity"
@@ -95,6 +95,14 @@
         <activity
             android:name=".PlaylistDetailsActivity"
             android:label="@string/title_activity_playlist_details" >
+        </activity>
+        <activity
+            android:name=".PlaylistSingleDetails"
+            android:label="@string/title_activity_playlist_single_details" >
+        </activity>
+        <activity
+            android:name=".PlaylistEditActivity"
+            android:label="@string/title_activity_playlist_edit" >
         </activity>
     </application>
 

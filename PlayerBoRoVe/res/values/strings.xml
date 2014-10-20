@@ -14,7 +14,8 @@
     <string name="title_activity_playlist_details">Dettagli delle Playlist</string>
     <string name="title_activity_library_details">Dettagli Libreria</string>
     <string name="title_activity_playlist_single_details">Dettagli Playlist</string>
-    
+    <string name="title_activity_playlist_edit">Modifica Playlist</string>
+    <!-- ****************altro**************************** -->
     <string name="library">Libreria</string>
     <string name="playlist">Playlist</string>
     <string name="settings">Impostazioni</string>
@@ -67,7 +68,7 @@
         <item>Impostazioni</item>
     </string-array>
     <string-array name="drawer_choice_single_playlist">
-        <item>Aggiungi brano</item>
+        <item>Modifica Playlist</item>
         <item>Dettagli</item>
         <item>Impostazioni</item>
     </string-array>
@@ -100,4 +101,11 @@
     <string name="activity_details_n_track_in_playlist">Numero di brani</string>
     <string name="activity_details_total_duration_single_playlist">Durata totale della playlist</string>
     <string name="activity_details_longest_track_in_playlist">Brano più lungo</string>
+    
+    <!-- *****************edit playlist activity ******************* -->
+    <string name="edit_playlist_title">Titolo della playlist</string>
+	<string name="edit_playlist_add_track">Aggiungi brani alla playlist</string>
+	<string name="edit_playlist_remove_track">Rimuovi brani dalla playlist</string>
+	<string name="edit_playlist_add_track_btn">Aggiungi</string>
+	<string name="edit_playlist_remove_track_btn">Rimuovi</string>
 </resources>

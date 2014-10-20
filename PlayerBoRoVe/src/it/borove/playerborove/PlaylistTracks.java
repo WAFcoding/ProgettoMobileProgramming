@@ -375,51 +375,19 @@ public class PlaylistTracks extends Activity{
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			
-			//Add Track
+			//Edit Playlist
 			if(position == 0){
-				startActivityForResult(new Intent(PlaylistTracks.this, AddTracksToPlaylist.class), ADD_TRACKS);
+				//startActivityForResult(new Intent(PlaylistTracks.this, AddTracksToPlaylist.class), ADD_TRACKS);
+				PlayerController.open_edit_playlist();
 			}
 			//Details
 			else if(position == 1){
 				PlayerController.playlistSingleDetails(actual_playlist);
-				/*if(selectedTrack >= 0){
-					SinglePlaylistItem trackDeleted = listOfTracks.remove(selectedTrack);
-					PlayerController.setPlaylistOnDb(name_playlist, trackDeleted.getId(), true);
-				}				
-				setListTracks(listOfTracks);*/
 			}
 			
 			//Impostazioni
 			else if(position == 2){
 				PlayerController.open_settings();
-				/*if(selectedTrack >= 0){
-					SinglePlaylistItem track = listOfTracks.get(selectedTrack);
-					Intent trackActivity	= new Intent(PlaylistTracks.this, TrackActivity.class);
-					Bundle infoTrack 		= new Bundle();
-					
-					String nameTrack 	= track.getnameFile();
-					String singerName	= track.getSinger_name();
-					String kind			= track.getKind();
-					String vote			= track.getVote();
-					String titleTrack	= track.getTitle();
-					String albumName	= track.getAlbumName();
-					String duration		= track.getDuration();
-					Bitmap albumId		= track.getBitmapCover();
-					
-					infoTrack.putString("nameTrack", nameTrack);
-					infoTrack.putString("singerName", singerName);
-					infoTrack.putString("kind", kind);
-					infoTrack.putString("vote", vote);
-					infoTrack.putString("titleTrack", titleTrack);
-					infoTrack.putString("albumName", albumName);
-					infoTrack.putString("duration", duration);
-					
-					trackActivity.putExtra("imageAlbum", albumId);
-					trackActivity.putExtras(infoTrack);
-				
-					
-					startActivityForResult(trackActivity, REQUEST_DETAILS_TRACK);
-				}*/
 			}
 			drawer.closeDrawer(drawer_list_view);
 		}

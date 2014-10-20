@@ -1,0 +1,106 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}"
+    android:background="@drawable/gradient_listview"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/txt_edit_playlist_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:labelFor="@+id/etxt_edit_playlist_name"
+            android:text="@string/edit_playlist_title"
+            android:textColor="#FFCC99" />
+
+        <EditText
+            android:id="@+id/etxt_edit_playlist_name"
+            android:layout_width="0dip"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:layout_weight="1.0"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:padding="1dp"
+            android:text=""
+            android:textColor="#6666FF"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/txt_edit_playlist_add_track"
+            android:layout_width="0dp"
+		    android:layout_weight="0.3"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:labelFor="@+id/etxt_edit_playlist_name"
+            android:text="@string/edit_playlist_add_track"
+            android:textColor="#FFCC99" />
+        
+        <Button 
+            android:id="@+id/btn_edit_playlist_add_track"
+	        android:layout_width="0dp"
+		    android:layout_height="match_parent"
+		    android:layout_weight="0.7"
+		    android:padding="3dp"
+		    android:background="@drawable/ellipse_button"
+		    android:text="@string/edit_playlist_add_track_btn"/>
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/txt_edit_playlist_remove_track"
+            android:layout_width="0dp"
+		    android:layout_weight="0.3"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:labelFor="@+id/etxt_edit_playlist_name"
+            android:text="@string/edit_playlist_remove_track"
+            android:textColor="#FFCC99" />
+        
+        <Button 
+            android:id="@+id/btn_edit_playlist_remove_track"
+	        android:layout_width="0dp"
+		    android:layout_height="match_parent"
+		    android:layout_weight="0.7"
+		    android:padding="3dp"
+		    android:background="@drawable/ellipse_button"
+		    android:text="@string/edit_playlist_remove_track_btn"/>
+
+    </LinearLayout>
+
+</LinearLayout>
