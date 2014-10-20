@@ -1,7 +1,5 @@
-package playlistModules;
+package it.borove.playerborove;
 
-import it.borove.playerborove.LibraryActivity;
-import it.borove.playerborove.PlaylistActivity;
 import it.borove.playerborove.R;
 
 import java.util.ArrayList;

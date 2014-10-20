@@ -261,19 +261,23 @@ public class SettingsActivity extends Activity{
 		synchronizeDatabase.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-					PlayerController.createDb();
-					new PlayerController.SynchronizeDb().execute();
-					Toast.makeText(SettingsActivity.this, "database created", Toast.LENGTH_LONG).show();
+					boolean isDbCreated = PlayerController.createDb();
+					if(!isDbCreated){
+						new PlayerController.SynchronizeDb().execute();
+						Toast.makeText(SettingsActivity.this, "database created", Toast.LENGTH_SHORT).show();
+					}
+					else
+						Toast.makeText(SettingsActivity.this, "please first erase database", Toast.LENGTH_SHORT).show();
 				
 				Cursor someTrack	= PlayerController.getCursorTracks();
 				if(someTrack == null){
-					Log.d(SETTINGS, "someTrack is NULL");
+					//Log.d(SETTINGS, "someTrack is NULL");
 					eraseDatabase.setBackgroundColor(Color.TRANSPARENT);
 					eraseDatabase.setTextColor(Color.DKGRAY);
 					eraseDatabase.setEnabled(false);
 				}
 				else{
-					Log.d(SETTINGS, "someTrack is not NULL");
+					//Log.d(SETTINGS, "someTrack is not NULL");
 					eraseDatabase.setBackground(getResources().getDrawable(R.drawable.ellipse_button));
 					eraseDatabase.setTextColor(Color.WHITE);
 					eraseDatabase.setEnabled(true);

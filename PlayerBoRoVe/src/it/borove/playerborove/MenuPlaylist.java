@@ -1,5 +1,8 @@
 package it.borove.playerborove;
 
+import it.borove.playerborove.R;
+import it.borove.playerborove.R.id;
+import it.borove.playerborove.R.layout;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

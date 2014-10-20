@@ -1,18 +1,21 @@
 package it.borove.playerborove;
 
+import it.borove.playerborove.R;
+import it.borove.playerborove.R.anim;
+import it.borove.playerborove.R.array;
+import it.borove.playerborove.R.drawable;
+import it.borove.playerborove.R.id;
+import it.borove.playerborove.R.layout;
+import it.borove.playerborove.R.menu;
+import it.borove.playerborove.R.string;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import library_stuff.TrackActivity;
-import playlistModules.Group;
-import playlistModules.MyExpandableListAdapter;
-import playlistModules.PlaylistAdapter;
-import playlistModules.PlaylistExpAdapter;
-import playlistModules.PlaylistItem;
-import playlistModules.SinglePlaylistItem;
+import Playlist.MyExpandableListAdapter;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;

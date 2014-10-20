@@ -1,7 +1,7 @@
 /**
  * 
  */
-package playlistModules;
+package it.borove.playerborove;
 
 import it.borove.playerborove.R;
 

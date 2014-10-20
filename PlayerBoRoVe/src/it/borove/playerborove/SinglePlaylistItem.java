@@ -1,9 +1,7 @@
 /**
  * 
  */
-package playlistModules;
-
-import it.borove.playerborove.AlbumMapper;
+package it.borove.playerborove;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

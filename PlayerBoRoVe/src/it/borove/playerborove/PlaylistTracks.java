@@ -1,12 +1,17 @@
 package it.borove.playerborove;
 
+import it.borove.playerborove.R;
+import it.borove.playerborove.R.anim;
+import it.borove.playerborove.R.array;
+import it.borove.playerborove.R.drawable;
+import it.borove.playerborove.R.id;
+import it.borove.playerborove.R.layout;
+import it.borove.playerborove.R.string;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import library_stuff.TrackActivity;
 import db.SQLiteConnect;
-import playlistModules.PlaylistItem;
-import playlistModules.SinglePlaylistItem;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

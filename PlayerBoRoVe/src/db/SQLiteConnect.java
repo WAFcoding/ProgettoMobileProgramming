@@ -423,7 +423,8 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 					c.moveToFirst();
 					while(!c.isAfterLast()){		
 						//Log.d(LOG, "c.getString(5): " + c.getString(5));
-						if(valueContentTitle.equals(c.getString(5))){
+						String temp= Utils.replaceBadSymbols(c.getString(5));
+						if(valueContentTitle.equals(temp)){
 							Log.d(LOG, "valueContentTitle: " + valueContentTitle);
 							//Log.d(LOG, "c.getString(5): " + c.getString(5));
 							trackFound = true;
@@ -451,7 +452,7 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 		}
 		
 		closeDatabase();
-		//c.moveToFirst();
+		c.moveToFirst();
 		if(c != null){
 			while(!c.isAfterLast()){
 				String vote			= "0";

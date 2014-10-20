@@ -1,6 +1,5 @@
-package library_stuff;
+package it.borove.playerborove;
 
-import it.borove.playerborove.PlayerController;
 import it.borove.playerborove.R;
 import it.borove.playerborove.R.id;
 import it.borove.playerborove.R.layout;

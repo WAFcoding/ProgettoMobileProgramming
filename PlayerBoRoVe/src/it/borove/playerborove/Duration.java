@@ -1,4 +1,4 @@
-package PlayerManager;
+package it.borove.playerborove;
 
 /**
  * Rappresenta l'oggetto durata, sia di un singolo brano che di una playlist

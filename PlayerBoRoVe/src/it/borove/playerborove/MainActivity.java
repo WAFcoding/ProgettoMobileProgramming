@@ -128,7 +128,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(MainActivity.this, LibraryActivity.class));
+				PlayerController.open_library();
 				//animazione a comparsa da destra
 				overridePendingTransition(R.anim.left_in, R.anim.right_out); 
 			}

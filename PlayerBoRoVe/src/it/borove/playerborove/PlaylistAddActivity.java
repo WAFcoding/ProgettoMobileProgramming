@@ -1,6 +1,12 @@
 package it.borove.playerborove;
 
-import it.borove.playerborove.LibraryActivity.MySimpleCursorAdapter;
+import it.borove.playerborove.R;
+import it.borove.playerborove.R.array;
+import it.borove.playerborove.R.drawable;
+import it.borove.playerborove.R.id;
+import it.borove.playerborove.R.layout;
+import it.borove.playerborove.R.menu;
+import it.borove.playerborove.R.string;
 
 import java.util.ArrayList;
 import java.util.HashMap;

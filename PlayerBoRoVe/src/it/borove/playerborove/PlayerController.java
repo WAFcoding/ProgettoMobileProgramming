@@ -17,14 +17,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import library_stuff.LibraryDetailsActivity;
-import library_stuff.TrackActivity;
-import playlistModules.PlaylistItem;
-import playlistModules.SinglePlaylistItem;
 import db.SQLiteConnect;
 import db.ServiceFileObserver;
-import PlayerManager.Duration;
-import PlayerManager.Queue;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -119,9 +113,13 @@ public class PlayerController extends SQLiteOpenHelper{
 		mainActivity.startActivity(intent);
 	}
 	
+	public static void open_library(){
+		m_context.startActivity(new Intent(m_context, LibraryActivity.class));
+	}
+	
 	//Crea il database per la prima volta
-	public static void createDb(){
-		sqlDatabaseHelper.createDatabase();
+	public static boolean createDb(){
+		return sqlDatabaseHelper.createDatabase();
 	}
 	
 	/*public void addTrackToPlaylist(Track t, Playlist p){

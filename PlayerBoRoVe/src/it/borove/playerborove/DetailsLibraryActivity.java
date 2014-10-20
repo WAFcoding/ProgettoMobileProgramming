@@ -1,5 +1,9 @@
 package it.borove.playerborove;
 
+import it.borove.playerborove.R;
+import it.borove.playerborove.R.id;
+import it.borove.playerborove.R.layout;
+import it.borove.playerborove.R.menu;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;

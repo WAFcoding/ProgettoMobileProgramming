@@ -1,6 +1,9 @@
 package it.borove.playerborove;
 
-import library_stuff.LibraryDetailsActivity;
+import it.borove.playerborove.R;
+import it.borove.playerborove.R.anim;
+import it.borove.playerborove.R.id;
+import it.borove.playerborove.R.layout;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;

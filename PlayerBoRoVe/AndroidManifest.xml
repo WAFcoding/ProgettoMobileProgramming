@@ -37,7 +37,7 @@
 
         <activity
             android:name=".menuTrack"
-            android:label="@string/title_options"
+            android:label="@string/title_activity_player"
             android:theme="@android:style/Theme.Holo.Dialog" >
 
             <!-- android:windowSoftInputMode="stateAlwaysVisible|adjustPan" -->
@@ -49,11 +49,11 @@
 
         <activity
             android:name="library_stuff.TrackActivity"
-            android:label="@string/title_activity_track" >
+            android:label="@string/title_activity_player" >
         </activity>
         <activity
             android:name=".MenuPlaylist"
-            android:label="@string/title_options"
+            android:label="@string/title_activity_player"
             android:theme="@android:style/Theme.Holo.Dialog" >
         </activity>
         <activity
@@ -66,15 +66,15 @@
         </activity>
         <activity
             android:name=".PlaylistActivity2"
-            android:label="@string/title_activity_playlist" >
+            android:label="@string/title_activity_player" >
         </activity>
         <activity
             android:name=".PlaylistTracks"
-            android:label="@string/title_activity_playlist" >
+            android:label="@string/title_activity_player" >
         </activity>
         <activity
             android:name=".AddTracksToPlaylist"
-            android:label="@string/title_activity_playlist" >
+            android:label="@string/title_activity_player" >
         </activity>
         <activity
             android:name=".LibraryActivity"
@@ -89,16 +89,12 @@
             android:label="@string/title_activity_playlist_add" >
         </activity>
         <activity
-            android:name="library_stuff.LibraryDetailsActivity"
+            android:name=".LibraryDetailsActivity"
             android:label="@string/title_activity_library_details" >
         </activity>
         <activity
             android:name=".PlaylistDetailsActivity"
             android:label="@string/title_activity_playlist_details" >
-        </activity>
-        <activity
-            android:name=".PlaylistSingleDetails"
-            android:label="@string/title_activity_playlist_single_details" >
         </activity>
     </application>
 

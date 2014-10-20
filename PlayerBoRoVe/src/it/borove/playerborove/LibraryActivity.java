@@ -1,13 +1,19 @@
 package it.borove.playerborove;
 
+import it.borove.playerborove.R;
+import it.borove.playerborove.PlayerController.SynchronizeDb;
 import it.borove.playerborove.PlayerController.updateDbOnTrack;
+import it.borove.playerborove.R.anim;
+import it.borove.playerborove.R.array;
+import it.borove.playerborove.R.drawable;
+import it.borove.playerborove.R.id;
+import it.borove.playerborove.R.layout;
+import it.borove.playerborove.R.string;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
-import library_stuff.TrackActivity;
-import playlistModules.SinglePlaylistItem;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -106,6 +112,7 @@ public class LibraryActivity extends Activity {
 		}
 		
 		setAdapter(cursor);
+        updateListTracks();
 		listener();
 		
 		//il navigation drawer
@@ -139,6 +146,7 @@ public class LibraryActivity extends Activity {
         drawer_list_view= (ListView)findViewById(R.id.left_drawer);
         drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
         drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
+        
 		
 	}
 	
@@ -204,7 +212,8 @@ public class LibraryActivity extends Activity {
 					}
 					isChangedAnything = true;
 					//Toast.makeText(LibraryActivity.this, "Please update Library", Toast.LENGTH_SHORT).show();
-					updateTracksList();
+					clearData();
+					updateListTracks();
 					Toast.makeText(LibraryActivity.this,  "List updated!", Toast.LENGTH_LONG).show();
 				}
 			});
@@ -256,7 +265,8 @@ public class LibraryActivity extends Activity {
 			
 			if(isChangedAnything){
 				PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);
-				updateTracksList();
+				clearData();
+				updateListTracks();
 				Toast.makeText(LibraryActivity.this,  "List updated!", Toast.LENGTH_LONG).show();
 			}
 		}
@@ -303,7 +313,8 @@ public class LibraryActivity extends Activity {
 				long id) {
 			//update library
 			if(position == 0){
-				updateTracksList();
+				clearData();
+				updateListTracks();
 				PlayerController.printToast("Library Updated");
 			}
 			//details 
@@ -376,7 +387,7 @@ public class LibraryActivity extends Activity {
 			
 		});
 		
-		updateTracksList();
+		//updateListTracks();
 		
 		
 	}
@@ -553,76 +564,34 @@ public class LibraryActivity extends Activity {
 	
 	/*
 	 * metodo utilizzato dal bottone Update
-	 */
-	public void updateTracksList(){
-		Cursor newCursor = PlayerController.getCursorTracks();
-		isChangedAnything = false;
-		if(newCursor != null){
-			newCursor.moveToFirst();
-			while(!newCursor.isAfterLast()){
-				boolean found = false;
-				//Log.d(TAG, "newCursor.getString(0): " + newCursor.getString(0));
-				cursor.moveToFirst();
-				while(!cursor.isAfterLast()){
-					if(cursor.getString(0).equals(newCursor.getString(0))){
-						found = true;		
-						break;
-					}
-
-					cursor.moveToNext();
-				}
-				if(!found){
-					isChangedAnything = true;
-					break;
-				}
-			
-				newCursor.moveToNext();
-			}			
+	 */	
+	public void updateListTracks(){
+		new PlayerController.SynchronizeDb().execute();
+		cursor = PlayerController.getCursorTracks();
+		if(cursor != null){
 			cursor.moveToFirst();
-			while(!cursor.isAfterLast()){
-				boolean found = false;
-				newCursor.moveToFirst();
-				while(!newCursor.isAfterLast()){
-					if(cursor.getString(0).equals(newCursor.getString(0))){				
-						//controlla anche altri tag
-						for(int i = 1; i < cursor.getColumnCount(); i++){
-							if(!cursor.getString(i).equals(newCursor.getString(i)))
-								isChangedAnything = true;
-						}
-						
-						found = true;
-						break;
-					}
-					
-					newCursor.moveToNext();
-				}
-				if(!found){
-					//map.remove(cursor.getString(0));
-					mapper.getIdTrackToIdAlbum().remove(cursor.getString(0));
-					mapper.getIdTrackToContentTitle().remove(cursor.getString(0));
-					isChangedAnything = true;
-					break;
-				}
-
+			while(!cursor.isAfterLast()){			
+				mapper.setIdTrackToContentTitle(cursor.getString(0), cursor.getString(5));
+				mapper.setIdTrackToIdAlbum(cursor.getString(0), cursor.getString(6));
+	
 				cursor.moveToNext();
 			}
-
-			if(!isChangedAnything){
-				Log.d(TAG, "!isChangedAnything");
-				//Toast.makeText(LibraryActivity.this, "Database is updated", Toast.LENGTH_SHORT).show();		
-			}
-			else{
-				Log.d(TAG, "NOTIFYDATASETCHANGED!");
-				LibraryActivity.adapter.swapCursor(newCursor);
-				setAdapter(newCursor);
-				LibraryActivity.listView.invalidateViews();
-				adapter.notifyDataSetChanged();
-				isChangedAnything = false;
-			}
+			Log.d(TAG, "NOTIFYDATASETCHANGED!");
+			setAdapter(cursor);
+			listView.invalidateViews();
+			adapter.notifyDataSetChanged();
+			isChangedAnything = false;
 		}
-		else
-			Toast.makeText(LibraryActivity.this, "Database is empty!", Toast.LENGTH_SHORT).show();
+	}
 	
+	public void clearData(){	
+		if(cursor != null){
+			cursor.close();
+			PlayerController.closeConnectionDB();
+		}
+		if(adapter != null)
+			adapter = null;
+		
 	}
 	
 }
