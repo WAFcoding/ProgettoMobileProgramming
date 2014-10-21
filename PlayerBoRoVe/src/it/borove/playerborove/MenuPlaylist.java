@@ -15,12 +15,12 @@ public class MenuPlaylist extends Activity{
 	private TextView textViewDetails;
 	private TextView textViewErase;
 	private TextView textViewPreview;
-	private TextView textViewAddTrack;
+	private TextView textViewEdit;
 	
 	private final int RESULT_CODE_DETAILS 	= 400;
 	private final int RESULT_CODE_ERASE		= 402;
 	private final int RESULT_CODE_PREVIEW	= 401;
-	private final int RESULT_CODE_ADD_TRACK	= 403;
+	private final int RESULT_CODE_EDIT	= 403;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class MenuPlaylist extends Activity{
 		
 		textViewDetails		= (TextView)findViewById(R.id.detailsPlaylist);
 		textViewErase		= (TextView)findViewById(R.id.erasePlaylist);
-		textViewAddTrack	= (TextView)findViewById(R.id.addTrackPlaylist);
+		textViewEdit	= (TextView)findViewById(R.id.addTrackPlaylist);
 		textViewPreview		= (TextView)findViewById(R.id.previewPlaylist);
 		
 		this.myCallerIntent = getIntent();
@@ -43,11 +43,11 @@ public class MenuPlaylist extends Activity{
 
 	private void listener() {
 		
-		textViewAddTrack.setOnClickListener(new OnClickListener() {
+		textViewEdit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				
-				setResult(RESULT_CODE_ADD_TRACK, myCallerIntent);
+				setResult(RESULT_CODE_EDIT, myCallerIntent);
 				finish();
 				
 			}

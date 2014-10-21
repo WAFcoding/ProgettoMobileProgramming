@@ -43,6 +43,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -199,7 +200,7 @@ public class PlaylistActivity2 extends Activity{
 		private ArrayList<PlaylistItem> namePlaylists;
 		private ArrayList<SinglePlaylistItem> listOfTracks;
 		private View myView;
-		private Button btn1,btn2;
+		private ImageButton btn1,btn2;
 		private Context m_context;
 		
 		public PlaylistAdapter(Context context, int resource, ArrayList<PlaylistItem> namePlaylists) {
@@ -225,8 +226,8 @@ public class PlaylistActivity2 extends Activity{
 				playlist_title.setText(playlist_name);
 			}
 			
-			btn1	= (Button)myView.findViewById(R.id.button_pl1);
-			btn2	= (Button)myView.findViewById(R.id.button_pl2);
+			btn1	= (ImageButton)myView.findViewById(R.id.button_pl1);
+			btn2	= (ImageButton)myView.findViewById(R.id.button_pl2);
 			
 			btn1.setFocusable(false);
 			btn2.setFocusable(false);
@@ -317,34 +318,8 @@ public class PlaylistActivity2 extends Activity{
 				overridePendingTransition(R.anim.right_in, R.anim.left_out);
 			}
 			
-			//Remove Playlist
-			/*else if(position == 1){
-				for(int i=0; i < isGroupSelected.size(); i++){
-					if(isGroupSelected.get(i)){					
-						String name = adapter.getPlaylistItem(i).getTitle_playlist();
-						Log.d(TAG, "name: " + name);
-						delNameP.add(name);				
-					}			
-				}	
-				if(delNameP.size() >= 1){
-					for(int i=0; i< delNameP.size(); i++)
-						Log.d(TAG, "delNameP.get(i): " + delNameP.get(i));
-					PlayerController.deletePlaylist(delNameP);
-					delNameP.clear();
-					clearData();
-					setListPlaylist();
-				}
-				else{
-					Toast.makeText(PlaylistActivity2.this, "Not any playlist selected!", Toast.LENGTH_SHORT).show();
-				}
-				
-			
-			}*/
-			
-			
 			drawer.closeDrawer(drawer_list_view);
 		}
-	
 	}
     
     @Override
@@ -389,23 +364,42 @@ public class PlaylistActivity2 extends Activity{
 			
 
 		}
-		
 		//dettagli
 		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==400){
-			
+			PlayerController.playlistSingleDetails(listPlaylistItem.get(selectedPlaylist));
 		}
 		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==PREVIEW){
 			PlayerController.previewPlaylist(listPlaylistItem.get(selectedPlaylist));
 			
 		}
-		//erase
+		//remove
 		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==402){
-			
+
+
+			/*for(int i=0; i < isGroupSelected.size(); i++){
+				if(isGroupSelected.get(i)){					
+					String name = adapter.getPlaylistItem(i).getTitle_playlist();
+					Log.d(TAG, "name: " + name);
+					delNameP.add(name);				
+				}			
+			}	
+			if(delNameP.size() >= 1){
+				for(int i=0; i< delNameP.size(); i++)
+					Log.d(TAG, "delNameP.get(i): " + delNameP.get(i));
+				delNameP.clear();
+			}
+			else{
+				Toast.makeText(PlaylistActivity2.this, "Not any playlist selected!", Toast.LENGTH_SHORT).show();
+			}*/
+			PlayerController.deleteSinglePlaylist(listPlaylistItem.get(selectedPlaylist).getTitle_playlist());
+			clearData();
+			setListPlaylist();
 		}
-		//add track
+		//edit
 		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==403){
-			Intent i=new Intent(PlaylistActivity2.this, AddTracksToPlaylist.class);
-			startActivity(i);
+			/*Intent i=new Intent(PlaylistActivity2.this, AddTracksToPlaylist.class);
+			startActivity(i);*/
+			PlayerController.open_edit_playlist(listPlaylistItem.get(selectedPlaylist));
 		}
 		
 		

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="CustomPopup"
-           parent="@style/AppTheme">
-        <item name="android:background">@drawable/gradient_listview</item>
+           parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:background">#000066</item>
     </style>
 </resources>

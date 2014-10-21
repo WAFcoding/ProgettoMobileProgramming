@@ -37,7 +37,7 @@
 
         <activity
             android:name=".menuTrack"
-            android:label="@string/title_activity_player"
+            android:label="@string/title_options"
             android:theme="@style/CustomPopup" >
 
             <!-- android:windowSoftInputMode="stateAlwaysVisible|adjustPan" -->

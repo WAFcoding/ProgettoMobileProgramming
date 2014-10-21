@@ -33,13 +33,12 @@
 
     <!-- *****************menu_track.xml**************** -->
     <string name="details">Dettagli </string>
-    <string name="selectTrack">Seleziona </string>
     <string name="erase">Rimuovi</string>
 
     <!-- *****************menu_Playlist.xml**************** -->
     <string name="detailsPlay">Dettagli </string>
     <string name="PreviewPlay">Anteprima </string>
-    <string name="AddTrackPlay">Aggiungi Brano</string>
+    <string name="AddTrackPlay">Modifica</string>
     <string name="erasePlay">Rimuovi</string>
 
     <!-- *****************settings_activity.xml**************** -->

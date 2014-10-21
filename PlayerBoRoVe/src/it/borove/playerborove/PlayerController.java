@@ -617,6 +617,21 @@ public class PlayerController extends SQLiteOpenHelper{
 		}
 	}
 	
+	public static void deleteSinglePlaylist(String name){
+
+		if(name == null)
+			return;
+
+		try{
+			Cursor c = sqlDatabaseHelper.getExactlyNamePlaylist(name);
+			if(c != null){
+				sqlDatabaseHelper.deleteRowPlaylist(name);
+			}
+		}catch(Exception e){
+			Log.d(TAG, "Errore in deleteSinglePlaylist: deleteRowPlaylist()");
+		}
+	}
+	
 	/**
 	 * Permette di ricavare la lista delle playlist con i brani associati salvate sul db (in background)
 	 * setta il cursore di PlayerController (cursorPlaylist)
@@ -1405,7 +1420,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		m_context.startActivity(playlist_single_details);
 	}
 	
-	public static void open_edit_playlist(){
+	public static void open_edit_playlist(PlaylistItem playlist){
 
 		m_context.startActivity(new Intent(m_context, PlaylistEditActivity.class));
 	}

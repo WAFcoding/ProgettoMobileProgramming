@@ -92,19 +92,19 @@ public class PlaylistTracks extends Activity{
 		choices			= getResources().getStringArray(R.array.drawer_choice_single_playlist);
 		drawer			= (DrawerLayout)findViewById(R.id.drawer_tracks_playlist);
 		drawer_toggle	= new ActionBarDrawerToggle(this, drawer, R.drawable.ic_launcher, R.string.drawer_open, R.string.drawer_close){
-		//richiamata quando il drawer è completamente chiuso
-		public void onDrawerClosed(View view){
-			super.onDrawerClosed(view);
-			getActionBar().setTitle(title);
-			invalidateOptionsMenu();
-		}
-							
-		//richiamata quando il drawer è completamente aperto
-		public void onDrawerOpended(View view){
-			super.onDrawerOpened(view);
-			getActionBar().setTitle(drawer_title);
-			invalidateOptionsMenu();
-		}
+			//richiamata quando il drawer è completamente chiuso
+			public void onDrawerClosed(View view){
+				super.onDrawerClosed(view);
+				getActionBar().setTitle(title);
+				invalidateOptionsMenu();
+			}
+
+			//richiamata quando il drawer è completamente aperto
+			public void onDrawerOpended(View view){
+				super.onDrawerOpened(view);
+				getActionBar().setTitle(drawer_title);
+				invalidateOptionsMenu();
+			}
 		};
 		drawer.setDrawerListener(drawer_toggle);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -355,8 +355,6 @@ public class PlaylistTracks extends Activity{
 				}
 				
 			}
-
-			
 			return ViewTrack;
 		}
 
@@ -378,7 +376,7 @@ public class PlaylistTracks extends Activity{
 			//Edit Playlist
 			if(position == 0){
 				//startActivityForResult(new Intent(PlaylistTracks.this, AddTracksToPlaylist.class), ADD_TRACKS);
-				PlayerController.open_edit_playlist();
+				PlayerController.open_edit_playlist(actual_playlist);
 			}
 			//Details
 			else if(position == 1){
