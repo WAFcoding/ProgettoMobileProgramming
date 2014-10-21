@@ -30,6 +30,9 @@
     <string name="genere">Genere</string>
     <string name="durata">Durata</string>
     <string name="updateList">Update</string>
+    <string name="play_item_playlist">play</string>
+    <string name="open_item_playlist">apri</string>
+    
 
     <!-- *****************menu_track.xml**************** -->
     <string name="details">Dettagli </string>
