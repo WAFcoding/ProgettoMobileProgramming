@@ -120,7 +120,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				startActivity(new Intent(MainActivity.this, PlaylistActivity2.class));
 				//animazione a comparsa da sinistra
-				overridePendingTransition(R.anim.right_in, R.anim.left_out); 
+				overridePendingTransition(R.anim.top_in, R.anim.bottom_out); 
 			}
 		});
 		

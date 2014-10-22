@@ -110,4 +110,6 @@
 	<string name="edit_playlist_remove_track">Rimuovi brani dalla playlist</string>
 	<string name="edit_playlist_add_track_btn">Aggiungi</string>
 	<string name="edit_playlist_remove_track_btn">Rimuovi</string>
+	<string name="edit_playlist_edit_title_btn">Modifica titolo</string>
+	
 </resources>

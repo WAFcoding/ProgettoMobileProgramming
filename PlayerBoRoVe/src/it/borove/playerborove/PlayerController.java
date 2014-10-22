@@ -1421,15 +1421,47 @@ public class PlayerController extends SQLiteOpenHelper{
 	}
 	
 	public static void open_edit_playlist(PlaylistItem playlist){
-
-		m_context.startActivity(new Intent(m_context, PlaylistEditActivity.class));
+		
+		String pl_title= playlist.getTitle_playlist();
+		
+		Intent playlist_edit= new Intent(m_context, PlaylistEditActivity.class);
+		Bundle edit= new Bundle();
+		edit.putString("title", pl_title);
+		
+		playlist_edit.putExtras(edit);
+		m_context.startActivity(playlist_edit);
 	}
 
-	public static void open_add_track_to_playlist(){
-		m_context.startActivity(new Intent(m_context, AddTracksToPlaylist.class));
+	public static void open_add_track_to_playlist(String pl_title){
+		Intent playlist_add= new Intent(m_context, AddTracksToPlaylist.class);
+		Bundle edit= new Bundle();
+		edit.putString("title", pl_title);
+		
+		playlist_add.putExtras(edit);
+		m_context.startActivity(playlist_add);
 	}
 	
 	public static void open_playlist_tracks(){
+		
+		/*Intent playlist_add= new Intent(m_context, AddTracksToPlaylist.class);
+		Bundle edit= new Bundle();
+		edit.putString("title", pl_title);
+		
+		playlist_add.putExtras(edit);
+		m_context.startActivity(playlist_add);*/
+		
 		//m_context.startActivity(new Intent(m_context, PlaylistTracks.class));
+	}
+	
+	public static Cursor getExactlyPlaylistByName(String playlist_name){
+		return sqlDatabaseHelper.getExactlyNamePlaylist(playlist_name);
+	}
+	
+	public static void editPlaylistName(String idPlaylist, String new_name){
+		if(sqlDatabaseHelper.editPlaylistName(idPlaylist, new_name))
+			printToast("Titolo playlist modificato in: " + new_name);
+		else
+			printToast("Titolo playlist non modificato");
+		
 	}
 }

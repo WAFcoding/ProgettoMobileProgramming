@@ -303,8 +303,33 @@ public class SQLiteConnect extends SQLiteOpenHelper{
 			closeDatabase();
 		}
 		catch (Exception e){
-				Log.d(LOG, "Errore in containsTrack!! " + e.getMessage());
+			Log.d(LOG, "Errore in containsTrack!! " + e.getMessage());
 		}
+	}
+	
+	public boolean editPlaylistName(String idPlaylist, String new_name){
+		if(idPlaylist.equals(null) || new_name.equals(null)){
+			return false;
+		}
+		int toReturn=0;
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_ID, idPlaylist);
+		values.put(COLUMN_NAME, new_name);
+		String whereClause= COLUMN_ID + "='" + idPlaylist + "'";
+		try{
+			openDatabaseRW();
+			toReturn= m_db.update(TABLE_NAME_PLAYLIST, values, whereClause, null);
+			closeDatabase();
+		}
+		catch (Exception e){
+			Log.d(LOG, "Errore in editPlaylistName!! " + e.getMessage());
+		}
+		
+		if(toReturn > 0)
+			return true;
+		
+		return false;
+		
 	}
 
 	/**

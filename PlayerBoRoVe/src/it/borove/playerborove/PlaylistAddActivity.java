@@ -125,16 +125,9 @@ public class PlaylistAddActivity extends Activity {
 						Log.d(TAG, "idTrack: " + idTrack);
 					}
 				}
-				
 				if(idTracksSelected.size() >= 1){
-					boolean duplicatedNamePlaylist = false;
-					//Log.d(TAG, "namePlaylist: " + namePlaylist);
-					
-					if(cursorPlaylist == null){
-						PlayerController.addPlaylistToDb(namePlaylist, idTracksSelected);
-						setResult(Activity.RESULT_OK);				
-					}
-					else{
+					if(cursorPlaylist != null){
+						boolean duplicatedNamePlaylist = false;
 						cursorPlaylist.moveToFirst();
 						while(!cursorPlaylist.isAfterLast()){
 							if(namePlaylist.equals(cursorPlaylist.getString(1))){
@@ -143,18 +136,23 @@ public class PlaylistAddActivity extends Activity {
 							}
 							cursorPlaylist.moveToNext();
 						}
+
 						if(!duplicatedNamePlaylist){
 							Log.d(TAG, "!duplicatedNamePlaylist--> " + namePlaylist);
 							PlayerController.addPlaylistToDb(namePlaylist, idTracksSelected);
 							setResult(Activity.RESULT_OK);
+							finish();
 						}
 						else{
-							setResult(Activity.RESULT_CANCELED);
+							PlayerController.printToast("Playlist title duplicated, choose a different one");
 						}
-	
 					}
-					finish();
-					
+					else{
+
+						PlayerController.addPlaylistToDb(namePlaylist, idTracksSelected);
+						setResult(Activity.RESULT_OK);	
+						finish();
+					}
 				}
 			}
 		});

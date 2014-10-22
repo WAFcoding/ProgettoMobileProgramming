@@ -189,7 +189,7 @@ public class PlaylistActivity2 extends Activity{
 	public boolean onKeyDown(int keyCode, KeyEvent event){
 		if(keyCode == KeyEvent.KEYCODE_BACK){
 			finish();
-			overridePendingTransition(R.anim.left_in, R.anim.right_out);
+			overridePendingTransition(R.anim.bottom_in, R.anim.top_out);
 			return true;
 		}
 		return super.onKeyDown(keyCode, event); 
@@ -331,7 +331,7 @@ public class PlaylistActivity2 extends Activity{
 		}
 		
 		if(requestCode == ADDPLAYLIST && resultCode == RESULT_CANCELED){
-			Toast.makeText(this, "Name playlist duplicated! Please change name of new playlist", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(this, "Name playlist duplicated! Please change name of new playlist", Toast.LENGTH_SHORT).show();
 		}
 		
 		if(requestCode == REQUEST_INFO_TRACK && resultCode == RESULT_OK){	
@@ -368,9 +368,9 @@ public class PlaylistActivity2 extends Activity{
 		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==400){
 			PlayerController.playlistSingleDetails(listPlaylistItem.get(selectedPlaylist));
 		}
+		//anteprima
 		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==PREVIEW){
 			PlayerController.previewPlaylist(listPlaylistItem.get(selectedPlaylist));
-			
 		}
 		//remove
 		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==402){
