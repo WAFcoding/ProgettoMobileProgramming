@@ -2,74 +2,71 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical|center_horizontal"
     android:layout_margin="10dp"
+    android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical" >
-    
+
     <TextView
         android:id="@+id/detailsPlaylist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="4dp"
-        android:textStyle="italic"
-        android:textSize="28sp"
-        android:textColor="#FFCC99"
+        android:gravity="center"
         android:text="@string/detailsPlay"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-    <TextView          
-      android:layout_width="match_parent" 
-      android:layout_height="1px" 
-      android:background="#DADADA" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FFCC99"
+        android:textSize="28sp"
+        android:textStyle="italic" />
 
-      <TextView
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#DADADA" />
+
+    <TextView
         android:id="@+id/previewPlaylist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="4dp"
+        android:gravity="center"
         android:text="@string/PreviewPlay"
-        android:textStyle="italic"
-        android:textSize="28sp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#FFCC99"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-    
-	    <TextView          
-	      android:layout_width="match_parent" 
-	      android:layout_height="1px" 
-	      android:background="#DADADA" />
-    
+        android:textSize="28sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#DADADA" />
 
     <TextView
         android:id="@+id/addTrackPlaylist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="4dp"
+        android:gravity="center"
         android:text="@string/AddTrackPlay"
-        android:textStyle="italic"
-        android:textSize="28sp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#FFCC99"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-    <TextView          
-      android:layout_width="match_parent" 
-      android:layout_height="1px" 
-      android:background="#DADADA" />
-    
+        android:textSize="28sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#DADADA" />
+
     <TextView
         android:id="@+id/erasePlaylist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="4dp"
+        android:gravity="center"
         android:text="@string/erasePlay"
-        android:textStyle="italic"
-        android:textSize="28sp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#FFCC99"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
+        android:textSize="28sp"
+        android:textStyle="italic" />
 
 </LinearLayout>

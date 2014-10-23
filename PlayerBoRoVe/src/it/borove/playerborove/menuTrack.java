@@ -8,10 +8,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.KeyListener;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,7 +37,6 @@ public class menuTrack extends Activity{
 		textViewDetails 		= (TextView)findViewById(R.id.details);
 		textViewErase 			= (TextView)findViewById(R.id.erase);
 		
-		
 		this.MyCallerIntent 	= getIntent();
 
 		starsListeners();
@@ -49,6 +51,14 @@ public class menuTrack extends Activity{
 				finish();
 			}
 		});
+		textViewDetails.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				textViewDetails.setBackgroundColor(Color.parseColor("#F5DEB3"));
+				return false;
+			}
+		});
 		
 		textViewErase.setOnClickListener(new OnClickListener() {
 			@Override
@@ -57,6 +67,14 @@ public class menuTrack extends Activity{
 				finish();
 				
 			}	
+		});
+		textViewErase.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				textViewErase.setBackgroundColor(Color.parseColor("#F5DEB3"));
+				return false;
+			}
 		});
 
 		

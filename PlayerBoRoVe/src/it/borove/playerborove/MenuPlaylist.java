@@ -5,9 +5,12 @@ import it.borove.playerborove.R.id;
 import it.borove.playerborove.R.layout;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 public class MenuPlaylist extends Activity{
@@ -35,10 +38,6 @@ public class MenuPlaylist extends Activity{
 		this.myCallerIntent = getIntent();
 		
 		listener();
-		
-		
-		
-		
 	}
 
 	private void listener() {
@@ -52,6 +51,14 @@ public class MenuPlaylist extends Activity{
 				
 			}
 		});
+		textViewEdit.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				textViewEdit.setBackgroundColor(Color.parseColor("#F5DEB3"));
+				return false;
+			}
+		});
 		
 		textViewDetails.setOnClickListener(new OnClickListener() {		
 			@Override
@@ -60,6 +67,14 @@ public class MenuPlaylist extends Activity{
 				setResult(RESULT_CODE_DETAILS, myCallerIntent);
 				finish();
 				
+			}
+		});
+		textViewDetails.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				textViewDetails.setBackgroundColor(Color.parseColor("#F5DEB3"));
+				return false;
 			}
 		});
 		
@@ -72,6 +87,14 @@ public class MenuPlaylist extends Activity{
 				
 			}
 		});
+		textViewErase.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				textViewErase.setBackgroundColor(Color.parseColor("#F5DEB3"));
+				return false;
+			}
+		});
 		
 		textViewPreview.setOnClickListener(new OnClickListener() {		
 			@Override
@@ -82,7 +105,14 @@ public class MenuPlaylist extends Activity{
 				
 			}
 		});
-		
+		textViewPreview.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				textViewPreview.setBackgroundColor(Color.parseColor("#F5DEB3"));
+				return false;
+			}
+		});
 		
 		
 	}

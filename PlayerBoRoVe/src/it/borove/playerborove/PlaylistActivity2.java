@@ -305,6 +305,7 @@ public class PlaylistActivity2 extends Activity{
 			if(position == 0){
 			
 				startActivityForResult(new Intent(PlaylistActivity2.this, PlaylistAddActivity.class), ADDPLAYLIST);
+				overridePendingTransition(R.anim.right_in, R.anim.left_out);
 			}
 			//Update list of Playlist
 			else if(position == 1){
@@ -366,8 +367,6 @@ public class PlaylistActivity2 extends Activity{
 	        		Toast.makeText(this, "Track's Tags updated!", Toast.LENGTH_SHORT).show();
 				}		
 			}
-			
-
 		}
 		//dettagli
 		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==400){
