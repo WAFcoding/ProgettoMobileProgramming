@@ -11,38 +11,39 @@
 	    android:layout_height="match_parent"
 	    tools:context="${packageName}.${activityClass}"
 	    android:orientation="vertical" >
-
-		<EditText
-		    android:id="@+id/edit_text_add_playlist"
+	    
+	    <LinearLayout
 		    android:layout_width="match_parent"
 		    android:layout_height="0dp"
-		    android:layout_weight="0.2"
-		    android:ems="10" 
-		    android:labelFor="@string/label_add_playlist"
-		    android:text="@string/playlist_add_hint">
+		    android:layout_weight="0.1"
+		    android:orientation="horizontal">
 
-		    <requestFocus />
-		</EditText>
+            <EditText
+                android:id="@+id/edit_text_add_playlist"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:ems="10"
+                android:text="@string/playlist_add_hint" >
+
+                <requestFocus />
+            </EditText>
+
+            <Button
+                android:id="@+id/button_add_playlist"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="@drawable/background_button_playlist"
+                android:padding="3dp"
+                android:text="@string/btn_add_playlist" />
+        </LinearLayout>
 		
 		<ListView 
 		    android:id="@+id/listview_add_playlist"
 	        android:layout_width="match_parent"
 		    android:layout_height="0dp"
-		    android:layout_weight="0.7" />
-		
-		<Button 
-		    android:id="@+id/button_add_playlist"
-	        android:layout_width="match_parent"
-		    android:layout_height="0dp"
-		    android:layout_weight="0.2"
-		    android:padding="3dp"
-		    android:background="@drawable/ellipse_button"
-		    android:text="@string/txtButton"
-		    
-		    />
-		
-		
-		
+		    android:layout_weight="0.9" />
 		
 		    
 	</LinearLayout>

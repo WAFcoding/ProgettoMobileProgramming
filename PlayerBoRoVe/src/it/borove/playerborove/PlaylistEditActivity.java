@@ -16,7 +16,7 @@ import android.widget.EditText;
 public class PlaylistEditActivity extends Activity {
 	
 	private EditText title;
-	private Button add, remove, modify;
+	private Button add, remove, modify_name;
 	private AlertDialog.Builder builder;
 	private Intent MyCallerIntent;
 	private Bundle myBundle;
@@ -29,7 +29,7 @@ public class PlaylistEditActivity extends Activity {
 		setContentView(R.layout.activity_playlist_edit);
 		
 		title= (EditText)findViewById(R.id.etxt_edit_playlist_name);
-		modify= (Button)findViewById(R.id.btn_edit_playlist_name);
+		modify_name= (Button)findViewById(R.id.btn_edit_playlist_name);
 		add= (Button)findViewById(R.id.btn_edit_playlist_add_track);
 		remove= (Button)findViewById(R.id.btn_edit_playlist_remove_track);
 		
@@ -46,7 +46,7 @@ public class PlaylistEditActivity extends Activity {
 		
 		title.setText(title_playlist);
 		
-		modify.setOnClickListener(new OnClickListener() {
+		modify_name.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {

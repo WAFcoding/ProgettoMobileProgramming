@@ -78,6 +78,7 @@
     <!-- *****************add playlist**************** -->
     <string name="label_add_playlist">Inserisci il nome della playlist</string>
     <string name="playlist_add_hint">Nuova Playlist</string>
+    <string name="btn_add_playlist">Crea</string>
 
     <!-- *****************popup add playlist**************** -->
     <string name="playlist_popup_choice1">Elimina</string>

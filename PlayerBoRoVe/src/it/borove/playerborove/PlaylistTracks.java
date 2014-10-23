@@ -114,37 +114,41 @@ public class PlaylistTracks extends Activity{
 		drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
 		
 		playlist = PlayerController.getCursorPlaylist();
-			if(playlist != null){
-				boolean name = false;
-				playlist.moveToFirst();
-				while(!playlist.isAfterLast()){
-					if(playlist.getString(0).equals(id_playlist)){
-						if(!name){
-							name_playlist = playlist.getString(1);
-							name = true;
-						}					
-						String title		= playlist.getString(7);
-						String name_singer 	= playlist.getString(4);
-						String kind			= playlist.getString(5);
-						String path_track	= playlist.getString(9);
-						String _id			= playlist.getString(2);
-						String vote			= playlist.getString(6);
-						String nameFile		= playlist.getString(3);
-						String duration		= playlist.getString(11);
-						String albumName	= playlist.getString(10);
-						
-						String album_id 	= mapper.getIdAlbumFromIdTrack(playlist.getString(2));
-						
-						SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem(_id, title, name_singer, kind, vote,
-								nameFile, album_id, path_track, albumName, duration, this);
-						listOfTracks.add(tmp_pl_item);
-					}
-		
-					playlist.moveToNext();
+		if(playlist != null){
+			boolean name = false;
+			playlist.moveToFirst();
+			while(!playlist.isAfterLast()){
+				if(playlist.getString(0).equals(id_playlist)){
+					if(!name){
+						name_playlist = playlist.getString(1);
+						name = true;
+					}					
+					String title		= playlist.getString(7);
+					String name_singer 	= playlist.getString(4);
+					String kind			= playlist.getString(5);
+					String path_track	= playlist.getString(9);
+					String _id			= playlist.getString(2);
+					String vote			= playlist.getString(6);
+					String nameFile		= playlist.getString(3);
+					String duration		= playlist.getString(11);
+					String albumName	= playlist.getString(10);
+
+					String album_id 	= mapper.getIdAlbumFromIdTrack(playlist.getString(2));
+
+					SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem(_id, title, name_singer, kind, vote,
+							nameFile, album_id, path_track, albumName, duration, this);
+					listOfTracks.add(tmp_pl_item);
 				}
-				
-				actual_playlist= new PlaylistItem(name_playlist, listOfTracks);
+
+				playlist.moveToNext();
 			}
+
+			actual_playlist= new PlaylistItem(name_playlist, listOfTracks);
+		}
+		//imposta il nome dell'activity con il nome della playlist selezionata
+		if(actual_playlist != null){
+			getActionBar().setTitle(actual_playlist.getTitle_playlist());
+		}
 
 		for(int i=0; i < listOfTracks.size(); i++){
         	isGroupSelected.add(false);

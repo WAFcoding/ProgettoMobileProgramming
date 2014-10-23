@@ -1,102 +1,91 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="${relativePackage}.${activityClass}"
     android:background="@drawable/gradient_listview"
-    android:orientation="vertical" >
-    
+    tools:context="${relativePackage}.${activityClass}" >
+
     <LinearLayout
+        android:id="@+id/rel_layout_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp" >
+        android:orientation="horizontal">
+        
+        <LinearLayout 
+        android:layout_width="0dp"
+        android:layout_weight="0.7"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/txt_edit_playlist_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="top"
             android:layout_margin="4dp"
-            android:gravity="center"
             android:labelFor="@+id/etxt_edit_playlist_name"
             android:text="@string/edit_playlist_title"
             android:textColor="#FFCC99" />
 
         <EditText
             android:id="@+id/etxt_edit_playlist_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_below="@+id/txt_edit_playlist_name"
+            android:layout_gravity="bottom"
             android:background="@android:color/transparent"
-            android:gravity="center"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:padding="1dp"
             android:text=""
-            android:textColor="#6666FF"
-            android:textSize="15sp"
+            android:textColor="@android:color/white"
             android:textStyle="italic" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/btn_edit_playlist_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
             android:layout_height="wrap_content"
+            android:background="@drawable/background_button"
             android:padding="3dp"
-            android:text="@string/edit_playlist_edit_title_btn" 
-            android:background="@drawable/background_button"/>
+            android:text="@string/edit_playlist_edit_title_btn" />
     </LinearLayout>
-    
+
     <LinearLayout
+        android:id="@+id/rel_layout_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_below="@+id/rel_layout_1" >
 
-        <TextView
-            android:id="@+id/txt_edit_playlist_add_track"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:labelFor="@+id/etxt_edit_playlist_name"
-            android:text="@string/edit_playlist_add_track"
-            android:textColor="#FFCC99" />
-        
-        <Button 
+        <Button
             android:id="@+id/btn_edit_playlist_add_track"
-	        android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:padding="3dp"
-		    android:text="@string/edit_playlist_add_track_btn"
-            android:background="@drawable/background_button"/>
+            android:layout_width="0dp"
+            android:layout_weight="0.4"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_button"
+            android:padding="3dp"
+            android:text="@string/edit_playlist_add_track_btn" />
 
+        <Button
+            android:id="@+id/btn_edit_playlist_remove_track"
+            android:layout_width="0dp"
+            android:layout_weight="0.4"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_button"
+            android:padding="3dp"
+            android:text="@string/edit_playlist_remove_track_btn" />
     </LinearLayout>
-    
+
     <LinearLayout
+        android:id="@+id/rel_layout_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_below="@+id/rel_layout_2" >
 
-        <TextView
-            android:id="@+id/txt_edit_playlist_remove_track"
+        <ListView
+            android:id="@+id/list_view_edit_playlist"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:labelFor="@+id/etxt_edit_playlist_name"
-            android:text="@string/edit_playlist_remove_track"
-            android:textColor="#FFCC99" />
-        
-        <Button 
-            android:id="@+id/btn_edit_playlist_remove_track"
-	        android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:padding="3dp"
-		    android:text="@string/edit_playlist_remove_track_btn"
-            android:background="@drawable/background_button"/>
-
+            android:layout_height="wrap_content" />
     </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

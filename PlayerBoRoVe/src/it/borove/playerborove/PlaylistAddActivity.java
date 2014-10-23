@@ -71,10 +71,6 @@ public class PlaylistAddActivity extends Activity {
 		
 		m_edit_text.setTextColor(Color.parseColor("#ff0000"));
 		
-		/*
-		 * TODO PlayerBoRoVe implementare la gestione del doppio nome
-		 */
-		
 		cursorTracks	= PlayerController.getCursorTracks();
 		cursorPlaylist	= PlayerController.getCursorPlaylist();
 		
@@ -159,9 +155,6 @@ public class PlaylistAddActivity extends Activity {
 
 		//il navigation drawer
 		title= drawer_title = getTitle();
-		
-		
-		
 		drawer_toggle= new ActionBarDrawerToggle(this, drawer, R.drawable.ic_launcher, 
 												R.string.drawer_open, R.string.drawer_close){
 			//richiamata quando il drawer è completamente chiuso
@@ -188,8 +181,6 @@ public class PlaylistAddActivity extends Activity {
         drawer_list_view= (ListView)findViewById(R.id.left_drawer_add_playlist);
         drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
         drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
-        
-        registerForContextMenu(m_list_view);
 	}
 
     @Override
@@ -264,30 +255,5 @@ public class PlaylistAddActivity extends Activity {
 			super(context, layout, c, from, to, flags);
 			
 		}
-	}
-	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-			super.onCreateContextMenu(menu, v, menuInfo);
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.popup_menu_playlist, menu);
-	}
-	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-	    switch (item.getItemId()) {
-	        case R.id.playlist_popup_menu_choice1:
-	            
-	            return true;
-	        case R.id.playlist_popup_menu_choice2:
-	            
-	            return true;
-	        case R.id.playlist_popup_menu_choice3:
-	            
-	            return true;
-	        default:
-	            return super.onContextItemSelected(item);
-	    }
 	}
 }

@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -42,6 +44,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -298,7 +301,9 @@ public class PlaylistActivity2 extends Activity{
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			//aggiungi playlist
 			if(position == 0){
+			
 				startActivityForResult(new Intent(PlaylistActivity2.this, PlaylistAddActivity.class), ADDPLAYLIST);
 			}
 			//Update list of Playlist
