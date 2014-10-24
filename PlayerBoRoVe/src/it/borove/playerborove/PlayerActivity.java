@@ -154,10 +154,11 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 	public boolean isMute() {
 		return PlayerController.isMute();
 	}
-
+	
 	@Override
 	public void stop() {
 		PlayerController.stop();
+		lbm.registerReceiver(receiver, new IntentFilter("Prepared"));
 	}
 
 	@Override

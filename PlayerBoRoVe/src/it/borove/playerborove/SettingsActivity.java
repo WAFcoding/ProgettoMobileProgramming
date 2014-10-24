@@ -208,7 +208,7 @@ public class SettingsActivity extends Activity{
 		});
 		
 		Cursor someTrack	= PlayerController.getCursorTracks();
-		if(someTrack == null){
+		/*if(someTrack == null){
 			Log.d(SETTINGS, "someTrack is NULL");
 			eraseDatabase.setBackgroundColor(Color.TRANSPARENT);
 			eraseDatabase.setTextColor(Color.DKGRAY);
@@ -219,7 +219,7 @@ public class SettingsActivity extends Activity{
 			eraseDatabase.setBackground(getResources().getDrawable(R.drawable.ellipse_button));
 			eraseDatabase.setTextColor(Color.WHITE);
 			eraseDatabase.setEnabled(true);
-		}
+		}*/
 		
 		
 		eraseDatabase.setOnClickListener(new OnClickListener() {			
@@ -269,7 +269,7 @@ public class SettingsActivity extends Activity{
 					else
 						Toast.makeText(SettingsActivity.this, "please first erase database", Toast.LENGTH_SHORT).show();
 				
-				Cursor someTrack	= PlayerController.getCursorTracks();
+				/*Cursor someTrack	= PlayerController.getCursorTracks();
 				if(someTrack == null){
 					//Log.d(SETTINGS, "someTrack is NULL");
 					eraseDatabase.setBackgroundColor(Color.TRANSPARENT);
@@ -281,7 +281,7 @@ public class SettingsActivity extends Activity{
 					eraseDatabase.setBackground(getResources().getDrawable(R.drawable.ellipse_button));
 					eraseDatabase.setTextColor(Color.WHITE);
 					eraseDatabase.setEnabled(true);
-				}
+				}*/
 			
 			}
 		});

@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="it.borove.playerborove"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0" 
+    >
 
     <uses-sdk
         android:minSdkVersion="17"
@@ -21,7 +22,8 @@
         android:theme="@style/CustomActionBarTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,7 +40,8 @@
         <activity
             android:name=".menuTrack"
             android:label="@string/title_options"
-            android:theme="@style/CustomPopup" >
+            android:theme="@style/CustomPopup" 
+            android:screenOrientation="portrait">
 
             <!-- android:windowSoftInputMode="stateAlwaysVisible|adjustPan" -->
         </activity>
@@ -49,12 +52,14 @@
 
         <activity
             android:name=".TrackActivity"
-            android:label="@string/title_activity_track" >
+            android:label="@string/title_activity_track" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".MenuPlaylist"
             android:label="@string/title_options"
-            android:theme="@style/CustomPopup" >
+            android:theme="@style/CustomPopup" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".PlayerActivity"
@@ -62,49 +67,60 @@
         </activity>
         <activity
             android:name=".PlaylistActivity"
-            android:label="@string/title_activity_playlist" >
+            android:label="@string/title_activity_playlist" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".PlaylistActivity2"
-            android:label="@string/title_activity_playlist" >
+            android:label="@string/title_activity_playlist" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".PlaylistTracks"
-            android:label="@string/title_activity_playlist" >
+            android:label="@string/title_activity_playlist" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".AddTracksToPlaylist"
-            android:label="@string/title_activity_playlist_edit" >
+            android:label="@string/title_activity_playlist_edit" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".LibraryActivity"
-            android:label="@string/title_activity_library" >
+            android:label="@string/title_activity_library" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" >
+            android:label="@string/title_activity_settings" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".PlaylistAddActivity"
             android:label="@string/title_activity_playlist_add"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".LibraryDetailsActivity"
-            android:label="@string/title_activity_library_details" >
+            android:label="@string/title_activity_library_details" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".PlaylistDetailsActivity"
-            android:label="@string/title_activity_playlist_details" >
+            android:label="@string/title_activity_playlist_details" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".PlaylistSingleDetails"
-            android:label="@string/title_activity_playlist_single_details" >
+            android:label="@string/title_activity_playlist_single_details" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".PlaylistEditActivity"
             android:label="@string/title_activity_playlist_edit" 
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
