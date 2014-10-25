@@ -53,7 +53,7 @@ public class PlaylistDetailsActivity extends Activity {
 		if(keyCode == KeyEvent.KEYCODE_BACK){
 
 			finish();
-			overridePendingTransition(R.anim.left_in, R.anim.right_out);
+			overridePendingTransition(R.anim.bottom_in, R.anim.top_out);
 			return true;
 		}	
 		return super.onKeyDown(keyCode, event); 

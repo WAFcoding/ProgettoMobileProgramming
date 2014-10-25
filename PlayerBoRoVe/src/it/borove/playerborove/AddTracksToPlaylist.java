@@ -40,8 +40,6 @@ public class AddTracksToPlaylist extends Activity {
 	
 	ArrayList<SinglePlaylistItem> listTracks;
 	
-	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

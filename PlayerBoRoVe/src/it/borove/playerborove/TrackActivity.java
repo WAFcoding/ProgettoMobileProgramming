@@ -542,4 +542,15 @@ public class TrackActivity extends Activity{
 		}
 		
 	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event){
+		
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+
+			finish();
+			overridePendingTransition(R.anim.bottom_in, R.anim.top_out);
+			return true;
+		}	
+		return super.onKeyDown(keyCode, event); 
+	}
 }

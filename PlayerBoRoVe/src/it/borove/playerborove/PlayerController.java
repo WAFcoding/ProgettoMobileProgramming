@@ -461,6 +461,7 @@ public class PlayerController extends SQLiteOpenHelper{
 		PlayerController.cursorTracks = cursor;
 	}
 	
+	
 	public static Cursor getCursorPlaylist(){
 		//columnsSelect = {"id_P, nameP, pid AS _id, title, singerName, kind, vote, contentTitle, albumId, pathTrack, albumName, duration"};
 		
@@ -558,7 +559,7 @@ public class PlayerController extends SQLiteOpenHelper{
 					}
 				}
 			else{
-				Log.d(TAG, "Errore in addPlaylistToDb(): pl � NULL");
+				Log.d(TAG, "Errore in addPlaylistToDb(): pl is NULL");
 			}
 		}catch(Exception e){
 			Log.d(TAG, "Errore in addPlaylistToDb()");
@@ -630,6 +631,34 @@ public class PlayerController extends SQLiteOpenHelper{
 		}catch(Exception e){
 			Log.d(TAG, "Errore in deleteSinglePlaylist: deleteRowPlaylist()");
 		}
+	}
+	
+	public static void deleteTracksInPlaylist(String idPlaylist, ArrayList<String> playlist_track_ids){
+		
+		for(String id : playlist_track_ids){
+			sqlDatabaseHelper.deleteRowContains(idPlaylist, id);
+		}
+	}
+	
+	public static ArrayList<String> getTracksIdFromInPlaylist(String playlist_name){
+		ArrayList<String> toReturn= new ArrayList<String>();
+		
+		String playlist_id= getExactlyPlaylistByName(playlist_name).getString(0);
+		Cursor all_playlist= getCursorPlaylist();
+		if(all_playlist != null){
+			all_playlist.moveToFirst();
+			while(!all_playlist.isAfterLast()){
+				
+				if(all_playlist.getString(0).equals(playlist_id)){
+					
+					toReturn.add(all_playlist.getString(0));
+				}
+				
+				all_playlist.moveToNext();
+			}
+		}
+		
+		return toReturn;
 	}
 	
 	/**
@@ -1441,7 +1470,12 @@ public class PlayerController extends SQLiteOpenHelper{
 		m_context.startActivity(playlist_add);
 	}
 	
-	public static void open_playlist_tracks(){
+	public static void open_playlist_tracks(String playlist_name){
+		
+		if(playlist_name != null){
+			Cursor playlist= getExactlyPlaylistByName(playlist_name);
+			
+		}
 		
 		/*Intent playlist_add= new Intent(m_context, AddTracksToPlaylist.class);
 		Bundle edit= new Bundle();
@@ -1458,10 +1492,59 @@ public class PlayerController extends SQLiteOpenHelper{
 	}
 	
 	public static void editPlaylistName(String idPlaylist, String new_name){
-		if(sqlDatabaseHelper.editPlaylistName(idPlaylist, new_name))
-			printToast("Titolo playlist modificato in: " + new_name);
-		else
-			printToast("Titolo playlist non modificato");
+		sqlDatabaseHelper.editPlaylistName(idPlaylist, new_name);
+	}
+	
+	public static ArrayList<SinglePlaylistItem> getAllTracksInPlaylist(String playlist_name){
 		
+		if(playlist_name == null || playlist_name.equals("")){
+			return null;
+		}
+		
+		ArrayList<SinglePlaylistItem> toReturn= new ArrayList<SinglePlaylistItem>();
+		
+		AlbumMapper mapper = new AlbumMapper();	
+		Cursor all_tracks = PlayerController.getCursorTracks();
+		if(all_tracks != null){
+			all_tracks.moveToFirst();
+			while(!all_tracks.isAfterLast()){
+				mapper.setIdTrackToContentTitle(all_tracks.getString(0), all_tracks.getString(5));
+				mapper.setIdTrackToIdAlbum(all_tracks.getString(0), all_tracks.getString(6));
+		
+				all_tracks.moveToNext();
+			}
+		}
+		
+		Cursor playlist= getExactlyPlaylistByName(playlist_name);
+		Cursor all_playlist= getCursorPlaylist();
+		
+		if(playlist != null && all_playlist != null){
+			all_playlist.moveToFirst();
+			while(!all_playlist.isAfterLast()){
+				
+				if(all_playlist.getString(0).equals(playlist.getString(0))){
+
+					String title		= all_playlist.getString(7);
+					String name_singer 	= all_playlist.getString(4);
+					String kind			= all_playlist.getString(5);
+					String path_track	= all_playlist.getString(9);
+					String _id			= all_playlist.getString(2);
+					String vote			= all_playlist.getString(6);
+					String nameFile		= all_playlist.getString(3);
+					String duration		= all_playlist.getString(11);
+					String albumName	= all_playlist.getString(10);
+
+					String album_id 	= mapper.getIdAlbumFromIdTrack(all_playlist.getString(2));
+					
+					SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem(_id, title, name_singer, kind, vote,
+							nameFile, album_id, path_track, albumName, duration, m_context);
+					toReturn.add(tmp_pl_item);
+				}
+				
+				all_playlist.moveToNext();
+			}
+		}
+		
+		return toReturn;
 	}
 }

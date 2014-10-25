@@ -222,7 +222,7 @@ public class PlaylistActivity2 extends Activity{
 			}
 			final PlaylistItem playlistSelected = this.namePlaylists.get(position);
 			String playlist_name = playlistSelected.getTitle_playlist();
-			Log.d(TAG, "dentro getView(): " + playlist_name); 
+			//Log.d(TAG, "dentro getView(): " + playlist_name); 
 	
 			if(playlist_name != null){
 				TextView playlist_title = (TextView)myView.findViewById(R.id.text_view_item);
@@ -242,6 +242,7 @@ public class PlaylistActivity2 extends Activity{
 				@Override
 				public void onClick(View v) {
 					PlayerController.playPlaylist(playlistSelected);
+					overridePendingTransition(R.anim.bottom_in, R.anim.top_out);
 				}
 			});
 
@@ -259,6 +260,7 @@ public class PlaylistActivity2 extends Activity{
 					i.putExtras(b);
 					
 					m_context.startActivity(i);
+					overridePendingTransition(R.anim.left_in, R.anim.right_out);
 								
 				}
 			});
@@ -305,7 +307,7 @@ public class PlaylistActivity2 extends Activity{
 			if(position == 0){
 			
 				startActivityForResult(new Intent(PlaylistActivity2.this, PlaylistAddActivity.class), ADDPLAYLIST);
-				overridePendingTransition(R.anim.right_in, R.anim.left_out);
+				//overridePendingTransition(R.anim.right_in, R.anim.left_out);
 			}
 			//Update list of Playlist
 			else if(position == 1){
@@ -316,14 +318,15 @@ public class PlaylistActivity2 extends Activity{
 			//details
 			else if(position == 2){
 				PlayerController.playlistDetails();
-				overridePendingTransition(R.anim.right_in, R.anim.left_out);
+				//overridePendingTransition(R.anim.right_in, R.anim.left_out);
 			}
 			//Settings
 			else if(position == 3){
 				PlayerController.open_settings();
-				overridePendingTransition(R.anim.right_in, R.anim.left_out);
+				//overridePendingTransition(R.anim.right_in, R.anim.left_out);
 			}
-			
+
+			overridePendingTransition(R.anim.right_in, R.anim.left_out);
 			drawer.closeDrawer(drawer_list_view);
 		}
 	}
@@ -405,8 +408,8 @@ public class PlaylistActivity2 extends Activity{
 			startActivity(i);*/
 			PlayerController.open_edit_playlist(listPlaylistItem.get(selectedPlaylist));
 		}
-		
-		
+
+		overridePendingTransition(R.anim.top_in, R.anim.bottom_out);
 	}
  
     private void setListPlaylist(){

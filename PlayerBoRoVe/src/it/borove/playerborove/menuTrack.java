@@ -49,6 +49,7 @@ public class menuTrack extends Activity{
 			public void onClick(View v) {		
 				setResult(RESULT_CODE_DETAILS, MyCallerIntent);
 				finish();
+				overridePendingTransition(R.anim.top_in, R.anim.bottom_out);
 			}
 		});
 		textViewDetails.setOnTouchListener(new OnTouchListener() {

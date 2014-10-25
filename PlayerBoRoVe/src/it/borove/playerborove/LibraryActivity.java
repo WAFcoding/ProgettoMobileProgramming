@@ -191,6 +191,7 @@ public class LibraryActivity extends Activity {
 				trackActivity.putExtra("imageAlbum", albumId);
 				trackActivity.putExtras(infoTrack);			
 				startActivityForResult(trackActivity, REQUEST_VOTE_TRACK);
+				overridePendingTransition(R.anim.top_in, R.anim.bottom_out);
 				
 			}
 		}
@@ -378,6 +379,7 @@ public class LibraryActivity extends Activity {
 						
 						SinglePlaylistItem song=new SinglePlaylistItem(_id, p_title, singerName, kind, vote, nameFile, album_id, path_track, albumName, duration, getApplicationContext());
 						PlayerController.playSingleItem(song);
+						overridePendingTransition(R.anim.bottom_in, R.anim.top_out);
 					}
 				//}
 				//else{

@@ -256,7 +256,7 @@ public class PlaylistTracks extends Activity{
 	public boolean onKeyDown(int keyCode, KeyEvent event){
 		if(keyCode == KeyEvent.KEYCODE_BACK){
 			finish();
-			overridePendingTransition(R.anim.left_in, R.anim.right_out);
+			overridePendingTransition(R.anim.right_in, R.anim.left_out);
 			return true;
 		}
 		return super.onKeyDown(keyCode, event); 
@@ -391,6 +391,7 @@ public class PlaylistTracks extends Activity{
 			else if(position == 2){
 				PlayerController.open_settings();
 			}
+			overridePendingTransition(R.anim.top_in, R.anim.bottom_out);
 			drawer.closeDrawer(drawer_list_view);
 		}
 	}
