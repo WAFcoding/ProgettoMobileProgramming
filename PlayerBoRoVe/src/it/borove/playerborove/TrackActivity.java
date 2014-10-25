@@ -204,7 +204,6 @@ public class TrackActivity extends Activity{
 		 edtFileName.setOnClickListener(new OnClickListener() {	
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				exitTrack.setText("Save");
 			}
 		});
@@ -213,7 +212,6 @@ public class TrackActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				exitTrack.setText("Save");
 			}
 		});
@@ -222,7 +220,6 @@ public class TrackActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				exitTrack.setText("Save");
 				
 			}
@@ -231,7 +228,6 @@ public class TrackActivity extends Activity{
 		exitTrack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 
 				myBundle.putString("fileName", edtFileName.getText().toString());
 				myBundle.putString("author", edtAuthor.getText().toString());
@@ -251,7 +247,6 @@ public class TrackActivity extends Activity{
 		star1.setOnClickListener(new OnClickListener() {	
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				voteTrack = 1;
 				if(!stateStar1){
 					star1.setImageResource(R.drawable.star_gold);
@@ -279,7 +274,6 @@ public class TrackActivity extends Activity{
 		star2.setOnClickListener(new OnClickListener() {	
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				voteTrack = 2;
 				if(!stateStar2){
 					star1.setImageResource(R.drawable.star_gold);
@@ -306,7 +300,6 @@ public class TrackActivity extends Activity{
 		star3.setOnClickListener(new OnClickListener() {	
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				voteTrack = 3;
 				if(!stateStar3){
 					star1.setImageResource(R.drawable.star_gold);
@@ -334,7 +327,6 @@ public class TrackActivity extends Activity{
 		star4.setOnClickListener(new OnClickListener() {	
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				voteTrack = 4;
 				if(!stateStar4){
 					star1.setImageResource(R.drawable.star_gold);
@@ -362,7 +354,6 @@ public class TrackActivity extends Activity{
 		star5.setOnClickListener(new OnClickListener() {	
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				voteTrack = 5;
 				if(!stateStar5){
 					star1.setImageResource(R.drawable.star_gold);
@@ -392,7 +383,6 @@ public class TrackActivity extends Activity{
 		edtFileName.setOnEditorActionListener(new OnEditorActionListener() {		
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				// TODO Auto-generated method stub
 				
 				if(actionId == EditorInfo.IME_ACTION_DONE){
 					Log.e(TAG, "action done catturato!");
@@ -407,7 +397,6 @@ public class TrackActivity extends Activity{
 		edtAuthor.setOnEditorActionListener(new OnEditorActionListener() {		
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				// TODO Auto-generated method stub
 				if(!edtAuthor.getText().toString().equals(author))
 					exitTrack.setText("Save");			
 				return false;
@@ -416,7 +405,6 @@ public class TrackActivity extends Activity{
 		edtAlbum.setOnEditorActionListener(new OnEditorActionListener() {		
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				// TODO Auto-generated method stub
 				if(!edtAlbum.getText().toString().equals(albumName))
 					exitTrack.setText("Save");			
 				return false;
@@ -427,7 +415,6 @@ public class TrackActivity extends Activity{
 		edtKind.setOnTouchListener(new OnTouchListener() {	
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
 				int type = edtKind.getInputType();
 				edtKind.setInputType(InputType.TYPE_NULL);
 				edtKind.onTouchEvent(event);
@@ -441,7 +428,6 @@ public class TrackActivity extends Activity{
 		edtKind.setOnClickListener(new OnClickListener() {	
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				
 				final String[] array = {"Ambient","Blues","Classic", "Dance", "Electro","Etnic",
 			 				"House","Jazz","Metal", "Pop", "Rock","Swing","Techno"};
@@ -453,7 +439,6 @@ public class TrackActivity extends Activity{
 				builder.setItems(array, new DialogInterface.OnClickListener() {	
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
 						
 						edtKind.setText(array[which]);
 						if(!edtKind.getText().toString().equals(kind))
@@ -471,7 +456,6 @@ public class TrackActivity extends Activity{
 		albumArt.setOnClickListener(new OnClickListener() {	
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				/*if(albums != null){
 					
 					
@@ -503,25 +487,23 @@ public class TrackActivity extends Activity{
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
+			
 			return 0;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
+			
 			Bitmap album = albums.get(position);
 			ImageView imageAlbum;
 			

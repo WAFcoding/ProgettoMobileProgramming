@@ -870,8 +870,8 @@ public class PlayerController extends SQLiteOpenHelper{
 			//lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
 			printToast("Preview of: "+currentPreviewTrack.getTitle());
 			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
-			int durationPreview=(prefs.getInt("Duration Preview", 0)+15)*1000;//TODO PlayerBoRoVe ora lo prende statico, lo deve leggere dalle prefences
-			musicSrv.preview(5000);
+			int durationPreview=(prefs.getInt("Duration Preview", 0)+15)*1000;
+			musicSrv.preview(durationPreview);
 		}
 	};
 	
@@ -883,7 +883,6 @@ public class PlayerController extends SQLiteOpenHelper{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.d("on complete preview","on complete preview");
-			//FIXME controllare se necessario
 			m_context.unbindService(musicConnection);
 			if(!queue.isEmpty()){
 				
