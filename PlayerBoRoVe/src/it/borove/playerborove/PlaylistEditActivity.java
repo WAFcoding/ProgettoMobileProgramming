@@ -96,11 +96,12 @@ public class PlaylistEditActivity extends Activity {
 						}
 					}
 					
-					if(tracksSelectedAdd != null)
+					if(tracksSelectedAdd != null){
 						for(String id : tracksSelectedAdd){
 							PlayerController.setPlaylistOnDb(title.getText().toString(), id, false);
 						}
 						Log.d("edit activity", "brani selezionati da aggiungere: " + tracksSelectedAdd.size());
+					}
 				}
 				
 				if(func_remove){
@@ -116,9 +117,10 @@ public class PlaylistEditActivity extends Activity {
 						}
 					}
 					
-					if(tracksSelectedRemove != null)
+					if(tracksSelectedRemove != null){
 						PlayerController.deleteTracksInPlaylist(idPlaylist, tracksSelectedRemove);
 						Log.d("edit activity", "brani selezionati da rimuovere: " + tracksSelectedRemove.size());
+					}
 				}
 				
 				finish();
