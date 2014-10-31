@@ -74,7 +74,7 @@ public class PlaylistTracks extends Activity{
 		this.id_tracks		= bundle.getStringArrayList("id_tracks");
 		
 		this.listOfTracks	= new ArrayList<SinglePlaylistItem>();
-			
+		/*	
 		mapper = new AlbumMapper();	
 		cursorTracks = PlayerController.getCursorTracks();
 		if(cursorTracks != null){
@@ -85,7 +85,7 @@ public class PlaylistTracks extends Activity{
 		
 				cursorTracks.moveToNext();
 			}
-		}
+		}*/
 	
 		//il navigation drawer
 		title			= drawer_title = getTitle();
@@ -112,7 +112,7 @@ public class PlaylistTracks extends Activity{
 		drawer_list_view = (ListView)findViewById(R.id.left_drawer_track);
 		drawer_list_view.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, choices)); 
 		drawer_list_view.setOnItemClickListener(new DrawerItemClickListener());
-		
+		/*
 		playlist = PlayerController.getCursorPlaylist();
 		if(playlist != null){
 			boolean name = false;
@@ -144,7 +144,7 @@ public class PlaylistTracks extends Activity{
 			}
 
 			actual_playlist= new PlaylistItem(name_playlist, listOfTracks);
-		}
+		}*/
 		//imposta il nome dell'activity con il nome della playlist selezionata
 		if(actual_playlist != null){
 			getActionBar().setTitle(actual_playlist.getTitle_playlist());
@@ -237,7 +237,7 @@ public class PlaylistTracks extends Activity{
 	}
 	@Override
 	protected void onResume(){
-		super.onResume();
+
 		if(playlist != null){
 			playlist.close();
 			PlayerController.closeConnectionDB();
@@ -250,7 +250,60 @@ public class PlaylistTracks extends Activity{
 			cursorTracks.close();
 			PlayerController.closeConnectionDB();
 		}
-	
+		if(listOfTracks != null){
+			listOfTracks.clear();
+		}
+		
+		Log.d("onResume", "in onResume");
+
+		mapper = new AlbumMapper();	
+		cursorTracks = PlayerController.getCursorTracks();
+		if(cursorTracks != null){
+			cursorTracks.moveToFirst();
+			while(!cursorTracks.isAfterLast()){
+				mapper.setIdTrackToContentTitle(cursorTracks.getString(0), cursorTracks.getString(5));
+				mapper.setIdTrackToIdAlbum(cursorTracks.getString(0), cursorTracks.getString(6));
+
+				cursorTracks.moveToNext();
+			}
+		}
+
+		playlist = PlayerController.getCursorPlaylist();
+		if(playlist != null){
+			boolean name = false;
+			playlist.moveToFirst();
+			while(!playlist.isAfterLast()){
+				if(playlist.getString(0).equals(id_playlist)){
+					if(!name){
+						name_playlist = playlist.getString(1);
+						name = true;
+					}					
+					String title		= playlist.getString(7);
+					String name_singer 	= playlist.getString(4);
+					String kind			= playlist.getString(5);
+					String path_track	= playlist.getString(9);
+					String _id			= playlist.getString(2);
+					String vote			= playlist.getString(6);
+					String nameFile		= playlist.getString(3);
+					String duration		= playlist.getString(11);
+					String albumName	= playlist.getString(10);
+
+					String album_id 	= mapper.getIdAlbumFromIdTrack(playlist.getString(2));
+
+					SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem(_id, title, name_singer, kind, vote,
+							nameFile, album_id, path_track, albumName, duration, this);
+					listOfTracks.add(tmp_pl_item);
+				}
+
+				playlist.moveToNext();
+			}
+
+			actual_playlist= new PlaylistItem(name_playlist, listOfTracks);
+		}
+		listTracks.invalidateViews();
+		listTracksAdapter.notifyDataSetChanged();
+		super.onResume();
+
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event){
