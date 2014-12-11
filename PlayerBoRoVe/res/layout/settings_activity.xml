@@ -2,277 +2,275 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@drawable/gradient_listview" >
-<LinearLayout 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/gradient_listview" >
-    
+    android:background="@drawable/gradient_listview"
+    android:fillViewport="true" >
 
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@color/blue2" 
-    android:layout_marginBottom="5dp"
-    android:layout_marginTop="5dp">
-    
-		<TextView 
-		    android:id="@+id/textView1"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:layout_weight="1"
-        	android:text="Position" 
-        	android:layout_marginLeft="10dp"
-        	android:layout_marginRight="10dp"
-        	android:layout_marginBottom="10dp"
-        	android:layout_marginTop="10dp">
-        	</TextView>
-
-		<EditText
-		    android:id="@+id/editText1"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="0.5"
-		    android:layout_gravity="right"
-		    android:inputType="number" 
-			android:layout_marginLeft="10dp"
-        	android:layout_marginRight="10dp"
-        	android:layout_marginBottom="10dp"
-        	android:layout_marginTop="10dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal" 
-    android:background="@color/blue2" 
-    android:layout_marginBottom="5dp">
-    
-		<TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fade In " 
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
-	
-		<TextView
-        android:id="@+id/textViewValue1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
-	
-    	<SeekBar
-        android:id="@+id/seekBar1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="3"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
-    </LinearLayout>
-    
-        
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal" 
-    android:background="@color/blue2" 
-    android:layout_marginBottom="5dp">
-    
-	<TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fade Out" 
-       	android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
-	 
-	 <TextView
-        android:id="@+id/textViewValue2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
-
-    <SeekBar
-        android:id="@+id/seekBar2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="3"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
-
-
-    </LinearLayout>
-	<LinearLayout 
-	android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@color/blue2" 
-    android:layout_marginBottom="5dp">
-    
-	<TextView
-        android:id="@+id/textViewPreview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Preview" 
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
-	 
-	 <TextView
-        android:id="@+id/textViewValuePreview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
-
-    <SeekBar
-        android:id="@+id/seekBarPreview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="46" 
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
-	</LinearLayout>
-	
-	<LinearLayout 
-	android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal" 
-    android:background="@color/blue2" 
-    android:layout_marginBottom="5dp">
-    
-	<TextView
-        android:id="@+id/textNLoopPlaylist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="N° Loop Playlist"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp" />
-
-	<EditText
-	    android:id="@+id/editTextNLoopPlaylist"
-	    android:layout_width="60dp"
-	    android:layout_height="wrap_content"
-	    android:inputType="number"
-	    android:maxLength="3"
-	    android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
-
-		<CheckBox
-	    android:id="@+id/infiniteLoopCheckBox"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="Infinite Loop" 
-	    android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
-	</LinearLayout>
-	
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_marginBottom="5dp"
-	    android:background="@color/blue2"
-	    android:orientation="horizontal" >
-
-		<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center_vertical"
-		android:text="Playback mode"
-		android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp" />
-
-	<RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="0dp"
-        android:layout_weight="2"
-        android:layout_height="wrap_content" 
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp">
-
-		<RadioButton
-		    android:id="@+id/radioButtonRandom"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_gravity="right"
-		    android:text="Random" />
-
-		<RadioButton
-		    android:id="@+id/radioButtonSequential"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_gravity="right"
-		    android:text="Sequential" />
-  </RadioGroup>
-	</LinearLayout>
-	
-<LinearLayout 	
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:background="@drawable/gradient_listview" >
-    <Button
-        android:id="@+id/buttonCancelDatabase"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:padding="2dp"
-        android:layout_margin="3dp"
-        android:text="@string/EraseDb"
-        android:textColor="@android:color/white"
-        android:background="@drawable/ellipse_button"
-        style="?android:attr/buttonBarButtonStyle" />
+        android:background="@drawable/gradient_listview"
+        android:orientation="vertical" >
 
-	<Button
-	    android:id="@+id/buttonSyncronizesDatabase"
-	    android:layout_width="wrap_content"
-	    android:layout_weight="1"
-	    android:layout_height="match_parent"
-	    android:gravity="center"
-	    android:layout_gravity="center"
-	    android:padding="2dp"
-        android:layout_margin="3dp"
-	    android:text="@string/SyncDb"
-	    android:textColor="@android:color/white"
-	    android:background="@drawable/ellipse_button"
-	    style="?android:attr/buttonBarButtonStyle" />
-</LinearLayout>
-	
-	 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/blue2"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text="Position" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/editText1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0.5"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@color/blue2"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Fade In " />
+
+            <TextView
+                android:id="@+id/textViewValue1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp" />
+
+            <SeekBar
+                android:id="@+id/seekBar1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:max="3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@color/blue2"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Fade Out" />
+
+            <TextView
+                android:id="@+id/textViewValue2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp" />
+
+            <SeekBar
+                android:id="@+id/seekBar2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:max="3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@color/blue2"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/textViewPreview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Preview" />
+
+            <TextView
+                android:id="@+id/textViewValuePreview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp" />
+
+            <SeekBar
+                android:id="@+id/seekBarPreview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:max="46" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@color/blue2"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/textNLoopPlaylist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:text="N° Loop Playlist" />
+
+            <EditText
+                android:id="@+id/editTextNLoopPlaylist"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:inputType="number"
+                android:maxLength="3" />
+
+            <CheckBox
+                android:id="@+id/infiniteLoopCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Infinite Loop" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@color/blue2"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Playback mode" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="2" >
+
+                <RadioButton
+                    android:id="@+id/radioButtonRandom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="Random" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonSequential"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="Sequential" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_listview"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/buttonCancelDatabase"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/background_button"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="@string/EraseDb"
+                android:textColor="@android:color/black" />
+
+            <Button
+                android:id="@+id/buttonSyncronizesDatabase"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/background_button"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="@string/SyncDb"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
+    </LinearLayout>
+
 </ScrollView>

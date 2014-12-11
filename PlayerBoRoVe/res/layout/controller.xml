@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
-    android:orientation="vertical"
-    android:layout_weight="1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_weight="1"
     android:background="@drawable/gradient_listview"
+    android:orientation="vertical"
     tools:ignore="MergeRootFrame" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingTop="4dip"
-        android:orientation="horizontal"
+        android:layout_weight="0.01"
         android:background="#439DE8"
-        android:layout_weight="0.01">
-        
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="4dip" >
+
         <ImageButton
             android:id="@+id/back"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/ic_media_back"
             android:contentDescription="@string/description" />
-        
+
         <ImageButton
             android:id="@+id/forward"
             android:layout_width="40dp"
@@ -32,76 +32,69 @@
             android:background="@drawable/ic_media_forward"
             android:contentDescription="@string/description" />
 
-
-
-        <ImageButton android:id="@+id/audio"
+        <ImageButton
+            android:id="@+id/audio"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/ic_media_audio"
             android:contentDescription="@string/description" />
-        
-        <ImageButton android:id="@+id/stop"
+
+        <ImageButton
+            android:id="@+id/stop"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/ic_media_stop"
             android:contentDescription="@string/description" />
-        
+
         <ImageButton
             android:id="@+id/pause"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/ic_media_pause"
             android:contentDescription="@string/description" />
-        
-        <ImageButton android:id="@+id/loop"
+
+        <ImageButton
+            android:id="@+id/loop"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/ic_media_loop2"
             android:contentDescription="@string/description" />
-
-
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#439DE8">
+        android:background="#439DE8"
+        android:orientation="horizontal" >
 
-        <TextView android:id="@+id/time_current"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:paddingTop="4dip"
-            android:paddingLeft="4dip"
-            android:layout_gravity="center_horizontal"
+        <TextView
+            android:id="@+id/time_current"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="4dip" />
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="4dip"
+            android:paddingRight="4dip"
+            android:paddingTop="4dip"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <SeekBar
             android:id="@+id/mediacontroller_progress"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dip"
-            android:layout_weight="1"
-            android:layout_height="32dip" />
+            android:layout_height="32dip"
+            android:layout_weight="1" />
 
-        <TextView android:id="@+id/time"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:paddingTop="4dip"
-            android:paddingRight="4dip"
-            android:layout_gravity="center_horizontal"
+        <TextView
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="4dip" />
-        
-
-      
-
-
-</LinearLayout>
-
-    
-    
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="4dip"
+            android:paddingRight="4dip"
+            android:paddingTop="4dip"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </LinearLayout>
