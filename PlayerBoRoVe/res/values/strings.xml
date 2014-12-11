@@ -113,4 +113,15 @@
 	<string name="edit_playlist_remove_track_btn">Rimuovi</string>
 	<string name="edit_playlist_edit_title_btn">Fatto</string>
 	
+	<!-- *****************Toast Strings ******************* -->
+	<string name="library_update">Aggiorna la libreria</string>
+	<string name="library_list_update">Lista aggiornata</string>
+	<string name="music_service_error1">Impossibile riprodurre</string>
+	<string name="player_controller_error1">Seleziona un brano</string>
+	<string name="player_controller_preview1">Anteprima di</string>
+	<string name="playlist_add_activity_error1">Titolo duplicato!</string>
+	<string name="playlist_add_activity_warning1">Database vuoto!</string>
+	<string name="settings_activity1">Database creato!</string>
+	<string name="settings_activity2">Prima cancella il database!</string>
+	
 </resources>

@@ -215,7 +215,7 @@ public class LibraryActivity extends Activity {
 					//Toast.makeText(LibraryActivity.this, "Please update Library", Toast.LENGTH_SHORT).show();
 					clearData();
 					updateListTracks(false);
-					Toast.makeText(LibraryActivity.this,  "List updated!", Toast.LENGTH_LONG).show();
+					PlayerController.printToast(getResources().getString(R.string.library_list_update));
 				}
 			});
 			popup.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -267,7 +267,7 @@ public class LibraryActivity extends Activity {
 				PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);
 				clearData();
 				updateListTracks(true);
-				Toast.makeText(LibraryActivity.this,  "List updated!", Toast.LENGTH_LONG).show();
+				PlayerController.printToast(getResources().getString(R.string.library_list_update));
 			}
 		}
 		
@@ -317,7 +317,7 @@ public class LibraryActivity extends Activity {
 				finish();
 				PlayerController.open_library();
 				updateListTracks(true);
-				PlayerController.printToast("Library Updated");
+				PlayerController.printToast(getResources().getString(R.string.library_update));
 			}
 			//details 
 			else if(position == 1){

@@ -97,7 +97,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 	@Override
 	public void onPrepared(MediaPlayer mp) {
 		if(getFocusResult() != AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
-			PlayerController.printToast("Impossibile riprodurre, focus non concesso");
+			PlayerController.printToast(getResources().getString(R.string.music_service_error1));
 			Log.d("audio focus", "focus negato");
 		}
 		else{

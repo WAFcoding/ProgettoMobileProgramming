@@ -300,25 +300,7 @@ public final class R {
     public static final class string {
         public static final int AddTrackPlay=0x7f070021;
         /**  *****************settings_activity.xml**************** 
- *****************menu_track.xml**************** 
  *****************settings_activity.xml**************** 
- *****************menu_track.xml**************** 
- *****************settings_activity.xml**************** 
- *****************menu_track.xml**************** 
- *****************settings_activity.xml**************** 
- *****************menu_track.xml**************** 
- *****************settings_activity.xml**************** 
- *****************menu_track.xml**************** 
- *****************settings_activity.xml**************** 
- *****************menu_track.xml**************** 
- *****************settings_activity.xml**************** 
- *****************menu_track.xml**************** 
- *****************settings_activity.xml**************** 
- *****************menu_track.xml**************** 
- *****************settings_activity.xml**************** 
- *****************menu_track.xml**************** 
- *****************settings_activity.xml**************** 
- *****************menu_track.xml**************** 
  *****************settings_activity.xml**************** 
          */
         public static final int EraseDb=0x7f070023;
@@ -331,12 +313,18 @@ public final class R {
         public static final int activity_details_longest_track=0x7f070036;
         public static final int activity_details_longest_track_in_playlist=0x7f07003e;
         /**  *****************details playlist******************* 
+ *****************details playlist******************* 
+ *****************details playlist******************* 
          */
         public static final int activity_details_n_playlist=0x7f070038;
         /**  *****************details single playlist******************* 
+ *****************details single playlist******************* 
+ *****************details single playlist******************* 
          */
         public static final int activity_details_n_track_in_playlist=0x7f07003c;
         /**  *****************details library******************* 
+ *****************details library******************* 
+ *****************details library******************* 
          */
         public static final int activity_details_n_tracks=0x7f070033;
         public static final int activity_details_total_duration=0x7f070035;
@@ -353,42 +341,20 @@ public final class R {
         /**  *****************menu_track.xml**************** 
  *****************menu_track.xml**************** 
  *****************menu_track.xml**************** 
- *****************menu_track.xml**************** 
- *****************menu_track.xml**************** 
- *****************menu_track.xml**************** 
- *****************menu_track.xml**************** 
- *****************menu_track.xml**************** 
- *****************menu_track.xml**************** 
- *****************menu_track.xml**************** 
- *****************menu_track.xml**************** 
          */
         public static final int details=0x7f07001d;
         /**  *****************menu_Playlist.xml**************** 
+ *****************menu_Playlist.xml**************** 
+ *****************menu_Playlist.xml**************** 
          */
         public static final int detailsPlay=0x7f07001f;
         /**  *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
- *****************settings_activity.xml**************** 
  *****************settings_activity.xml**************** 
  *****************settings_activity.xml**************** 
          */
         public static final int detailsPlaylist=0x7f070025;
         public static final int drawer_close=0x7f070029;
         /**  *****************navigation drawer**************** 
- *****************navigation drawer**************** 
- *****************navigation drawer**************** 
- *****************navigation drawer**************** 
- *****************navigation drawer**************** 
- *****************navigation drawer**************** 
- *****************navigation drawer**************** 
- *****************navigation drawer**************** 
- *****************navigation drawer**************** 
  *****************navigation drawer**************** 
  *****************navigation drawer**************** 
          */
@@ -401,6 +367,8 @@ public final class R {
         public static final int edit_playlist_remove_track=0x7f070041;
         public static final int edit_playlist_remove_track_btn=0x7f070043;
         /**  *****************edit playlist activity ******************* 
+ *****************edit playlist activity ******************* 
+ *****************edit playlist activity ******************* 
          */
         public static final int edit_playlist_title=0x7f07003f;
         public static final int erase=0x7f07001e;
@@ -408,26 +376,33 @@ public final class R {
         public static final int genere=0x7f070018;
         public static final int hello_world=0x7f070001;
         /**  *****************add playlist**************** 
+ *****************add playlist**************** 
+ *****************add playlist**************** 
          */
         public static final int label_add_playlist=0x7f07002b;
         /**  ****************altro**************************** 
+ ****************altro**************************** 
+ ****************altro**************************** 
          */
         public static final int library=0x7f07000d;
+        public static final int library_list_update=0x7f070046;
+        /**  *****************Toast Strings ******************* 
+ *****************Toast Strings ******************* 
+ *****************Toast Strings ******************* 
+         */
+        public static final int library_update=0x7f070045;
+        public static final int music_service_error1=0x7f070047;
         public static final int openPlayer=0x7f070026;
         public static final int open_item_playlist=0x7f07001c;
         public static final int play_item_playlist=0x7f07001b;
         public static final int player=0x7f070011;
+        public static final int player_controller_error1=0x7f070048;
+        public static final int player_controller_preview1=0x7f070049;
         public static final int playlist=0x7f07000e;
+        public static final int playlist_add_activity_error1=0x7f07004a;
+        public static final int playlist_add_activity_warning1=0x7f07004b;
         public static final int playlist_add_hint=0x7f07002c;
         /**  *****************popup add playlist**************** 
- *****************popup add playlist**************** 
- *****************popup add playlist**************** 
- *****************popup add playlist**************** 
- *****************popup add playlist**************** 
- *****************popup add playlist**************** 
- *****************popup add playlist**************** 
- *****************popup add playlist**************** 
- *****************popup add playlist**************** 
  *****************popup add playlist**************** 
  *****************popup add playlist**************** 
          */
@@ -435,25 +410,17 @@ public final class R {
         public static final int playlist_popup_choice2=0x7f07002f;
         public static final int playlist_popup_choice3=0x7f070030;
         public static final int playlist_popup_choice4=0x7f070031;
-        public static final int selectTrack=0x7f070045;
         public static final int settings=0x7f07000f;
+        public static final int settings_activity1=0x7f07004c;
+        public static final int settings_activity2=0x7f07004d;
         public static final int title_activity_library=0x7f070004;
         public static final int title_activity_library_details=0x7f07000a;
         /**  ****************activity title**************************** 
+ ****************activity title**************************** 
+ ****************activity title**************************** 
          */
         public static final int title_activity_player=0x7f070002;
         public static final int title_activity_playlist=0x7f070003;
-        /**  *****************add playlist**************** 
- *****************add playlist**************** 
- *****************add playlist**************** 
- *****************add playlist**************** 
- *****************add playlist**************** 
- *****************add playlist**************** 
- *****************add playlist**************** 
- *****************add playlist**************** 
- *****************add playlist**************** 
- *****************add playlist**************** 
-         */
         public static final int title_activity_playlist_add=0x7f070008;
         public static final int title_activity_playlist_details=0x7f070009;
         public static final int title_activity_playlist_edit=0x7f07000c;

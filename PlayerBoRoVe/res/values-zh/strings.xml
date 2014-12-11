@@ -3,77 +3,118 @@
 
     <string name="app_name">PlayerBoRoVe</string>
     <string name="hello_world">你好世界</string>
+    <!-- ****************activity title**************************** -->
     <string name="title_activity_player">玩家活動</string>
     <string name="title_activity_playlist">播放列表活動</string>
     <string name="title_activity_library">圖書館活動</string>
     <string name="title_activity_settings">設置活動</string>
+    <string name="title_activity_track">详细跟踪</string>
+    <string name="title_options">选项</string>
+    <string name="title_activity_playlist_add">添加到播放列表</string>
+    <string name="title_activity_playlist_details">详情播放列表</string>
+    <string name="title_activity_library_details">详细信息库</string>
+    <string name="title_activity_playlist_single_details">详情播放列表</string>
+    <string name="title_activity_playlist_edit">编辑播放列表</string>
+    <!-- ****************altro**************************** -->
     <string name="library">圖書館</string>
     <string name="playlist">播放列表</string>
     <string name="settings">設置</string>
-     <string name="classification">分類</string>
+    <string name="classification">分類</string>
     <string name="player">閱讀器</string>
-    <string name="duration">500</string>
-    
-    <string name="txtButton">出去</string>
-    
+    <string name="duration">500</string>   
+    <string name="txtButton">出去</string>  
     <string name="artista">藝術家</string>
     <string name="titolo">標題</string>
     <string name="voto">投票</string>
     <string name="album">相冊</string>
     <string name="genere">性別</string>
     <string name="durata">壽命</string>
-    
     <string name="updateList">更新</string>
-    
+    <string name="play_item_playlist">玩</string>
+    <string name="open_item_playlist">揭幕战</string>
     <!-- *****************menu_track.xml**************** -->
-     <string name="details">詳細 </string>
-     <string name="selectTrack">選擇 </string>
-     <string name="erase">清除 </string>
-    <!-- *****************menu_track.xml**************** -->
-   
+
+    <string name="details">詳細 </string>
+    <string name="erase">清除 </string>
+    <!-- *****************menu_Playlist.xml**************** -->
+    <string name="detailsPlay">详细信息 </string>
+    <string name="PreviewPlay">预览</string>
+    <string name="AddTrackPlay">修改</string>
+    <string name="erasePlay">拆除</string>
+
     <!-- *****************settings_activity.xml**************** -->
-     <string name="EraseDb">刪除數據庫</string>
-     <string name="SyncDb">同步數據庫</string>
+
+    <string name="EraseDb">刪除數據庫</string>
+    <string name="SyncDb">同步數據庫</string>
     <!-- *****************settings_activity.xml**************** -->
-   
-   <string name="detailsPlaylist">打開</string>
-   <string name="openPlayer">播放</string>
-   
-    
-    <string name="content"> </string>
-    
-   <!-- *****************navigation drawer**************** -->
+
+    <string name="detailsPlaylist">打開</string>
+    <string name="openPlayer">播放</string>
+    <string name="content"></string>
+
+    <!-- *****************navigation drawer**************** -->
     <string name="drawer_open">打開</string>
     <string name="drawer_close">關閉</string>
     <string name="description">設置</string>
 
-	    <string-array name="drawer_choice_playlist">
-	        <item >添加到播放列表</item>
-	        <item >刪除播放列表</item>
-	       <item >更新</item>
-	       <item >設置</item>
-	    </string-array>
-    
-    
-    
-    
-    <string-array name="drawer_choice_library">
-        <item >添加歌曲</item>
-        <item >刪除歌曲</item>
-       <item >更新</item>
-       <item >設置</item>
+    <string-array name="drawer_choice_playlist">
+        <item>添加到播放列表</item>
+        <item>刪除播放列表</item>
+        <item>更新</item>
+        <item>設置</item>
     </string-array>
-    
-	<!-- *****************add playlist**************** -->
-    <string name="title_activity_playlist_add">播放列表中添加活動</string>
-    
+    <string-array name="drawer_choice_library">
+        <item>添加歌曲</item>
+        <item>刪除歌曲</item>
+        <item>更新</item>
+        <item>設置</item>
+    </string-array>
+    <!-- *****************add playlist**************** -->
     <string name="label_add_playlist">輸入播放列表的名稱</string>
-    
     <string name="playlist_add_hint">新的播放列表</string>
-    
-	<!-- *****************popup add playlist**************** -->
+    <string name="btn_add_playlist">Crea</string>
+    <!-- *****************popup add playlist**************** -->
     <string name="playlist_popup_choice1">刪除</string>
     <string name="playlist_popup_choice2">詳細</string>
     <string name="playlist_popup_choice3">取消</string>
+    <string name="playlist_popup_choice4">预览</string>
+    <string name="action_settings">设置</string>
+
+    <!-- *****************details library******************* -->
+    <string name="activity_details_n_tracks">歌曲数</string>
+    <string name="activity_details_total_memory">内存占用</string>
+    <string name="activity_details_total_duration">总工期库</string>
+    <string name="activity_details_longest_track">最长的赛道</string>
+    <string name="activity_details_biggest_track">更大的文件</string>
+
+    <!-- *****************details playlist******************* -->
+    <string name="activity_details_n_playlist">播放列表的数量</string>
+    <string name="activity_details_total_duration_playlist">所有播放列表的总持续时间</string>
+    <string name="activity_details_longest_playlist">更长的播放列表</string>
+    <string name="activity_details_biggest_playlist">播放列表更多歌曲</string>
+
+    <!-- *****************details single playlist******************* -->
+    <string name="activity_details_n_track_in_playlist">歌曲数</string>
+    <string name="activity_details_total_duration_single_playlist">播放列表的总持续时间</string>
+    <string name="activity_details_longest_track_in_playlist">最长的赛道</string>
+
+    <!-- *****************edit playlist activity ******************* -->
+    <string name="edit_playlist_title">播放列表标题</string>
+    <string name="edit_playlist_add_track">添加歌曲到播放列表</string>
+    <string name="edit_playlist_remove_track">从播放列表中删除歌曲</string>
+    <string name="edit_playlist_add_track_btn">添加</string>
+    <string name="edit_playlist_remove_track_btn">拆除</string>
+    <string name="edit_playlist_edit_title_btn">得到它了</string>
+
+	<!-- *****************Toast Strings ******************* -->
+	<string name="library_update">刷新库</string>
+	<string name="library_list_update">更新列表</string>
+	<string name="music_service_error1">不能玩</string>
+	<string name="player_controller_error1">选择一首歌曲</string>
+	<string name="player_controller_preview1">预览</string>
+	<string name="playlist_add_activity_error1">冠以标题!</string>
+	<string name="playlist_add_activity_warning1">空白数据库!</string>
+	<string name="settings_activity1">数据库中创建!</string>
+	<string name="settings_activity2">删除数据库之前!</string>
 
 </resources>

@@ -868,7 +868,7 @@ public class PlayerController extends SQLiteOpenHelper{
 			Log.d("On receive prepared","preview");
 			lbm.unregisterReceiver(previewPreparedReceiver);
 			//lbm.registerReceiver(previewCompleteReceiver, new IntentFilter("Complete Preview") );
-			printToast("Preview of: "+currentPreviewTrack.getTitle());
+			printToast(m_context.getResources().getString(R.string.player_controller_preview1) + currentPreviewTrack.getTitle());
 			SharedPreferences prefs=m_context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
 			int durationPreview=(prefs.getInt("Duration Preview", 0)+15)*1000;
 			musicSrv.preview(durationPreview);
@@ -1247,6 +1247,8 @@ public class PlayerController extends SQLiteOpenHelper{
 			SinglePlaylistItem song=new SinglePlaylistItem(_id, p_title, singerName, kind, vote, nameFile, album_id, path_track, albumName, duration, m_context);
 			playSingleItem(song);
 		}
+		else
+			printToast(m_context.getResources().getString(R.string.player_controller_error1));
 			
 		//playSingleItem(PlayerController.cursorTracks.getExatlyTrack()�);
 

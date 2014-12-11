@@ -73,7 +73,7 @@ public class PlaylistAddActivity extends Activity {
 			setAdapter(cursorTracks);
 		}
 		else
-			Toast.makeText(PlaylistAddActivity.this, "Warning: database is empty!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(PlaylistAddActivity.this, getResources().getString(R.string.playlist_add_activity_warning1), Toast.LENGTH_SHORT).show();
 		
 		m_list_view.setOnItemClickListener(new OnItemClickListener() {
 
@@ -131,7 +131,7 @@ public class PlaylistAddActivity extends Activity {
 							overridePendingTransition(R.anim.left_in, R.anim.right_out);
 						}
 						else{
-							PlayerController.printToast("Playlist title duplicated, choose a different one");
+							PlayerController.printToast(getResources().getString(R.string.playlist_add_activity_error1));
 						}
 					}
 					else{

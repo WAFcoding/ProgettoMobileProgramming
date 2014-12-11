@@ -313,7 +313,6 @@ public class PlaylistActivity2 extends Activity{
 			else if(position == 1){
 				clearData();
 				setListPlaylist();
-				Toast.makeText(PlaylistActivity2.this, "list of Playlists updated!", Toast.LENGTH_SHORT).show();
 			}
 			//details
 			else if(position == 2){
@@ -336,11 +335,9 @@ public class PlaylistActivity2 extends Activity{
 		if(requestCode == ADDPLAYLIST && resultCode == RESULT_OK){	
 			clearData();
 			setListPlaylist();
-			Toast.makeText(this, "new playlist added!", Toast.LENGTH_SHORT).show();
 		}
 		
 		if(requestCode == ADDPLAYLIST && resultCode == RESULT_CANCELED){
-			//Toast.makeText(this, "Name playlist duplicated! Please change name of new playlist", Toast.LENGTH_SHORT).show();
 		}
 		
 		if(requestCode == REQUEST_INFO_TRACK && resultCode == RESULT_OK){	
@@ -367,7 +364,6 @@ public class PlaylistActivity2 extends Activity{
 	        		PlayerController.setTagTrackFromActivityLibrary(idTrack,fileNameTrack,authorName,kind,valueOfTrack,albumName,duration);
 	        		clearData();
 	        		setListPlaylist();
-	        		Toast.makeText(this, "Track's Tags updated!", Toast.LENGTH_SHORT).show();
 				}		
 			}
 		}
@@ -381,34 +377,14 @@ public class PlaylistActivity2 extends Activity{
 		}
 		//remove
 		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==402){
-
-
-			/*for(int i=0; i < isGroupSelected.size(); i++){
-				if(isGroupSelected.get(i)){					
-					String name = adapter.getPlaylistItem(i).getTitle_playlist();
-					Log.d(TAG, "name: " + name);
-					delNameP.add(name);				
-				}			
-			}	
-			if(delNameP.size() >= 1){
-				for(int i=0; i< delNameP.size(); i++)
-					Log.d(TAG, "delNameP.get(i): " + delNameP.get(i));
-				delNameP.clear();
-			}
-			else{
-				Toast.makeText(PlaylistActivity2.this, "Not any playlist selected!", Toast.LENGTH_SHORT).show();
-			}*/
 			PlayerController.deleteSinglePlaylist(listPlaylistItem.get(selectedPlaylist).getTitle_playlist());
 			clearData();
 			setListPlaylist();
 		}
 		//edit
 		if(requestCode== REQUEST_INFO_PLAYLIST && resultCode==403){
-			/*Intent i=new Intent(PlaylistActivity2.this, AddTracksToPlaylist.class);
-			startActivity(i);*/
 			PlayerController.open_edit_playlist(listPlaylistItem.get(selectedPlaylist));
 		}
-
 		overridePendingTransition(R.anim.top_in, R.anim.bottom_out);
 	}
  

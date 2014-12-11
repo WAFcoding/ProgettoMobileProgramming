@@ -107,7 +107,6 @@ public class PlaylistExpAdapter extends BaseExpandableListAdapter {
 		btn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(context, "button!!!!!!", Toast.LENGTH_SHORT).show();
 				Intent i = new Intent(context, LibraryActivity.class);
 				Bundle container = new Bundle();
 				context.startActivity(i, container);

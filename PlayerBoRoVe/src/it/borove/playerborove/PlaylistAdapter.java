@@ -114,7 +114,6 @@ public class PlaylistAdapter extends ArrayAdapter<PlaylistItem> {
 				
 				@Override
 				public boolean onLongClick(View v) {
-					Toast.makeText(getContext(), " long_click su nome playist", Toast.LENGTH_SHORT).show();
 					return false;
 				}
 			});
