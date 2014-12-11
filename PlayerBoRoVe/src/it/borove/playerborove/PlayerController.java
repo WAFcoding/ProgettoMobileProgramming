@@ -1160,12 +1160,11 @@ public class PlayerController extends SQLiteOpenHelper{
 		uri=Uri.parse(currentPlayingTrack.getPath_track());
 		Intent intent=new Intent(mainActivity, PlayerActivity.class);
 		mainActivity.startActivity(intent);
-		PlayerController.set_player();
-		
+		set_player();
 	}
 	
 	public static boolean canBackForward(){
-	return true;		
+		return true;		
 	}
 	
 	public static void forward(){
