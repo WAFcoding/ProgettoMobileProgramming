@@ -145,23 +145,14 @@ public class PlaylistTracks extends Activity{
 
 			actual_playlist= new PlaylistItem(name_playlist, listOfTracks);
 		}*/
-		//imposta il nome dell'activity con il nome della playlist selezionata
-		if(actual_playlist != null){
-			getActionBar().setTitle(actual_playlist.getTitle_playlist());
-		}
-
-		for(int i=0; i < listOfTracks.size(); i++){
-        	isGroupSelected.add(false);
-        }
 		
 		if(listOfTracks != null)
 			setListTracks(listOfTracks);
 		
 		this.listTracks.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {				
-				
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {				
+				//Log.e("PlaylistTracks", "dimensione di isGroupSelected: " + isGroupSelected.size() + ", position= " + position);
 				if(!isGroupSelected.get(position)){
 					view.setBackgroundColor(Color.parseColor("#c0c0c0"));
 					for(int i=0; i < isGroupSelected.size(); i++){
@@ -169,18 +160,17 @@ public class PlaylistTracks extends Activity{
 							isGroupSelected.set(i, false);
 							View v = listTracks.getChildAt(i);
 							v.setBackgroundColor(Color.TRANSPARENT);
-							
 						}
 					}
 					isGroupSelected.set(position, true);
 					selectedTrack = position;
 				}
 				else{	
-					
 					view.setBackgroundColor(Color.TRANSPARENT);
 					isGroupSelected.set(position, false);
 					selectedTrack = -1;
-				}				
+				}	
+				
 			}
 		});
 	}
@@ -196,9 +186,9 @@ public class PlaylistTracks extends Activity{
 			cursorTrack.close();
 			PlayerController.closeConnectionDB();
 		}
-		if(cursorTracks != null){
-			cursorTracks.close();
-			PlayerController.closeConnectionDB();
+		
+		if(listOfTracks != null){
+			listOfTracks.clear();
 		}
 	}
 	
@@ -213,9 +203,9 @@ public class PlaylistTracks extends Activity{
 			cursorTrack.close();
 			PlayerController.closeConnectionDB();
 		}
-		if(cursorTracks != null){
-			cursorTracks.close();
-			PlayerController.closeConnectionDB();
+		
+		if(listOfTracks != null){
+			listOfTracks.clear();
 		}
 		
 	}
@@ -230,9 +220,9 @@ public class PlaylistTracks extends Activity{
 			cursorTrack.close();
 			PlayerController.closeConnectionDB();
 		}
-		if(cursorTracks != null){
-			cursorTracks.close();
-			PlayerController.closeConnectionDB();
+		
+		if(listOfTracks != null){
+			listOfTracks.clear();
 		}
 	}
 	@Override
@@ -246,10 +236,7 @@ public class PlaylistTracks extends Activity{
 			cursorTrack.close();
 			PlayerController.closeConnectionDB();
 		}
-		if(cursorTracks != null){
-			cursorTracks.close();
-			PlayerController.closeConnectionDB();
-		}
+		
 		if(listOfTracks != null){
 			listOfTracks.clear();
 		}
@@ -257,6 +244,7 @@ public class PlaylistTracks extends Activity{
 		Log.d("onResume", "in onResume");
 
 		mapper = new AlbumMapper();	
+		
 		cursorTracks = PlayerController.getCursorTracks();
 		if(cursorTracks != null){
 			cursorTracks.moveToFirst();
@@ -270,12 +258,14 @@ public class PlaylistTracks extends Activity{
 
 		playlist = PlayerController.getCursorPlaylist();
 		if(playlist != null){
+			Log.d(TAG, "plalist not null");
 			boolean name = false;
 			playlist.moveToFirst();
 			while(!playlist.isAfterLast()){
 				if(playlist.getString(0).equals(id_playlist)){
 					if(!name){
 						name_playlist = playlist.getString(1);
+						//Log.d(TAG, "plalist name= " + name_playlist);
 						name = true;
 					}					
 					String title		= playlist.getString(7);
@@ -293,12 +283,23 @@ public class PlaylistTracks extends Activity{
 					SinglePlaylistItem tmp_pl_item= new SinglePlaylistItem(_id, title, name_singer, kind, vote,
 							nameFile, album_id, path_track, albumName, duration, this);
 					listOfTracks.add(tmp_pl_item);
+
+					//Log.d(TAG, "aggiunto elemento a listOfTracks, dimensione= " + listOfTracks.size());
 				}
 
 				playlist.moveToNext();
 			}
 
 			actual_playlist= new PlaylistItem(name_playlist, listOfTracks);
+
+			//imposta il nome dell'activity con il nome della playlist selezionata
+			if(actual_playlist != null){
+				getActionBar().setTitle(actual_playlist.getTitle_playlist());
+			}
+			
+			for(int i=0; i < listOfTracks.size(); i++){
+	        	isGroupSelected.add(false);
+	        }
 		}
 		listTracks.invalidateViews();
 		listTracksAdapter.notifyDataSetChanged();
@@ -564,12 +565,7 @@ public class PlaylistTracks extends Activity{
 				for(int i=0; i < listOfTracks.size(); i++){
 		        	isGroupSelected.add(false);
 		        }
-				
-				
-				
-				
 			}
-	
 		}
 	}
 	

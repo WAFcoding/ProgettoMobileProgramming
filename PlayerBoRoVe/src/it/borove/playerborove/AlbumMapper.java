@@ -31,7 +31,7 @@ public class AlbumMapper{
 			try{
 				if(!this.idTrackToContentTitle.containsKey(idTrack) && !this.idTrackToContentTitle.containsValue(idTrack)){
 					this.idTrackToContentTitle.put(idTrack, contentTitle);
-					Log.d(TAG, "Aggiunto track in IdTrackToContentTitle: " + idTrack + " " + contentTitle);
+					//Log.d(TAG, "Aggiunto track in IdTrackToContentTitle: " + idTrack + " " + contentTitle);
 				}
 			}catch(Exception e){e.printStackTrace();}
 	}
@@ -49,11 +49,11 @@ public class AlbumMapper{
 				if(!this.IdTrackToIdAlbum.containsKey(idTrack))
 					if (!this.IdTrackToIdAlbum.containsValue(idAlbum)){
 						this.IdTrackToIdAlbum.put(idTrack, idAlbum);
-						Log.d(TAG, "Aggiunto track in IdTrackToIdAlbum: " + idTrack + " " + idAlbum);
+						//Log.d(TAG, "Aggiunto track in IdTrackToIdAlbum: " + idTrack + " " + idAlbum);
 					}
 					else{
 						this.IdTrackToIdAlbum.put(idTrack, "-1");
-						Log.d(TAG, "Aggiunto track in IdTrackToIdAlbum: " + idTrack + " -1");
+						//Log.d(TAG, "Aggiunto track in IdTrackToIdAlbum: " + idTrack + " -1");
 					}
 			}catch(Exception e){e.printStackTrace();}
 	}
