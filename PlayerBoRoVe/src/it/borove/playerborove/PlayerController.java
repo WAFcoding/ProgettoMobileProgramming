@@ -1247,8 +1247,10 @@ public class PlayerController extends SQLiteOpenHelper{
 			SinglePlaylistItem song=new SinglePlaylistItem(_id, p_title, singerName, kind, vote, nameFile, album_id, path_track, albumName, duration, m_context);
 			playSingleItem(song);
 		}
-		else
+		else{
+			player = false;
 			printToast(m_context.getResources().getString(R.string.player_controller_error1));
+		}
 			
 		//playSingleItem(PlayerController.cursorTracks.getExatlyTrack()�);
 
