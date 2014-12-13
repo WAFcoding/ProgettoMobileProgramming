@@ -1075,12 +1075,16 @@ public class PlayerController extends SQLiteOpenHelper{
 	}
 
 
-	public static void stop() {//change
-		if(musicSrv!=null && serviceConnected)
-		{	lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
-			//musicSrv.seek(0);
-			musicSrv.stop();
+	public static void stop() {
+		if(playingPlaylist){
+			musicSrv.pausePlayer();
+			musicSrv.seek(0);
 		}
+		else
+			if(musicSrv!=null && serviceConnected)
+			{	lbm.registerReceiver(songPreparedReceiver, new IntentFilter("Prepared"));
+			musicSrv.stop();
+			}
 	}
 	private static boolean random;
 	
