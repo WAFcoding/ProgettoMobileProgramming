@@ -100,6 +100,7 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 	
 	public void start() {
 		PlayerController.play();
+		mediaController.enableBackAndForward();
 	}
 	public void pause() {
 		PlayerController.pause();
@@ -159,6 +160,7 @@ public class PlayerActivity extends Activity implements MyMediaController.MediaP
 	public void stop() {
 		PlayerController.stop();
 		lbm.registerReceiver(receiver, new IntentFilter("Prepared"));
+		mediaController.disableBackAndForward();
 	}
 
 	@Override

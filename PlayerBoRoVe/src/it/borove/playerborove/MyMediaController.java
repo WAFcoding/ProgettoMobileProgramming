@@ -300,4 +300,13 @@ public class MyMediaController extends FrameLayout{
     	audio.setEnabled(true);
     	seekBar.setEnabled(true);
     }
+    public void enableBackAndForward(){
+    	forward.setEnabled(true);
+    	back.setEnabled(true);
+    }
+
+    public void disableBackAndForward(){
+    	forward.setEnabled(false);
+    	back.setEnabled(false);
+    }
 }
